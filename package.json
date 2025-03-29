@@ -1,6 +1,12 @@
 {
   "name": "cesr",
   "version": "0.0.1",
+  "keywords": [
+    "CESR",
+    "KERI",
+    "ACDC",
+    "Composable Event Streaming Representation"
+  ],
   "scripts": {
     "build": "tsc -p tsconfig.build.json",
     "dev": "tsc -p tsconfig.build.json --watch",
