@@ -176,7 +176,7 @@ async function* iter<T>(iterator: AsyncIterable<T>): AsyncIterableIterator<T> {
 export async function* parse(input: AsyncIterable<Uint8Array>): AsyncIterableIterator<Message> {
   const decoder = new Parser(iter(input));
 
-  let payload: DataObject | null = null;
+  let payload: MessagePayload | null = null;
   let group: string | null = null;
   let attachments: Record<string, string[]> = {};
 
@@ -205,7 +205,9 @@ export async function* parse(input: AsyncIterable<Uint8Array>): AsyncIterableIte
   }
 }
 
+export type MessagePayload = DataObject;
+
 export interface Message {
-  payload: DataObject;
+  payload: MessagePayload;
   attachments: Record<string, string[]>;
 }

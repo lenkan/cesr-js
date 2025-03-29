@@ -11,6 +11,7 @@
     "build": "tsc -p tsconfig.build.json",
     "dev": "tsc -p tsconfig.build.json --watch",
     "test": "node --test --test-reporter=spec --no-warnings --experimental-strip-types",
+    "test:example": "./test_examples.sh",
     "lint": "eslint"
   },
   "exports": {

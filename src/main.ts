@@ -1,1 +1,1 @@
-export { parse, Message } from "./parser.ts";
+export { parse, type Message, type MessagePayload } from "./parser.ts";
