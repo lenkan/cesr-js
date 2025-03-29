@@ -11,12 +11,16 @@ npm install cesr
 ```
 
 ```typescript
+// @ts-check
 import { parse } from "cesr";
 
-const response = await fetch("http://65.21.253.212:5623/oobi/EINmHd5g7iV-UldkkkKyBIH052bIyxZNBn9pq-zNrYoS");
+const url = new URL("/lenkan/cesr-js/refs/heads/main/fixtures/geda.cesr", "https://raw.githubusercontent.com");
+const response = await fetch(url);
 
-for await (const message of parse(response)) {
-  console.log(message.payload);
-  console.log(message.attachments);
+if (response.body) {
+  for await (const message of parse(response.body)) {
+    console.log(message.payload);
+    console.log(message.attachments);
+  }
 }
 ```
