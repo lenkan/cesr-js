@@ -1,6 +1,6 @@
 {
   "name": "cesr",
-  "version": "0.0.0",
+  "version": "0.0.1",
   "scripts": {
     "build": "tsc -p tsconfig.build.json",
     "dev": "tsc -p tsconfig.build.json --watch",
@@ -14,8 +14,8 @@
     "dist"
   ],
   "type": "module",
-  "author": "",
-  "license": "ISC",
+  "author": "Daniel Lenksjö",
+  "license": "Apache-2.0",
   "description": "",
   "engines": {
     "node": ">=22"
