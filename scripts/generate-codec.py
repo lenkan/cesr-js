@@ -1,6 +1,4 @@
 #!/usr/bin/env python
-import argparse
-
 from keri.core.coring import MtrDex, Matter
 from keri.core.indexing import IdrDex, Indexer
 from keri.core.counting import CtrDex_1_0, CtrDex_2_0, Counter
