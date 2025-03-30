@@ -12,7 +12,8 @@
     "dev": "tsc -p tsconfig.build.json --watch",
     "test": "node --test --test-reporter=spec --no-warnings --experimental-strip-types",
     "test:example": "./test_examples.sh",
-    "lint": "eslint"
+    "lint": "eslint && prettier --check .",
+    "format": "prettier --write ."
   },
   "exports": {
     ".": "./dist/main.js"

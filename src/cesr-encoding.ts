@@ -98,7 +98,7 @@ export function encode(code: string, raw: Uint8Array): string {
   if (!fs) {
     if ((ls + rs) % 3 !== 0 || cs % 4 !== 0) {
       throw new Error(
-        `Invalid full code=${both} with variable raw size=${rs} given cs=${cs}, hs=${hs}, ss=${ss}, fs=${fs}, and ls=${ls}.`
+        `Invalid full code=${both} with variable raw size=${rs} given cs=${cs}, hs=${hs}, ss=${ss}, fs=${fs}, and ls=${ls}.`,
       );
     }
 
@@ -110,7 +110,7 @@ export function encode(code: string, raw: Uint8Array): string {
 
     if (ps !== cs % 4) {
       throw new Error(
-        `Invalid full code=${both} with fixed raw size=${rs} given cs=${cs}, hs=${hs}, ss=${ss}, fs=${fs}, and ls=${ls}.`
+        `Invalid full code=${both} with fixed raw size=${rs} given cs=${cs}, hs=${hs}, ss=${ss}, fs=${fs}, and ls=${ls}.`,
       );
     }
 
@@ -121,7 +121,7 @@ export function encode(code: string, raw: Uint8Array): string {
 
   if (full.length % 4 !== 0 || (fs && full.length !== fs)) {
     throw new Error(
-      `Invalid full size given code=${both} with raw size=${rs}, cs=${cs}, hs=${hs}, ss=${ss}, xs=${xs}, fs=${fs}, and ls=${ls}.`
+      `Invalid full size given code=${both} with raw size=${rs}, cs=${cs}, hs=${hs}, ss=${ss}, xs=${xs}, fs=${fs}, and ls=${ls}.`,
     );
   }
 
