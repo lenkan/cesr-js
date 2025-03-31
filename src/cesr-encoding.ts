@@ -81,51 +81,29 @@ export function encodeDate(date: Date): string {
   return `1AAG${format}`;
 }
 
+function prepad(raw: Uint8Array, length: number): Uint8Array {
+  const padded = new Uint8Array(length + raw.byteLength);
+  padded.set(raw, length);
+  return padded;
+}
+
 export function encode(code: string, raw: Uint8Array): string {
-  const both = code;
-  const rs = raw.byteLength;
   const size = MatterSize[code];
+
   if (!size) {
     throw new Error(`Unable to find code table for ${code}`);
   }
 
-  const { hs, ss, xs, fs } = size;
-  const ls = size.ls ?? 0;
-  const cs = hs + ss;
-
-  let full: string;
-
-  if (!fs) {
-    if ((ls + rs) % 3 !== 0 || cs % 4 !== 0) {
-      throw new Error(
-        `Invalid full code=${both} with variable raw size=${rs} given cs=${cs}, hs=${hs}, ss=${ss}, fs=${fs}, and ls=${ls}.`,
-      );
-    }
-
-    const paddedRaw = new Uint8Array(ls + rs);
-    paddedRaw.set(raw, ls);
-    full = both + encodeBase64Url(paddedRaw);
-  } else {
-    const ps = (3 - ((rs + ls) % 3)) % 3;
-
-    if (ps !== cs % 4) {
-      throw new Error(
-        `Invalid full code=${both} with fixed raw size=${rs} given cs=${cs}, hs=${hs}, ss=${ss}, fs=${fs}, and ls=${ls}.`,
-      );
-    }
-
-    const paddedRaw = new Uint8Array(ps + ls + rs);
-    paddedRaw.set(raw, ps + ls);
-    full = both + encodeBase64Url(paddedRaw).slice(ps);
+  if (size.fs === null) {
+    const padded = prepad(raw, size.ls);
+    const soft = encodeBase64Int(padded.length / 3, size.ss);
+    return `${code}${soft}${encodeBase64Url(padded)}`;
   }
 
-  if (full.length % 4 !== 0 || (fs && full.length !== fs)) {
-    throw new Error(
-      `Invalid full size given code=${both} with raw size=${rs}, cs=${cs}, hs=${hs}, ss=${ss}, xs=${xs}, fs=${fs}, and ls=${ls}.`,
-    );
-  }
+  const padSize = (3 - ((raw.byteLength + size.ls) % 3)) % 3;
+  const padded = prepad(raw, padSize + size.ls);
 
-  return full;
+  return code + encodeBase64Url(padded).slice(padSize);
 }
 
 function resolveIndexCode(primitiveCode: string): [string, IndexerCodeSize] {

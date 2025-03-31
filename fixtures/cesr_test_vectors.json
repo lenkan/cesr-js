@@ -1,0 +1,1306 @@
+[
+  {
+    "code": "N",
+    "name": "Big",
+    "type": "matter",
+    "raw": "4b41e828b7987111",
+    "qb64": "NEtB6Ci3mHER",
+    "qb2": "344b41e828b7987111"
+  },
+  {
+    "code": "F",
+    "name": "Blake2b_256",
+    "type": "matter",
+    "raw": "693c6431a3133c7f16ced6946d9000131f70eb33f49380f719e6950637a8344b",
+    "qb64": "FGk8ZDGjEzx_Fs7WlG2QABMfcOsz9JOA9xnmlQY3qDRL",
+    "qb2": "14693c6431a3133c7f16ced6946d9000131f70eb33f49380f719e6950637a8344b"
+  },
+  {
+    "code": "0E",
+    "name": "Blake2b_512",
+    "type": "matter",
+    "raw": "daa61957dba154beeca609dfc767f24ec60e2d87c89972e54c7ab2e6736bfd750350fcf70d1848a80f9e8168954c00f8844f1e226df6b93daf39ad3d181bbf28",
+    "qb64": "0EDaphlX26FUvuymCd_HZ_JOxg4th8iZcuVMerLmc2v9dQNQ_PcNGEioD56BaJVMAPiETx4ibfa5Pa85rT0YG78o",
+    "qb2": "d040daa61957dba154beeca609dfc767f24ec60e2d87c89972e54c7ab2e6736bfd750350fcf70d1848a80f9e8168954c00f8844f1e226df6b93daf39ad3d181bbf28"
+  },
+  {
+    "code": "G",
+    "name": "Blake2s_256",
+    "type": "matter",
+    "raw": "900284953279675df7afb87350753264f1dd6da56aab46ce50eaf4b1e49a5d8c",
+    "qb64": "GJAChJUyeWdd96-4c1B1MmTx3W2laqtGzlDq9LHkml2M",
+    "qb2": "18900284953279675df7afb87350753264f1dd6da56aab46ce50eaf4b1e49a5d8c"
+  },
+  {
+    "code": "E",
+    "name": "Blake3_256",
+    "type": "matter",
+    "raw": "848198ac2a59ce1f968eac96e57ebc90e42eb59119878deea82308fa4e9fd619",
+    "qb64": "EISBmKwqWc4flo6sluV-vJDkLrWRGYeN7qgjCPpOn9YZ",
+    "qb2": "10848198ac2a59ce1f968eac96e57ebc90e42eb59119878deea82308fa4e9fd619"
+  },
+  {
+    "code": "0D",
+    "name": "Blake3_512",
+    "type": "matter",
+    "raw": "cd9356bf9a986163f47c36842057de49c7431561db36838ce960a4736f79bd1de46c53ff193f53601c320ee600ee0338795ae8ca759d0103d6b63c28bfebcc7c",
+    "qb64": "0DDNk1a_mphhY_R8NoQgV95Jx0MVYds2g4zpYKRzb3m9HeRsU_8ZP1NgHDIO5gDuAzh5WujKdZ0BA9a2PCi_68x8",
+    "qb2": "d030cd9356bf9a986163f47c36842057de49c7431561db36838ce960a4736f79bd1de46c53ff193f53601c320ee600ee0338795ae8ca759d0103d6b63c28bfebcc7c"
+  },
+  {
+    "code": "Z",
+    "name": "Blind",
+    "type": "matter",
+    "raw": "a1efd421a6fda1b190b0f0af637bae236cb99a81cb1e0c176d320567a55f7c3a",
+    "qb64": "ZKHv1CGm_aGxkLDwr2N7riNsuZqByx4MF20yBWelX3w6",
+    "qb2": "64a1efd421a6fda1b190b0f0af637bae236cb99a81cb1e0c176d320567a55f7c3a"
+  },
+  {
+    "code": "7AAB",
+    "name": "Bytes_Big_L0",
+    "type": "matter",
+    "raw": "4de16b837d3430bfdcb5d04db2f1d0809c52",
+    "qb64": "7AABAAAGTeFrg300ML_ctdBNsvHQgJxS",
+    "qb2": "ec00010000064de16b837d3430bfdcb5d04db2f1d0809c52"
+  },
+  {
+    "code": "8AAB",
+    "name": "Bytes_Big_L1",
+    "type": "matter",
+    "raw": "eae031fadfb68207847811cc71ebdb7147",
+    "qb64": "8AABAAAGAOrgMfrftoIHhHgRzHHr23FH",
+    "qb2": "f0000100000600eae031fadfb68207847811cc71ebdb7147"
+  },
+  {
+    "code": "9AAB",
+    "name": "Bytes_Big_L2",
+    "type": "matter",
+    "raw": "22c35d6574b98fed4c3eba7f96",
+    "qb64": "9AABAAAFAAAiw11ldLmP7Uw-un-W",
+    "qb2": "f40001000005000022c35d6574b98fed4c3eba7f96"
+  },
+  {
+    "code": "4B",
+    "name": "Bytes_L0",
+    "type": "matter",
+    "raw": "3071b2357aa2acb56995d9064c7fba06a51f67e53f52e283e0f47c",
+    "qb64": "4BAJMHGyNXqirLVpldkGTH-6BqUfZ-U_UuKD4PR8",
+    "qb2": "e010093071b2357aa2acb56995d9064c7fba06a51f67e53f52e283e0f47c"
+  },
+  {
+    "code": "5B",
+    "name": "Bytes_L1",
+    "type": "matter",
+    "raw": "a570194d936ddb55",
+    "qb64": "5BADAKVwGU2TbdtV",
+    "qb2": "e4100300a570194d936ddb55"
+  },
+  {
+    "code": "6B",
+    "name": "Bytes_L2",
+    "type": "matter",
+    "raw": "4fbd634beacc7a5605e041d7930c973656b38b11a112",
+    "qb64": "6BAIAABPvWNL6sx6VgXgQdeTDJc2VrOLEaES",
+    "qb2": "e8100800004fbd634beacc7a5605e041d7930c973656b38b11a112"
+  },
+  {
+    "code": "1AAG",
+    "name": "DateTime",
+    "type": "matter",
+    "raw": "8f0ac6d54b864e8aa795b967935d32ba4df32759dc2289fd",
+    "qb64": "1AAGjwrG1UuGToqnlblnk10yuk3zJ1ncIon9",
+    "qb2": "d400068f0ac6d54b864e8aa795b967935d32ba4df32759dc2289fd"
+  },
+  {
+    "code": "1AAB",
+    "name": "ECDSA_256k1",
+    "type": "matter",
+    "raw": "a4ba72207512bc5595b0b5fd4114ba27d2a4a5ce542ac9ddd20112db641bf56119",
+    "qb64": "1AABpLpyIHUSvFWVsLX9QRS6J9Kkpc5UKsnd0gES22Qb9WEZ",
+    "qb2": "d40001a4ba72207512bc5595b0b5fd4114ba27d2a4a5ce542ac9ddd20112db641bf56119"
+  },
+  {
+    "code": "1AAA",
+    "name": "ECDSA_256k1N",
+    "type": "matter",
+    "raw": "bdc5fcebc65941b54b49bd206b527692915bfb6fb8889fcd46da76df21856ad59e",
+    "qb64": "1AAAvcX868ZZQbVLSb0ga1J2kpFb-2-4iJ_NRtp23yGFatWe",
+    "qb2": "d40000bdc5fcebc65941b54b49bd206b527692915bfb6fb8889fcd46da76df21856ad59e"
+  },
+  {
+    "code": "J",
+    "name": "ECDSA_256k1_Seed",
+    "type": "matter",
+    "raw": "5c39f4874795479482f8ebecf40688c4d17f9215c1dc04a2b2d6dd715b2b27a5",
+    "qb64": "JFw59IdHlUeUgvjr7PQGiMTRf5IVwdwEorLW3XFbKyel",
+    "qb2": "245c39f4874795479482f8ebecf40688c4d17f9215c1dc04a2b2d6dd715b2b27a5"
+  },
+  {
+    "code": "0C",
+    "name": "ECDSA_256k1_Sig",
+    "type": "matter",
+    "raw": "af06744d0bcba9fc7c59b27a198bd0b854eee34d49844cf6008701423b864160b10f06312bf54bb77240842559faf4e8d423091e6d9a4adc9afde1d4b2f56133",
+    "qb64": "0CCvBnRNC8up_HxZsnoZi9C4VO7jTUmETPYAhwFCO4ZBYLEPBjEr9Uu3ckCEJVn69OjUIwkebZpK3Jr94dSy9WEz",
+    "qb2": "d020af06744d0bcba9fc7c59b27a198bd0b854eee34d49844cf6008701423b864160b10f06312bf54bb77240842559faf4e8d423091e6d9a4adc9afde1d4b2f56133"
+  },
+  {
+    "code": "1AAJ",
+    "name": "ECDSA_256r1",
+    "type": "matter",
+    "raw": "cb9b16339a8740f8880edf1cbbd0c106e51e3b1922bc061558a31f78e75a27582b",
+    "qb64": "1AAJy5sWM5qHQPiIDt8cu9DBBuUeOxkivAYVWKMfeOdaJ1gr",
+    "qb2": "d40009cb9b16339a8740f8880edf1cbbd0c106e51e3b1922bc061558a31f78e75a27582b"
+  },
+  {
+    "code": "1AAI",
+    "name": "ECDSA_256r1N",
+    "type": "matter",
+    "raw": "95390c30c51ad7c1ddf4b6354f7af2643485ffa660f50ee0c3b9aced38c271813a",
+    "qb64": "1AAIlTkMMMUa18Hd9LY1T3ryZDSF_6Zg9Q7gw7ms7TjCcYE6",
+    "qb2": "d4000895390c30c51ad7c1ddf4b6354f7af2643485ffa660f50ee0c3b9aced38c271813a"
+  },
+  {
+    "code": "Q",
+    "name": "ECDSA_256r1_Seed",
+    "type": "matter",
+    "raw": "295085bed3b7fdb9e0a5e933c62dd914a87ad2fb682188e0d46491194b68fef1",
+    "qb64": "QClQhb7Tt_254KXpM8Yt2RSoetL7aCGI4NRkkRlLaP7x",
+    "qb2": "40295085bed3b7fdb9e0a5e933c62dd914a87ad2fb682188e0d46491194b68fef1"
+  },
+  {
+    "code": "0I",
+    "name": "ECDSA_256r1_Sig",
+    "type": "matter",
+    "raw": "7b8ca107fd8fe6926bcfde53aeee72d72f84114f04eae1cbc2807c6292e35be8249f7698b3690a21e553fd61e062dba2a915ffe855e9c975b2cae762c91130bf",
+    "qb64": "0IB7jKEH_Y_mkmvP3lOu7nLXL4QRTwTq4cvCgHxikuNb6CSfdpizaQoh5VP9YeBi26KpFf_oVenJdbLK52LJETC_",
+    "qb2": "d0807b8ca107fd8fe6926bcfde53aeee72d72f84114f04eae1cbc2807c6292e35be8249f7698b3690a21e553fd61e062dba2a915ffe855e9c975b2cae762c91130bf"
+  },
+  {
+    "code": "D",
+    "name": "Ed25519",
+    "type": "matter",
+    "raw": "660a93bc3bcb552f68a3cd39090cad72899af26d3ef7b8966b200fca54bb0fb9",
+    "qb64": "DGYKk7w7y1UvaKPNOQkMrXKJmvJtPve4lmsgD8pUuw-5",
+    "qb2": "0c660a93bc3bcb552f68a3cd39090cad72899af26d3ef7b8966b200fca54bb0fb9"
+  },
+  {
+    "code": "B",
+    "name": "Ed25519N",
+    "type": "matter",
+    "raw": "cdd19f0ae2e22f59db6708808c36ed796c1fc956ca2373c1be44c444ce851438",
+    "qb64": "BM3Rnwri4i9Z22cIgIw27XlsH8lWyiNzwb5ExETOhRQ4",
+    "qb2": "04cdd19f0ae2e22f59db6708808c36ed796c1fc956ca2373c1be44c444ce851438"
+  },
+  {
+    "code": "A",
+    "name": "Ed25519_Seed",
+    "type": "matter",
+    "raw": "6e0312f9fef140d66942f63b38d4612bac340b7cb894ac2e313dfac951182d0a",
+    "qb64": "AG4DEvn-8UDWaUL2OzjUYSusNAt8uJSsLjE9-slRGC0K",
+    "qb2": "006e0312f9fef140d66942f63b38d4612bac340b7cb894ac2e313dfac951182d0a"
+  },
+  {
+    "code": "0B",
+    "name": "Ed25519_Sig",
+    "type": "matter",
+    "raw": "34056078f92d0507b41f30c9246ae2cdc69cd65db26b92e7d82bf7b10eedc2db6e2f25344a097766f4b462aa1764d877e996a236dd062d97d8e4d44c9b029288",
+    "qb64": "0BA0BWB4-S0FB7QfMMkkauLNxpzWXbJrkufYK_exDu3C224vJTRKCXdm9LRiqhdk2HfplqI23QYtl9jk1EybApKI",
+    "qb2": "d01034056078f92d0507b41f30c9246ae2cdc69cd65db26b92e7d82bf7b10eedc2db6e2f25344a097766f4b462aa1764d877e996a236dd062d97d8e4d44c9b029288"
+  },
+  {
+    "code": "1AAD",
+    "name": "Ed448",
+    "type": "matter",
+    "raw": "320d144f7e9180d0303edc370fecd98b36f49f9d07ab3bc9bb6e7564e1932258ec6fd520f7a6b0b8c0464a57f238f9082f703480d2f66a62ea",
+    "qb64": "1AADMg0UT36RgNAwPtw3D-zZizb0n50HqzvJu251ZOGTIljsb9Ug96awuMBGSlfyOPkIL3A0gNL2amLq",
+    "qb2": "d40003320d144f7e9180d0303edc370fecd98b36f49f9d07ab3bc9bb6e7564e1932258ec6fd520f7a6b0b8c0464a57f238f9082f703480d2f66a62ea"
+  },
+  {
+    "code": "1AAC",
+    "name": "Ed448N",
+    "type": "matter",
+    "raw": "31beed172a1ce2a6f4186a868f2a28ab4175e07ea58be2abd8ca6bbfa42ee153ab2739c9bd49b939583208f8713bedb2f0ff300a213503065c",
+    "qb64": "1AACMb7tFyoc4qb0GGqGjyooq0F14H6li-Kr2Mprv6Qu4VOrJznJvUm5OVgyCPhxO-2y8P8wCiE1AwZc",
+    "qb2": "d4000231beed172a1ce2a6f4186a868f2a28ab4175e07ea58be2abd8ca6bbfa42ee153ab2739c9bd49b939583208f8713bedb2f0ff300a213503065c"
+  },
+  {
+    "code": "K",
+    "name": "Ed448_Seed",
+    "type": "matter",
+    "raw": "ea78d3d6828d5c88e5fb3012883c35af295b03a3ed8c38b9b1d32f8dc746e500dc585f90aa3bd0e9807fd8e114f4fad00efd19632c630ae8",
+    "qb64": "KOp409aCjVyI5fswEog8Na8pWwOj7Yw4ubHTL43HRuUA3FhfkKo70OmAf9jhFPT60A79GWMsYwro",
+    "qb2": "28ea78d3d6828d5c88e5fb3012883c35af295b03a3ed8c38b9b1d32f8dc746e500dc585f90aa3bd0e9807fd8e114f4fad00efd19632c630ae8"
+  },
+  {
+    "code": "1AAE",
+    "name": "Ed448_Sig",
+    "type": "matter",
+    "raw": "8c51374666c53b7b66fbe6ee4bad44b63653de7380e97f1b2335a7b20757d1b188d14126b3e846",
+    "qb64": "1AAEjFE3RmbFO3tm--buS61EtjZT3nOA6X8bIzWnsgdX0bGI0UEms-hG",
+    "qb2": "d400048c51374666c53b7b66fbe6ee4bad44b63653de7380e97f1b2335a7b20757d1b188d14126b3e846"
+  },
+  {
+    "code": "T",
+    "name": "Great",
+    "type": "matter",
+    "raw": "375a019c8e14fd13cf9ace7ee058",
+    "qb64": "TDdaAZyOFP0Tz5rOfuBY",
+    "qb2": "4c375a019c8e14fd13cf9ace7ee058"
+  },
+  {
+    "code": "V",
+    "name": "Label1",
+    "type": "matter",
+    "raw": "0c",
+    "qb64": "VAAM",
+    "qb2": "54000c"
+  },
+  {
+    "code": "W",
+    "name": "Label2",
+    "type": "matter",
+    "raw": "2ad3",
+    "qb64": "WCrT",
+    "qb2": "582ad3"
+  },
+  {
+    "code": "S",
+    "name": "Large",
+    "type": "matter",
+    "raw": "b07f77a88c223191738d7e",
+    "qb64": "SLB_d6iMIjGRc41-",
+    "qb2": "48b07f77a88c223191738d7e"
+  },
+  {
+    "code": "0H",
+    "name": "Long",
+    "type": "matter",
+    "raw": "527bfbcc",
+    "qb64": "0HBSe_vM",
+    "qb2": "d070527bfbcc"
+  },
+  {
+    "code": "1AAL",
+    "name": "No",
+    "type": "matter",
+    "raw": "",
+    "qb64": "1AAL",
+    "qb2": "d4000b"
+  },
+  {
+    "code": "1AAK",
+    "name": "Null",
+    "type": "matter",
+    "raw": "",
+    "qb64": "1AAK",
+    "qb2": "d4000a"
+  },
+  {
+    "code": "I",
+    "name": "SHA2_256",
+    "type": "matter",
+    "raw": "1cbdbbb061da6351453b4aa94d895337bba39494b4d1ea011ec1c97c27fd242a",
+    "qb64": "IBy9u7Bh2mNRRTtKqU2JUze7o5SUtNHqAR7ByXwn_SQq",
+    "qb2": "201cbdbbb061da6351453b4aa94d895337bba39494b4d1ea011ec1c97c27fd242a"
+  },
+  {
+    "code": "0G",
+    "name": "SHA2_512",
+    "type": "matter",
+    "raw": "88d1769d73f205958664168914413da0e2e469fe5952bf5e0ad0a5ec344e28639d56601cc67b6d62d6ece4408859a72e55edf6a3a7afd409d522950ad4ec7867",
+    "qb64": "0GCI0Xadc_IFlYZkFokUQT2g4uRp_llSv14K0KXsNE4oY51WYBzGe21i1uzkQIhZpy5V7fajp6_UCdUilQrU7Hhn",
+    "qb2": "d06088d1769d73f205958664168914413da0e2e469fe5952bf5e0ad0a5ec344e28639d56601cc67b6d62d6ece4408859a72e55edf6a3a7afd409d522950ad4ec7867"
+  },
+  {
+    "code": "H",
+    "name": "SHA3_256",
+    "type": "matter",
+    "raw": "92f3418f8d81fa21ddb6c89b8b17fe868fdae8e7fea7a6416f89d980fa286f42",
+    "qb64": "HJLzQY-Ngfoh3bbIm4sX_oaP2ujn_qemQW-J2YD6KG9C",
+    "qb2": "1c92f3418f8d81fa21ddb6c89b8b17fe868fdae8e7fea7a6416f89d980fa286f42"
+  },
+  {
+    "code": "0F",
+    "name": "SHA3_512",
+    "type": "matter",
+    "raw": "18eec98bb09b7d7abeed2469126813154c352c412baf6b12fcfe6af3e8fe51d9a66af49d32e0a7c60a71125c976010885c85a2dccc751d0279ed359088e2b431",
+    "qb64": "0FAY7smLsJt9er7tJGkSaBMVTDUsQSuvaxL8_mrz6P5R2aZq9J0y4KfGCnESXJdgEIhchaLczHUdAnntNZCI4rQx",
+    "qb2": "d05018eec98bb09b7d7abeed2469126813154c352c412baf6b12fcfe6af3e8fe51d9a66af49d32e0a7c60a71125c976010885c85a2dccc751d0279ed359088e2b431"
+  },
+  {
+    "code": "0A",
+    "name": "Salt_128",
+    "type": "matter",
+    "raw": "52a8521e17ff266042a6aa25f2bc12de",
+    "qb64": "0ABSqFIeF_8mYEKmqiXyvBLe",
+    "qb2": "d00052a8521e17ff266042a6aa25f2bc12de"
+  },
+  {
+    "code": "M",
+    "name": "Short",
+    "type": "matter",
+    "raw": "a3dc",
+    "qb64": "MKPc",
+    "qb2": "30a3dc"
+  },
+  {
+    "code": "7AAA",
+    "name": "StrB64_Big_L0",
+    "type": "matter",
+    "raw": "1484ea1b126350b4e36f16750a2a30fb85a04d5965",
+    "qb64": "7AAAAAAHFITqGxJjULTjbxZ1Ciow-4WgTVll",
+    "qb2": "ec00000000071484ea1b126350b4e36f16750a2a30fb85a04d5965"
+  },
+  {
+    "code": "8AAA",
+    "name": "StrB64_Big_L1",
+    "type": "matter",
+    "raw": "51314e10d5",
+    "qb64": "8AAAAAACAFExThDV",
+    "qb2": "f000000000020051314e10d5"
+  },
+  {
+    "code": "9AAA",
+    "name": "StrB64_Big_L2",
+    "type": "matter",
+    "raw": "54cc4f285401edc87e2c78a430f805ba7dac8e4e1f4912974f",
+    "qb64": "9AAAAAAJAABUzE8oVAHtyH4seKQw-AW6fayOTh9JEpdP",
+    "qb2": "f40000000009000054cc4f285401edc87e2c78a430f805ba7dac8e4e1f4912974f"
+  },
+  {
+    "code": "4A",
+    "name": "StrB64_L0",
+    "type": "matter",
+    "raw": "c49be8",
+    "qb64": "4AABxJvo",
+    "qb2": "e00001c49be8"
+  },
+  {
+    "code": "5A",
+    "name": "StrB64_L1",
+    "type": "matter",
+    "raw": "3657",
+    "qb64": "5AABADZX",
+    "qb2": "e40001003657"
+  },
+  {
+    "code": "6A",
+    "name": "StrB64_L2",
+    "type": "matter",
+    "raw": "21020476",
+    "qb64": "6AACAAAhAgR2",
+    "qb2": "e80002000021020476"
+  },
+  {
+    "code": "R",
+    "name": "Tall",
+    "type": "matter",
+    "raw": "08b3d8ef87",
+    "qb64": "RAiz2O-H",
+    "qb2": "4408b3d8ef87"
+  },
+  {
+    "code": "U",
+    "name": "Vast",
+    "type": "matter",
+    "raw": "25b9f62f127f099bb9a6e035b777b79ac2",
+    "qb64": "UCW59i8SfwmbuabgNbd3t5rC",
+    "qb2": "5025b9f62f127f099bb9a6e035b777b79ac2"
+  },
+  {
+    "code": "C",
+    "name": "X25519",
+    "type": "matter",
+    "raw": "d4f73eb850a76a1d280ff057d8fdb8f610cfff64684accd7a92c964f05801017",
+    "qb64": "CNT3PrhQp2odKA_wV9j9uPYQz_9kaErM16kslk8FgBAX",
+    "qb2": "08d4f73eb850a76a1d280ff057d8fdb8f610cfff64684accd7a92c964f05801017"
+  },
+  {
+    "code": "7AAC",
+    "name": "X25519_Cipher_Big_L0",
+    "type": "matter",
+    "raw": "e9da5106c2057469fc41aa1fe864945703805e10e0",
+    "qb64": "7AACAAAH6dpRBsIFdGn8Qaof6GSUVwOAXhDg",
+    "qb2": "ec0002000007e9da5106c2057469fc41aa1fe864945703805e10e0"
+  },
+  {
+    "code": "8AAC",
+    "name": "X25519_Cipher_Big_L1",
+    "type": "matter",
+    "raw": "0a122f135318d02e3ac9ae7cc115eed4335c2d7447ede0",
+    "qb64": "8AACAAAIAAoSLxNTGNAuOsmufMEV7tQzXC10R-3g",
+    "qb2": "f00002000008000a122f135318d02e3ac9ae7cc115eed4335c2d7447ede0"
+  },
+  {
+    "code": "9AAC",
+    "name": "X25519_Cipher_Big_L2",
+    "type": "matter",
+    "raw": "8b2ad158ca6180d597098e12ffbc84aba89106960d6855d2f26dd4e0",
+    "qb64": "9AACAAAKAACLKtFYymGA1ZcJjhL_vISrqJEGlg1oVdLybdTg",
+    "qb2": "f4000200000a00008b2ad158ca6180d597098e12ffbc84aba89106960d6855d2f26dd4e0"
+  },
+  {
+    "code": "4C",
+    "name": "X25519_Cipher_L0",
+    "type": "matter",
+    "raw": "e7e2a14ff0c84ab6abe265427f4f3372538e31bce6",
+    "qb64": "4CAH5-KhT_DISrar4mVCf08zclOOMbzm",
+    "qb2": "e02007e7e2a14ff0c84ab6abe265427f4f3372538e31bce6"
+  },
+  {
+    "code": "5C",
+    "name": "X25519_Cipher_L1",
+    "type": "matter",
+    "raw": "1c727a044601268bee275165688865a65ed107da",
+    "qb64": "5CAHABxyegRGASaL7idRZWiIZaZe0Qfa",
+    "qb2": "e42007001c727a044601268bee275165688865a65ed107da"
+  },
+  {
+    "code": "6C",
+    "name": "X25519_Cipher_L2",
+    "type": "matter",
+    "raw": "dfbf948d",
+    "qb64": "6CACAADfv5SN",
+    "qb2": "e820020000dfbf948d"
+  },
+  {
+    "code": "7AAE",
+    "name": "X25519_Cipher_QB2_Big_L0",
+    "type": "matter",
+    "raw": "cca24e65f2d14fd9b1517b976a212f",
+    "qb64": "7AAEAAAFzKJOZfLRT9mxUXuXaiEv",
+    "qb2": "ec0004000005cca24e65f2d14fd9b1517b976a212f"
+  },
+  {
+    "code": "8AAE",
+    "name": "X25519_Cipher_QB2_Big_L1",
+    "type": "matter",
+    "raw": "0e15bc2afc3bbc75fb32a9469166c6317a",
+    "qb64": "8AAEAAAGAA4VvCr8O7x1-zKpRpFmxjF6",
+    "qb2": "f00004000006000e15bc2afc3bbc75fb32a9469166c6317a"
+  },
+  {
+    "code": "9AAE",
+    "name": "X25519_Cipher_QB2_Big_L2",
+    "type": "matter",
+    "raw": "ed99b1a37f0deb78a703ef55b65efde4d268c919b8ed1759a209bb47",
+    "qb64": "9AAEAAAKAADtmbGjfw3reKcD71W2Xv3k0mjJGbjtF1miCbtH",
+    "qb2": "f4000400000a0000ed99b1a37f0deb78a703ef55b65efde4d268c919b8ed1759a209bb47"
+  },
+  {
+    "code": "4E",
+    "name": "X25519_Cipher_QB2_L0",
+    "type": "matter",
+    "raw": "3b78fc",
+    "qb64": "4EABO3j8",
+    "qb2": "e040013b78fc"
+  },
+  {
+    "code": "5E",
+    "name": "X25519_Cipher_QB2_L1",
+    "type": "matter",
+    "raw": "a2f684b0f709554bd915cf0d84e9435af184a6531ae81d",
+    "qb64": "5EAIAKL2hLD3CVVL2RXPDYTpQ1rxhKZTGugd",
+    "qb2": "e4400800a2f684b0f709554bd915cf0d84e9435af184a6531ae81d"
+  },
+  {
+    "code": "6E",
+    "name": "X25519_Cipher_QB2_L2",
+    "type": "matter",
+    "raw": "be950c55a45f4c0e99c2daf0d490c9f8c952145c6520bda138",
+    "qb64": "6EAJAAC-lQxVpF9MDpnC2vDUkMn4yVIUXGUgvaE4",
+    "qb2": "e840090000be950c55a45f4c0e99c2daf0d490c9f8c952145c6520bda138"
+  },
+  {
+    "code": "7AAD",
+    "name": "X25519_Cipher_QB64_Big_L0",
+    "type": "matter",
+    "raw": "fa4519bd68ab616f90de0965",
+    "qb64": "7AADAAAE-kUZvWirYW-Q3gll",
+    "qb2": "ec0003000004fa4519bd68ab616f90de0965"
+  },
+  {
+    "code": "8AAD",
+    "name": "X25519_Cipher_QB64_Big_L1",
+    "type": "matter",
+    "raw": "801976a0c5",
+    "qb64": "8AADAAACAIAZdqDF",
+    "qb2": "f0000300000200801976a0c5"
+  },
+  {
+    "code": "9AAD",
+    "name": "X25519_Cipher_QB64_Big_L2",
+    "type": "matter",
+    "raw": "da926b470bc215",
+    "qb64": "9AADAAADAADakmtHC8IV",
+    "qb2": "f400030000030000da926b470bc215"
+  },
+  {
+    "code": "4D",
+    "name": "X25519_Cipher_QB64_L0",
+    "type": "matter",
+    "raw": "8779ae25126258b39d1a35a65a5fb6",
+    "qb64": "4DAFh3muJRJiWLOdGjWmWl-2",
+    "qb2": "e030058779ae25126258b39d1a35a65a5fb6"
+  },
+  {
+    "code": "5D",
+    "name": "X25519_Cipher_QB64_L1",
+    "type": "matter",
+    "raw": "e0b5a193ec",
+    "qb64": "5DACAOC1oZPs",
+    "qb2": "e4300200e0b5a193ec"
+  },
+  {
+    "code": "6D",
+    "name": "X25519_Cipher_QB64_L2",
+    "type": "matter",
+    "raw": "ac2c8be81148ad48a7e9209f5e",
+    "qb64": "6DAFAACsLIvoEUitSKfpIJ9e",
+    "qb2": "e830050000ac2c8be81148ad48a7e9209f5e"
+  },
+  {
+    "code": "1AAH",
+    "name": "X25519_Cipher_Salt",
+    "type": "matter",
+    "raw": "a9cba125f88e48388fca117d2dae73b307eabd5b912f57600c3a079d19bb08d72034b478435027b084c6c710eb9e7df97a12e4956acd69498a189ad4d85d93962ed5066e629bb721",
+    "qb64": "1AAHqcuhJfiOSDiPyhF9La5zswfqvVuRL1dgDDoHnRm7CNcgNLR4Q1AnsITGxxDrnn35ehLklWrNaUmKGJrU2F2Tli7VBm5im7ch",
+    "qb2": "d40007a9cba125f88e48388fca117d2dae73b307eabd5b912f57600c3a079d19bb08d72034b478435027b084c6c710eb9e7df97a12e4956acd69498a189ad4d85d93962ed5066e629bb721"
+  },
+  {
+    "code": "P",
+    "name": "X25519_Cipher_Seed",
+    "type": "matter",
+    "raw": "a9d8d04d8b193aa83cdd499595e3743f9111aa3971337efcfe44863758c8fd6c22ee531da4aa8907cc23775597f6c251f03fcbd6b57a1230598f2f30f5f59ba9261e5305f189024ba4d5da89ade4867e1cb3b1ed496631bb28d59455",
+    "qb64": "PKnY0E2LGTqoPN1JlZXjdD-REao5cTN-_P5EhjdYyP1sIu5THaSqiQfMI3dVl_bCUfA_y9a1ehIwWY8vMPX1m6kmHlMF8YkCS6TV2omt5IZ-HLOx7UlmMbso1ZRV",
+    "qb2": "3ca9d8d04d8b193aa83cdd499595e3743f9111aa3971337efcfe44863758c8fd6c22ee531da4aa8907cc23775597f6c251f03fcbd6b57a1230598f2f30f5f59ba9261e5305f189024ba4d5da89ade4867e1cb3b1ed496631bb28d59455"
+  },
+  {
+    "code": "O",
+    "name": "X25519_Private",
+    "type": "matter",
+    "raw": "7b5135aa0f81a30cec57c76a1b6381e3486768b7dfc357d82cee6933793590f6",
+    "qb64": "OHtRNaoPgaMM7FfHahtjgeNIZ2i338NX2CzuaTN5NZD2",
+    "qb2": "387b5135aa0f81a30cec57c76a1b6381e3486768b7dfc357d82cee6933793590f6"
+  },
+  {
+    "code": "L",
+    "name": "X448",
+    "type": "matter",
+    "raw": "a06f83fdbabe23aaaadd3637f8ed1fea4f0e9d673ca2e970c36710c7dd6e20b38330c264ffe2f7479ea67ea5210e2d0c86a23359f697d145",
+    "qb64": "LKBvg_26viOqqt02N_jtH-pPDp1nPKLpcMNnEMfdbiCzgzDCZP_i90eepn6lIQ4tDIaiM1n2l9FF",
+    "qb2": "2ca06f83fdbabe23aaaadd3637f8ed1fea4f0e9d673ca2e970c36710c7dd6e20b38330c264ffe2f7479ea67ea5210e2d0c86a23359f697d145"
+  },
+  {
+    "code": "1AAM",
+    "name": "Yes",
+    "type": "matter",
+    "raw": "",
+    "qb64": "1AAM",
+    "qb2": "d4000c"
+  },
+  {
+    "code": "2D",
+    "name": "ECDSA_256k1_Big_Crt_Sig",
+    "type": "indexer",
+    "index": 8,
+    "raw": "4544e5799f723650d4d509871dbbb103839c1c423666b18b6c3e7d69c6cbb4e2b592b81828dc2ac365f6b8b08d3b43069412c520ad1cfed4e237c9239d374f77",
+    "qb64": "2DAIAABFROV5n3I2UNTVCYcdu7EDg5wcQjZmsYtsPn1pxsu04rWSuBgo3CrDZfa4sI07QwaUEsUgrRz-1OI3ySOdN093",
+    "qb2": "d8300800004544e5799f723650d4d509871dbbb103839c1c423666b18b6c3e7d69c6cbb4e2b592b81828dc2ac365f6b8b08d3b43069412c520ad1cfed4e237c9239d374f77"
+  },
+  {
+    "code": "2C",
+    "name": "ECDSA_256k1_Big_Sig",
+    "type": "indexer",
+    "index": 7,
+    "raw": "6e6025938bfcffd44444406f240d294d12e696e1425f613c97d61be84d3c9ef1afb27b2b987974ad4896e8624e606964715550055e3e7ea85a81385d5f4bf075",
+    "qb64": "2CAHAHBuYCWTi_z_1EREQG8kDSlNEuaW4UJfYTyX1hvoTTye8a-yeyuYeXStSJboYk5gaWRxVVAFXj5-qFqBOF1fS_B1",
+    "qb2": "d8200700706e6025938bfcffd44444406f240d294d12e696e1425f613c97d61be84d3c9ef1afb27b2b987974ad4896e8624e606964715550055e3e7ea85a81385d5f4bf075"
+  },
+  {
+    "code": "D",
+    "name": "ECDSA_256k1_Crt_Sig",
+    "type": "indexer",
+    "index": 4,
+    "raw": "f082fb0b291607dca8c7b5571280bbab64f297bacf7e216717023688490f660b64d6862d459aef290087ffc870c4ffb1e52b90630e29a3118b1c52ca1776ede5",
+    "qb64": "DEDwgvsLKRYH3KjHtVcSgLurZPKXus9-IWcXAjaISQ9mC2TWhi1Fmu8pAIf_yHDE_7HlK5BjDimjEYscUsoXdu3l",
+    "qb2": "0c40f082fb0b291607dca8c7b5571280bbab64f297bacf7e216717023688490f660b64d6862d459aef290087ffc870c4ffb1e52b90630e29a3118b1c52ca1776ede5"
+  },
+  {
+    "code": "C",
+    "name": "ECDSA_256k1_Sig",
+    "type": "indexer",
+    "index": 3,
+    "raw": "10d0d1c429be45e65cc8032671d10d500f9eb9be147e41c033001956e36c815c0a5ef1ec1b3139f3aea84deb77ba1a9f52f840f93d0df437a5780adcd351286c",
+    "qb64": "CDAQ0NHEKb5F5lzIAyZx0Q1QD565vhR-QcAzABlW42yBXApe8ewbMTnzrqhN63e6Gp9S-ED5PQ30N6V4CtzTUShs",
+    "qb2": "083010d0d1c429be45e65cc8032671d10d500f9eb9be147e41c033001956e36c815c0a5ef1ec1b3139f3aea84deb77ba1a9f52f840f93d0df437a5780adcd351286c"
+  },
+  {
+    "code": "2F",
+    "name": "ECDSA_256r1_Big_Crt_Sig",
+    "type": "indexer",
+    "index": 5,
+    "raw": "bc685d933fec5c25c99b3fef1e0fbde6241974275006bfb39d40d96fd7b91b0cfd5d0a955662e3314d3245da3a7a02739224151756861ee2589d7265f2c7ca56",
+    "qb64": "2FAFAAC8aF2TP-xcJcmbP-8eD73mJBl0J1AGv7OdQNlv17kbDP1dCpVWYuMxTTJF2jp6AnOSJBUXVoYe4lidcmXyx8pW",
+    "qb2": "d850050000bc685d933fec5c25c99b3fef1e0fbde6241974275006bfb39d40d96fd7b91b0cfd5d0a955662e3314d3245da3a7a02739224151756861ee2589d7265f2c7ca56"
+  },
+  {
+    "code": "2E",
+    "name": "ECDSA_256r1_Big_Sig",
+    "type": "indexer",
+    "index": 5,
+    "raw": "f98d0836c4ea006aa2cb8403f6cf64df0d515bff53d0f058a626d0e8aa3c57d00efaded11cea7fc92e60db078cf3f7fd6c414ecb3fa42c38749e651ad2a404f1",
+    "qb64": "2EAFAFD5jQg2xOoAaqLLhAP2z2TfDVFb_1PQ8FimJtDoqjxX0A763tEc6n_JLmDbB4zz9_1sQU7LP6QsOHSeZRrSpATx",
+    "qb2": "d840050050f98d0836c4ea006aa2cb8403f6cf64df0d515bff53d0f058a626d0e8aa3c57d00efaded11cea7fc92e60db078cf3f7fd6c414ecb3fa42c38749e651ad2a404f1"
+  },
+  {
+    "code": "F",
+    "name": "ECDSA_256r1_Crt_Sig",
+    "type": "indexer",
+    "index": 4,
+    "raw": "35dd2211204b01353f8968bdedda723dd3c065e229eba804260a48999c3fc8894d00dcb941c8b160c3a1f6ef3a686fb44c53dd23aff76ef20f8e204c5f6284f4",
+    "qb64": "FEA13SIRIEsBNT-JaL3t2nI908Bl4inrqAQmCkiZnD_IiU0A3LlByLFgw6H27zpob7RMU90jr_du8g-OIExfYoT0",
+    "qb2": "144035dd2211204b01353f8968bdedda723dd3c065e229eba804260a48999c3fc8894d00dcb941c8b160c3a1f6ef3a686fb44c53dd23aff76ef20f8e204c5f6284f4"
+  },
+  {
+    "code": "E",
+    "name": "ECDSA_256r1_Sig",
+    "type": "indexer",
+    "index": 8,
+    "raw": "874a13ad41bec4950ad4bb96b106a29c509373602761132db8d295580ed041042d8ddde95b95be18cb2c63975ef76d73310ac79928917ca922801d12bbc317dd",
+    "qb64": "EICHShOtQb7ElQrUu5axBqKcUJNzYCdhEy240pVYDtBBBC2N3elblb4Yyyxjl173bXMxCseZKJF8qSKAHRK7wxfd",
+    "qb2": "1080874a13ad41bec4950ad4bb96b106a29c509373602761132db8d295580ed041042d8ddde95b95be18cb2c63975ef76d73310ac79928917ca922801d12bbc317dd"
+  },
+  {
+    "code": "2B",
+    "name": "Ed25519_Big_Crt_Sig",
+    "type": "indexer",
+    "index": 6,
+    "raw": "eaedb1699e9998541f61740ff2e5cd32d6a5debae2a98260d2c629e41e3062b63e071de5dafb15edfcf956eceee70f178105b26b1b0473070a8df1481b940f3d",
+    "qb64": "2BAGAADq7bFpnpmYVB9hdA_y5c0y1qXeuuKpgmDSxinkHjBitj4HHeXa-xXt_PlW7O7nDxeBBbJrGwRzBwqN8UgblA89",
+    "qb2": "d810060000eaedb1699e9998541f61740ff2e5cd32d6a5debae2a98260d2c629e41e3062b63e071de5dafb15edfcf956eceee70f178105b26b1b0473070a8df1481b940f3d"
+  },
+  {
+    "code": "2A",
+    "name": "Ed25519_Big_Sig",
+    "type": "indexer",
+    "index": 6,
+    "raw": "952e7613836f3a1607bafc6f29748caeab309491a65acaf94f6b10e25c6617e3a74d3906d4dd39557bd5a0296de260422b7fb08bf9a3119e62795780a8dac2f1",
+    "qb64": "2AAGAGCVLnYTg286Fge6_G8pdIyuqzCUkaZayvlPaxDiXGYX46dNOQbU3TlVe9WgKW3iYEIrf7CL-aMRnmJ5V4Co2sLx",
+    "qb2": "d800060060952e7613836f3a1607bafc6f29748caeab309491a65acaf94f6b10e25c6617e3a74d3906d4dd39557bd5a0296de260422b7fb08bf9a3119e62795780a8dac2f1"
+  },
+  {
+    "code": "B",
+    "name": "Ed25519_Crt_Sig",
+    "type": "indexer",
+    "index": 4,
+    "raw": "14878f7588a5a1d2a166ff24ebd6d5dbc05af2773576ca88413c4ae99310e8a2771c872c688fdaa52abd818e81be65cc4fb446ae5bc235783fa5f099af0bf9e5",
+    "qb64": "BEAUh491iKWh0qFm_yTr1tXbwFrydzV2yohBPErpkxDooncchyxoj9qlKr2BjoG-ZcxPtEauW8I1eD-l8JmvC_nl",
+    "qb2": "044014878f7588a5a1d2a166ff24ebd6d5dbc05af2773576ca88413c4ae99310e8a2771c872c688fdaa52abd818e81be65cc4fb446ae5bc235783fa5f099af0bf9e5"
+  },
+  {
+    "code": "A",
+    "name": "Ed25519_Sig",
+    "type": "indexer",
+    "index": 7,
+    "raw": "f6785b195d6a4c47e4d2479cfec8ec1dda44340d27793b748fca255c2662710b7c81d23048ef75718f2053177d571e5adcaf79985b4350a3b5bd9e304fcefeaf",
+    "qb64": "AHD2eFsZXWpMR-TSR5z-yOwd2kQ0DSd5O3SPyiVcJmJxC3yB0jBI73VxjyBTF31XHlrcr3mYW0NQo7W9njBPzv6v",
+    "qb2": "0070f6785b195d6a4c47e4d2479cfec8ec1dda44340d27793b748fca255c2662710b7c81d23048ef75718f2053177d571e5adcaf79985b4350a3b5bd9e304fcefeaf"
+  },
+  {
+    "code": "3B",
+    "name": "Ed448_Big_Crt_Sig",
+    "type": "indexer",
+    "index": 9,
+    "raw": "2ef68eb489a95d317c622ffb6445115ad09e6fdedebaee88da8eb2866501759a9440ab4fe129ce961448c5cc7f4b0554739e50bcfaa53c08eebfab43c59b7c9699d9afaade18a8dcd6d630a4bd75793acc5549d547b3ffc95320923978ff74803ee5a30f4abfcedf262c085bf48cbcec8e6c",
+    "qb64": "3BAAJAAALvaOtImpXTF8Yi_7ZEURWtCeb97euu6I2o6yhmUBdZqUQKtP4SnOlhRIxcx_SwVUc55QvPqlPAjuv6tDxZt8lpnZr6reGKjc1tYwpL11eTrMVUnVR7P_yVMgkjl4_3SAPuWjD0q_zt8mLAhb9Iy87I5s",
+    "qb2": "dc10002400002ef68eb489a95d317c622ffb6445115ad09e6fdedebaee88da8eb2866501759a9440ab4fe129ce961448c5cc7f4b0554739e50bcfaa53c08eebfab43c59b7c9699d9afaade18a8dcd6d630a4bd75793acc5549d547b3ffc95320923978ff74803ee5a30f4abfcedf262c085bf48cbcec8e6c"
+  },
+  {
+    "code": "3A",
+    "name": "Ed448_Big_Sig",
+    "type": "indexer",
+    "index": 8,
+    "raw": "dd8a60ebd5ac298d7fcea5b115f4167eb6a72148978276acb161a420aac76dc60f22a99d51ed909534114fc35474b7bc2c1876c1cf6cfc30a102b8da3aaeff98df148ddf8ede32bf4ccc96df3e56c78d2c5945117f72625c5558b7d56c0517ff3a1a9e9352618624286bccab00dd080417ff",
+    "qb64": "3AAAIAAI3Ypg69WsKY1_zqWxFfQWfranIUiXgnassWGkIKrHbcYPIqmdUe2QlTQRT8NUdLe8LBh2wc9s_DChArjaOq7_mN8Ujd-O3jK_TMyW3z5Wx40sWUURf3JiXFVYt9VsBRf_Ohqek1JhhiQoa8yrAN0IBBf_",
+    "qb2": "dc0000200008dd8a60ebd5ac298d7fcea5b115f4167eb6a72148978276acb161a420aac76dc60f22a99d51ed909534114fc35474b7bc2c1876c1cf6cfc30a102b8da3aaeff98df148ddf8ede32bf4ccc96df3e56c78d2c5945117f72625c5558b7d56c0517ff3a1a9e9352618624286bccab00dd080417ff"
+  },
+  {
+    "code": "0B",
+    "name": "Ed448_Crt_Sig",
+    "type": "indexer",
+    "index": 7,
+    "raw": "f6c5b77e0c5e0d2d59de9cf7342a8d624728d93c8a935ed300fb3a43921ab0a4877978fd343f62b67b84187fb01af1e7f0d61dedea68ddc1a89bf2a9c9ef787175dd505ff87c737f037ac1404f60474d77146a035e8ab17380b3fca4514a0a0ef6009444609c01c8cd72657a6e5e8b79a428",
+    "qb64": "0BHA9sW3fgxeDS1Z3pz3NCqNYkco2TyKk17TAPs6Q5IasKSHeXj9ND9itnuEGH-wGvHn8NYd7epo3cGom_Kpye94cXXdUF_4fHN_A3rBQE9gR013FGoDXoqxc4Cz_KRRSgoO9gCURGCcAcjNcmV6bl6LeaQo",
+    "qb2": "d011c0f6c5b77e0c5e0d2d59de9cf7342a8d624728d93c8a935ed300fb3a43921ab0a4877978fd343f62b67b84187fb01af1e7f0d61dedea68ddc1a89bf2a9c9ef787175dd505ff87c737f037ac1404f60474d77146a035e8ab17380b3fca4514a0a0ef6009444609c01c8cd72657a6e5e8b79a428"
+  },
+  {
+    "code": "0A",
+    "name": "Ed448_Sig",
+    "type": "indexer",
+    "index": 7,
+    "raw": "f77eb43025a3d11a059558cac67d9bee861a0cc7d4727b02a942c88cec04556e021a53c6ffdb4eaeba1d5dde92d9a9d3d82d3653156d68f6d56ed1ed561da314bd879f80f95a6f3e52347b5c503aa5a79f1f125a4e0261d62c62fa7883cf7a79af02ab51c0a5684e5753f42b2236c8a9a0ac",
+    "qb64": "0AHH9360MCWj0RoFlVjKxn2b7oYaDMfUcnsCqULIjOwEVW4CGlPG_9tOrrodXd6S2anT2C02UxVtaPbVbtHtVh2jFL2Hn4D5Wm8-UjR7XFA6paefHxJaTgJh1ixi-niDz3p5rwKrUcClaE5XU_QrIjbIqaCs",
+    "qb2": "d001c7f77eb43025a3d11a059558cac67d9bee861a0cc7d4727b02a942c88cec04556e021a53c6ffdb4eaeba1d5dde92d9a9d3d82d3653156d68f6d56ed1ed561da314bd879f80f95a6f3e52347b5c503aa5a79f1f125a4e0261d62c62fa7883cf7a79af02ab51c0a5684e5753f42b2236c8a9a0ac"
+  },
+  {
+    "code": "-V",
+    "name": "AttachmentGroup",
+    "type": "counter_10",
+    "count": 3,
+    "qb64": "-VAD",
+    "qb2": "f95003"
+  },
+  {
+    "code": "-0V",
+    "name": "BigAttachmentGroup",
+    "type": "counter_10",
+    "count": 4,
+    "qb64": "-0VAAAAE",
+    "qb2": "fb4540000004"
+  },
+  {
+    "code": "-0L",
+    "name": "BigPathedMaterialGroup",
+    "type": "counter_10",
+    "count": 1,
+    "qb64": "-0LAAAAB",
+    "qb2": "fb42c0000001"
+  },
+  {
+    "code": "-A",
+    "name": "ControllerIdxSigs",
+    "type": "counter_10",
+    "count": 1,
+    "qb64": "-AAB",
+    "qb2": "f80001"
+  },
+  {
+    "code": "-Z",
+    "name": "ESSRPayloadGroup",
+    "type": "counter_10",
+    "count": 9,
+    "qb64": "-ZAJ",
+    "qb2": "f99009"
+  },
+  {
+    "code": "-E",
+    "name": "FirstSeenReplayCouples",
+    "type": "counter_10",
+    "count": 9,
+    "qb64": "-EAJ",
+    "qb2": "f84009"
+  },
+  {
+    "code": "--AAA",
+    "name": "KERIACDCGenusVersion",
+    "type": "counter_10",
+    "count": 5,
+    "qb64": "--AAAAAF",
+    "qb2": "fbe000000005"
+  },
+  {
+    "code": "-C",
+    "name": "NonTransReceiptCouples",
+    "type": "counter_10",
+    "count": 1,
+    "qb64": "-CAB",
+    "qb2": "f82001"
+  },
+  {
+    "code": "-L",
+    "name": "PathedMaterialGroup",
+    "type": "counter_10",
+    "count": 0,
+    "qb64": "-LAA",
+    "qb2": "f8b000"
+  },
+  {
+    "code": "-K",
+    "name": "RootSadPathSigGroups",
+    "type": "counter_10",
+    "count": 7,
+    "qb64": "-KAH",
+    "qb2": "f8a007"
+  },
+  {
+    "code": "-J",
+    "name": "SadPathSigGroups",
+    "type": "counter_10",
+    "count": 7,
+    "qb64": "-JAH",
+    "qb2": "f89007"
+  },
+  {
+    "code": "-G",
+    "name": "SealSourceCouples",
+    "type": "counter_10",
+    "count": 1,
+    "qb64": "-GAB",
+    "qb2": "f86001"
+  },
+  {
+    "code": "-I",
+    "name": "SealSourceTriples",
+    "type": "counter_10",
+    "count": 0,
+    "qb64": "-IAA",
+    "qb2": "f88000"
+  },
+  {
+    "code": "-F",
+    "name": "TransIdxSigGroups",
+    "type": "counter_10",
+    "count": 9,
+    "qb64": "-FAJ",
+    "qb2": "f85009"
+  },
+  {
+    "code": "-H",
+    "name": "TransLastIdxSigGroups",
+    "type": "counter_10",
+    "count": 0,
+    "qb64": "-HAA",
+    "qb2": "f87000"
+  },
+  {
+    "code": "-D",
+    "name": "TransReceiptQuadruples",
+    "type": "counter_10",
+    "count": 7,
+    "qb64": "-DAH",
+    "qb2": "f83007"
+  },
+  {
+    "code": "-B",
+    "name": "WitnessIdxSigs",
+    "type": "counter_10",
+    "count": 6,
+    "qb64": "-BAG",
+    "qb2": "f81006"
+  },
+  {
+    "code": "-C",
+    "name": "AttachmentGroup",
+    "type": "counter_20",
+    "count": 5,
+    "qb64": "-CAF",
+    "qb2": "f82005"
+  },
+  {
+    "code": "-X",
+    "name": "BackerRegistrarSealCouples",
+    "type": "counter_20",
+    "count": 3,
+    "qb64": "-XAD",
+    "qb2": "f97003"
+  },
+  {
+    "code": "-0C",
+    "name": "BigAttachmentGroup",
+    "type": "counter_20",
+    "count": 6,
+    "qb64": "-0CAAAAG",
+    "qb2": "fb4080000006"
+  },
+  {
+    "code": "-0X",
+    "name": "BigBackerRegistrarSealCouples",
+    "type": "counter_20",
+    "count": 4,
+    "qb64": "-0XAAAAE",
+    "qb2": "fb45c0000004"
+  },
+  {
+    "code": "-0J",
+    "name": "BigControllerIdxSigs",
+    "type": "counter_20",
+    "count": 5,
+    "qb64": "-0JAAAAF",
+    "qb2": "fb4240000005"
+  },
+  {
+    "code": "-0D",
+    "name": "BigDatagramSegmentGroup",
+    "type": "counter_20",
+    "count": 4,
+    "qb64": "-0DAAAAE",
+    "qb2": "fb40c0000004"
+  },
+  {
+    "code": "-0V",
+    "name": "BigDigestSealSingles",
+    "type": "counter_20",
+    "count": 3,
+    "qb64": "-0VAAAAD",
+    "qb2": "fb4540000003"
+  },
+  {
+    "code": "-0Z",
+    "name": "BigESSRPayloadGroup",
+    "type": "counter_20",
+    "count": 1,
+    "qb64": "-0ZAAAAB",
+    "qb2": "fb4640000001"
+  },
+  {
+    "code": "-0E",
+    "name": "BigESSRWrapperGroup",
+    "type": "counter_20",
+    "count": 8,
+    "qb64": "-0EAAAAI",
+    "qb2": "fb4100000008"
+  },
+  {
+    "code": "-0N",
+    "name": "BigFirstSeenReplayCouples",
+    "type": "counter_20",
+    "count": 8,
+    "qb64": "-0NAAAAI",
+    "qb2": "fb4340000008"
+  },
+  {
+    "code": "-0F",
+    "name": "BigFixedMessageBodyGroup",
+    "type": "counter_20",
+    "count": 4,
+    "qb64": "-0FAAAAE",
+    "qb2": "fb4140000004"
+  },
+  {
+    "code": "-0A",
+    "name": "BigGenericGroup",
+    "type": "counter_20",
+    "count": 10,
+    "qb64": "-0AAAAAK",
+    "qb2": "fb400000000a"
+  },
+  {
+    "code": "-0I",
+    "name": "BigGenericListGroup",
+    "type": "counter_20",
+    "count": 10,
+    "qb64": "-0IAAAAK",
+    "qb2": "fb420000000a"
+  },
+  {
+    "code": "-0H",
+    "name": "BigGenericMapGroup",
+    "type": "counter_20",
+    "count": 8,
+    "qb64": "-0HAAAAI",
+    "qb2": "fb41c0000008"
+  },
+  {
+    "code": "-0G",
+    "name": "BigMapMessageBodyGroup",
+    "type": "counter_20",
+    "count": 10,
+    "qb64": "-0GAAAAK",
+    "qb2": "fb418000000a"
+  },
+  {
+    "code": "-0W",
+    "name": "BigMerkleRootSealSingles",
+    "type": "counter_20",
+    "count": 8,
+    "qb64": "-0WAAAAI",
+    "qb2": "fb4580000008"
+  },
+  {
+    "code": "-0B",
+    "name": "BigMessageGroup",
+    "type": "counter_20",
+    "count": 8,
+    "qb64": "-0BAAAAI",
+    "qb2": "fb4040000008"
+  },
+  {
+    "code": "-0L",
+    "name": "BigNonTransReceiptCouples",
+    "type": "counter_20",
+    "count": 6,
+    "qb64": "-0LAAAAG",
+    "qb2": "fb42c0000006"
+  },
+  {
+    "code": "-0S",
+    "name": "BigPathedMaterialGroup",
+    "type": "counter_20",
+    "count": 5,
+    "qb64": "-0SAAAAF",
+    "qb2": "fb4480000005"
+  },
+  {
+    "code": "-0U",
+    "name": "BigRootSadPathSigGroups",
+    "type": "counter_20",
+    "count": 7,
+    "qb64": "-0UAAAAH",
+    "qb2": "fb4500000007"
+  },
+  {
+    "code": "-0T",
+    "name": "BigSadPathSigGroups",
+    "type": "counter_20",
+    "count": 10,
+    "qb64": "-0TAAAAK",
+    "qb2": "fb44c000000a"
+  },
+  {
+    "code": "-0Q",
+    "name": "BigSealSourceCouples",
+    "type": "counter_20",
+    "count": 5,
+    "qb64": "-0QAAAAF",
+    "qb2": "fb4400000005"
+  },
+  {
+    "code": "-0Y",
+    "name": "BigSealSourceLastSingles",
+    "type": "counter_20",
+    "count": 2,
+    "qb64": "-0YAAAAC",
+    "qb2": "fb4600000002"
+  },
+  {
+    "code": "-0R",
+    "name": "BigSealSourceTriples",
+    "type": "counter_20",
+    "count": 4,
+    "qb64": "-0RAAAAE",
+    "qb2": "fb4440000004"
+  },
+  {
+    "code": "-0O",
+    "name": "BigTransIdxSigGroups",
+    "type": "counter_20",
+    "count": 0,
+    "qb64": "-0OAAAAA",
+    "qb2": "fb4380000000"
+  },
+  {
+    "code": "-0P",
+    "name": "BigTransLastIdxSigGroups",
+    "type": "counter_20",
+    "count": 9,
+    "qb64": "-0PAAAAJ",
+    "qb2": "fb43c0000009"
+  },
+  {
+    "code": "-0M",
+    "name": "BigTransReceiptQuadruples",
+    "type": "counter_20",
+    "count": 5,
+    "qb64": "-0MAAAAF",
+    "qb2": "fb4300000005"
+  },
+  {
+    "code": "-0K",
+    "name": "BigWitnessIdxSigs",
+    "type": "counter_20",
+    "count": 8,
+    "qb64": "-0KAAAAI",
+    "qb2": "fb4280000008"
+  },
+  {
+    "code": "-J",
+    "name": "ControllerIdxSigs",
+    "type": "counter_20",
+    "count": 10,
+    "qb64": "-JAK",
+    "qb2": "f8900a"
+  },
+  {
+    "code": "-D",
+    "name": "DatagramSegmentGroup",
+    "type": "counter_20",
+    "count": 2,
+    "qb64": "-DAC",
+    "qb2": "f83002"
+  },
+  {
+    "code": "-V",
+    "name": "DigestSealSingles",
+    "type": "counter_20",
+    "count": 9,
+    "qb64": "-VAJ",
+    "qb2": "f95009"
+  },
+  {
+    "code": "-Z",
+    "name": "ESSRPayloadGroup",
+    "type": "counter_20",
+    "count": 1,
+    "qb64": "-ZAB",
+    "qb2": "f99001"
+  },
+  {
+    "code": "-E",
+    "name": "ESSRWrapperGroup",
+    "type": "counter_20",
+    "count": 0,
+    "qb64": "-EAA",
+    "qb2": "f84000"
+  },
+  {
+    "code": "-N",
+    "name": "FirstSeenReplayCouples",
+    "type": "counter_20",
+    "count": 8,
+    "qb64": "-NAI",
+    "qb2": "f8d008"
+  },
+  {
+    "code": "-F",
+    "name": "FixedMessageBodyGroup",
+    "type": "counter_20",
+    "count": 3,
+    "qb64": "-FAD",
+    "qb2": "f85003"
+  },
+  {
+    "code": "-A",
+    "name": "GenericGroup",
+    "type": "counter_20",
+    "count": 2,
+    "qb64": "-AAC",
+    "qb2": "f80002"
+  },
+  {
+    "code": "-I",
+    "name": "GenericListGroup",
+    "type": "counter_20",
+    "count": 8,
+    "qb64": "-IAI",
+    "qb2": "f88008"
+  },
+  {
+    "code": "-H",
+    "name": "GenericMapGroup",
+    "type": "counter_20",
+    "count": 5,
+    "qb64": "-HAF",
+    "qb2": "f87005"
+  },
+  {
+    "code": "--AAA",
+    "name": "KERIACDCGenusVersion",
+    "type": "counter_20",
+    "count": 10,
+    "qb64": "--AAAAAK",
+    "qb2": "fbe00000000a"
+  },
+  {
+    "code": "-G",
+    "name": "MapMessageBodyGroup",
+    "type": "counter_20",
+    "count": 5,
+    "qb64": "-GAF",
+    "qb2": "f86005"
+  },
+  {
+    "code": "-W",
+    "name": "MerkleRootSealSingles",
+    "type": "counter_20",
+    "count": 10,
+    "qb64": "-WAK",
+    "qb2": "f9600a"
+  },
+  {
+    "code": "-B",
+    "name": "MessageGroup",
+    "type": "counter_20",
+    "count": 1,
+    "qb64": "-BAB",
+    "qb2": "f81001"
+  },
+  {
+    "code": "-L",
+    "name": "NonTransReceiptCouples",
+    "type": "counter_20",
+    "count": 8,
+    "qb64": "-LAI",
+    "qb2": "f8b008"
+  },
+  {
+    "code": "-S",
+    "name": "PathedMaterialGroup",
+    "type": "counter_20",
+    "count": 10,
+    "qb64": "-SAK",
+    "qb2": "f9200a"
+  },
+  {
+    "code": "-U",
+    "name": "RootSadPathSigGroups",
+    "type": "counter_20",
+    "count": 2,
+    "qb64": "-UAC",
+    "qb2": "f94002"
+  },
+  {
+    "code": "-T",
+    "name": "SadPathSigGroups",
+    "type": "counter_20",
+    "count": 7,
+    "qb64": "-TAH",
+    "qb2": "f93007"
+  },
+  {
+    "code": "-Q",
+    "name": "SealSourceCouples",
+    "type": "counter_20",
+    "count": 10,
+    "qb64": "-QAK",
+    "qb2": "f9000a"
+  },
+  {
+    "code": "-Y",
+    "name": "SealSourceLastSingles",
+    "type": "counter_20",
+    "count": 0,
+    "qb64": "-YAA",
+    "qb2": "f98000"
+  },
+  {
+    "code": "-R",
+    "name": "SealSourceTriples",
+    "type": "counter_20",
+    "count": 8,
+    "qb64": "-RAI",
+    "qb2": "f91008"
+  },
+  {
+    "code": "-O",
+    "name": "TransIdxSigGroups",
+    "type": "counter_20",
+    "count": 4,
+    "qb64": "-OAE",
+    "qb2": "f8e004"
+  },
+  {
+    "code": "-P",
+    "name": "TransLastIdxSigGroups",
+    "type": "counter_20",
+    "count": 1,
+    "qb64": "-PAB",
+    "qb2": "f8f001"
+  },
+  {
+    "code": "-M",
+    "name": "TransReceiptQuadruples",
+    "type": "counter_20",
+    "count": 3,
+    "qb64": "-MAD",
+    "qb2": "f8c003"
+  },
+  {
+    "code": "-K",
+    "name": "WitnessIdxSigs",
+    "type": "counter_20",
+    "count": 4,
+    "qb64": "-KAE",
+    "qb2": "f8a004"
+  }
+]
