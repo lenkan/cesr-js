@@ -3,10 +3,31 @@ import { decodeBase64Int } from "./base64.ts";
 import { type CounterCodeSize, IndexerSize, MatterSize, CounterSize_10, CountCode_10 } from "./codes.ts";
 import type { DataObject } from "./data-type.ts";
 
-interface Frame {
+interface CountFrame {
+  type: "counter";
+  count: number;
   code: string;
   text: string;
 }
+
+interface IndexedFrame {
+  type: "indexer";
+  code: string;
+  text: string;
+}
+
+interface MatterFrame {
+  type: "matter";
+  code: string;
+  text: string;
+}
+
+interface JsonFrame {
+  type: "json";
+  text: string;
+}
+
+type Frame = CountFrame | IndexedFrame | MatterFrame | JsonFrame;
 
 function concat(a: Uint8Array, b: Uint8Array) {
   if (a.length === 0) {
@@ -57,7 +78,7 @@ class Parser {
     return this.#decoder.decode(chunk);
   }
 
-  async #readIndexer(): Promise<Frame> {
+  async #readIndexer(): Promise<IndexedFrame> {
     let code = "";
 
     while (code.length < 4) {
@@ -71,14 +92,14 @@ class Parser {
 
       if (size && size.fs) {
         const qb64 = await this.#readCharacters(size.fs - size.hs);
-        return { code, text: qb64 };
+        return { type: "indexer", code, text: qb64 };
       }
     }
 
     throw new Error(`Unexpected end of stream '${code}'`);
   }
 
-  async #readPrimitive(): Promise<Frame> {
+  async #readPrimitive(): Promise<MatterFrame> {
     let code = "";
     while (code.length < 4) {
       const next = await this.#readBytes(1);
@@ -91,7 +112,7 @@ class Parser {
 
       if (size && size.fs !== null) {
         const qb64 = await this.#readCharacters(size.fs - size.hs);
-        return { code, text: qb64 };
+        return { code, type: "matter", text: qb64 };
       }
     }
 
@@ -112,13 +133,12 @@ class Parser {
       size = CounterSize_10[code];
       if (size && size.fs !== null) {
         const qb64 = await this.#readCharacters(size.fs - size.hs);
-        yield { code, text: qb64 };
+        let count = decodeBase64Int(qb64);
+        yield { code, type: "counter", count, text: qb64 };
 
         switch (code) {
           case CountCode_10.ControllerIdxSigs:
           case CountCode_10.WitnessIdxSigs: {
-            let count = decodeBase64Int(qb64);
-
             while (count > 0) {
               yield this.#readIndexer();
               count--;
@@ -129,8 +149,6 @@ class Parser {
           case CountCode_10.NonTransReceiptCouples:
           case CountCode_10.SealSourceCouples:
           case CountCode_10.FirstSeenReplayCouples: {
-            let count = decodeBase64Int(qb64);
-
             while (count > 0) {
               yield this.#readPrimitive();
               yield this.#readPrimitive();
@@ -155,7 +173,7 @@ class Parser {
         const prefix = this.#decoder.decode(start) + (await this.#readCharacters(22));
         const version = parseVersion(prefix);
         const text = prefix + (await this.#readCharacters(version.size - prefix.length));
-        yield { code, text };
+        yield { text, type: "json" };
       } else if (code === "-") {
         for await (const frame of this.readCounter()) {
           yield frame;
@@ -185,7 +203,7 @@ export async function* parse(input: AsyncIterable<Uint8Array>): AsyncIterableIte
       return;
     }
 
-    if (frame.code === "{") {
+    if (frame.type === "json") {
       if (payload) {
         yield { payload, attachments };
       }
