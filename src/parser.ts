@@ -191,18 +191,39 @@ async function* iter<T>(iterator: AsyncIterable<T>): AsyncIterableIterator<T> {
   }
 }
 
-export async function* parse(input: AsyncIterable<Uint8Array>): AsyncIterableIterator<Message> {
+/**
+ * Parses CESR frames from an incoming stream of bytes.
+ *
+ * Inspect the {@link Frame.type} property to determine the type of frame.
+ *
+ *
+ * @param input Incoming stream of bytes
+ * @returns An async iterable of CESR frames
+ */
+export async function* read(input: AsyncIterable<Uint8Array>): AsyncIterableIterator<Frame> {
   const decoder = new Parser(iter(input));
-
-  let payload: MessagePayload | null = null;
-  let group: string | null = null;
-  let attachments: Record<string, string[]> = {};
 
   for await (const frame of decoder.read()) {
     if (frame === null) {
       return;
     }
 
+    yield frame;
+  }
+}
+
+/**
+ * Parses JSON messages with CESR attachments from an incoming stream of bytes.
+ *
+ * @param input Incoming stream of bytes
+ * @returns An async iterable of messages with attachments
+ */
+export async function* parse(input: AsyncIterable<Uint8Array>): AsyncIterableIterator<Message> {
+  let payload: MessagePayload | null = null;
+  let group: string | null = null;
+  let attachments: Record<string, string[]> = {};
+
+  for await (const frame of read(input)) {
     if (frame.type === "json") {
       if (payload) {
         yield { payload, attachments };
