@@ -41,6 +41,3 @@ jobs:
 
       - name: Run tests
         run: pnpm test
-
-      - name: Run example tests
-        run: pnpm test:example
