@@ -10,3 +10,8 @@ await rm("node_modules", {
   recursive: true,
   force: true,
 });
+
+await rm(".venv", {
+  recursive: true,
+  force: true,
+});
