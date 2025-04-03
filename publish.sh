@@ -10,8 +10,8 @@ if [ "$tag" = "dev" ]; then
     version="${version}-dev.$(git rev-parse --short HEAD)"
 fi
 
-pnpm install --frozen-lockfile
-pnpm run build
+npm install
+npm run build
 
 publish_dir="$(mktemp -d)"
 cp -r README.md LICENSE dist package.json "${publish_dir}/"

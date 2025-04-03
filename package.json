@@ -13,6 +13,7 @@
     "test": "node --test --test-reporter=spec --no-warnings --experimental-strip-types",
     "test:example": "./test_examples.sh",
     "lint": "eslint && prettier --check .",
+    "clean": "node scripts/clean.js",
     "format": "prettier --write ."
   },
   "exports": {
