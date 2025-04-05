@@ -29,6 +29,10 @@
   "author": "Daniel Lenksjö",
   "license": "Apache-2.0",
   "description": "",
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/lenkan/cesr-js.git"
+  },
   "engines": {
     "node": ">=22"
   },
