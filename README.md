@@ -37,7 +37,7 @@ The command line interface can be used to parse CESR streams.
 npm install -g cesr
 cesr --help
 
-# Parse a CESR file from an URL
+# Parse a CESR file from n URL
 cesr https://raw.githubusercontent.com/lenkan/cesr-js/refs/heads/main/fixtures/geda.cesr
 
 # Parse a CESR file from stdin
