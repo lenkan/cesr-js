@@ -29,6 +29,21 @@ if (response.body) {
 }
 ```
 
+## Command line interface
+
+The command line interface can be used to parse CESR streams.
+
+```bash
+npm install -g cesr
+cesr --help
+
+# Parse a CESR file from an URL
+cesr https://raw.githubusercontent.com/lenkan/cesr-js/refs/heads/main/fixtures/geda.cesr
+
+# Parse a CESR file from stdin
+curl https://raw.githubusercontent.com/lenkan/cesr-js/refs/heads/main/fixtures/geda.cesr | cesr --pretty -
+```
+
 # Features
 
 - [x] Simple parsing of KERI CESR Stream
