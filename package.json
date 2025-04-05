@@ -1,6 +1,6 @@
 {
   "name": "cesr",
-  "version": "0.0.4",
+  "version": "0.0.5",
   "keywords": [
     "CESR",
     "KERI",
@@ -29,6 +29,10 @@
   "author": "Daniel Lenksjö",
   "license": "Apache-2.0",
   "description": "",
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/lenkan/cesr-js.git"
+  },
   "engines": {
     "node": ">=22"
   },
