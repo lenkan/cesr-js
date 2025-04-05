@@ -1,8 +1,51 @@
-const ALPHABET = "ABCDEFGHIJKLMNOPQRSTUVWXYZabcdefghijklmnopqrstuvwxyz0123456789-_";
-const B64_URL_MAP = ALPHABET.split("");
-const B64_ALPHABET = "ABCDEFGHIJKLMNOPQRSTUVWXYZabcdefghijklmnopqrstuvwxyz0123456789+/".split("");
+const B64_ALPHABET = "ABCDEFGHIJKLMNOPQRSTUVWXYZabcdefghijklmnopqrstuvwxyz0123456789-_".split("");
 
-export function encodeBase64(uint8: Uint8Array): string {
+function getBase64Index(char: string): number {
+  if (char === "=") {
+    return 0;
+  }
+
+  const code = B64_ALPHABET.indexOf(char);
+
+  if (code === -1) {
+    throw new Error(`Invalid base64 character '${char}'`);
+  }
+
+  return code;
+}
+
+export function decodeBase64Int(str: string): number {
+  let result = 0;
+
+  for (let i = str.length - 1; i >= 0; i--) {
+    const character = str.charAt(i);
+
+    const index = getBase64Index(character);
+
+    const factor = 64 ** (str.length - i - 1);
+    result += factor * index;
+  }
+
+  return result;
+}
+
+export function encodeBase64Int(value: number, length?: number): string {
+  if (length !== undefined && value >= 64 ** length) {
+    throw new Error(`value ${value} too big for base64 length ${length}`);
+  }
+
+  let remainder = value;
+  let result = "";
+
+  while (remainder !== 0) {
+    result = B64_ALPHABET[remainder % 64] + result;
+    remainder = Math.floor(remainder / 64);
+  }
+
+  return result.padStart(length ?? 1, "A");
+}
+
+export function encodeBase64Url(uint8: Uint8Array): string {
   // CREDIT: https://github.com/denoland/std/blob/main/encoding/base64.ts
   // CREDIT: https://gist.github.com/enepomnyaschih/72c423f727d395eeaa09697058238727
   let result = "";
@@ -18,68 +61,44 @@ export function encodeBase64(uint8: Uint8Array): string {
     // 1 octet yet to write
     result += B64_ALPHABET[uint8[i - 2] >> 2];
     result += B64_ALPHABET[(uint8[i - 2] & 0x03) << 4];
-    result += "==";
   }
   if (i === l) {
     // 2 octets yet to write
     result += B64_ALPHABET[uint8[i - 2] >> 2];
     result += B64_ALPHABET[((uint8[i - 2] & 0x03) << 4) | (uint8[i - 1] >> 4)];
     result += B64_ALPHABET[(uint8[i - 1] & 0x0f) << 2];
-    result += "=";
   }
   return result;
 }
 
-export function decodeBase64(b64: string): Uint8Array {
-  // CREDIT: https://github.com/denoland/std/blob/main/encoding/base64.ts
-  const binString = atob(b64);
-  const size = binString.length;
-  const bytes = new Uint8Array(size);
-
-  for (let i = 0; i < size; i++) {
-    bytes[i] = binString.charCodeAt(i);
-  }
-
-  return bytes;
-}
-
-export function decodeBase64Int(value: string): number {
-  return value
-    .split("")
-    .reverse()
-    .reduce((result, character, index) => {
-      const value = ALPHABET.indexOf(character);
-      const factor = 64 ** index;
-      return result + value * factor;
-    }, 0);
-}
-
-export function encodeBase64Int(value: number, length = 1): string {
-  let current = value;
-  let result = "";
-  while (length != 0) {
-    result = B64_URL_MAP[current % 64] + result;
-    current = Math.floor(current / 64);
-    if (current == 0) {
-      break;
-    }
-  }
-
-  return result.padStart(length, "A");
-}
-
-export function encodeBase64Url(buffer: Uint8Array): string {
-  return encodeBase64(buffer).replace(/\+/g, "-").replace(/\//g, "_").replace(/=+/, "");
-}
-
 export function decodeBase64Url(input: string): Uint8Array {
+  // CREDIT: https://gist.github.com/enepomnyaschih/72c423f727d395eeaa09697058238727
   if (!(typeof input === "string")) {
     throw new TypeError("`input` must be a string.");
   }
 
-  const n = input.length % 4;
-  const padded = input + "=".repeat(n > 0 ? 4 - n : n);
-  const base64String = padded.replace(/-/g, "+").replace(/_/g, "/");
+  if (input.length === 0) {
+    return new Uint8Array(0);
+  }
 
-  return decodeBase64(base64String);
+  const remainder = input.length % 4;
+  const padSize = remainder > 0 ? 4 - remainder : remainder;
+  const str = input.padEnd(padSize + input.length, "=");
+
+  const result = new Uint8Array(3 * (str.length / 4));
+
+  for (let i = 0, j = 0; i < str.length; i += 4, j += 3) {
+    const sixtet0 = getBase64Index(str.charAt(i)) << 18;
+    const sixtet1 = getBase64Index(str.charAt(i + 1)) << 12;
+    const sixtet2 = getBase64Index(str.charAt(i + 2)) << 6;
+    const sixtet3 = getBase64Index(str.charAt(i + 3));
+
+    const chunk = sixtet0 | sixtet1 | sixtet2 | sixtet3;
+
+    result[j] = chunk >> 16;
+    result[j + 1] = (chunk >> 8) & 0xff;
+    result[j + 2] = chunk & 0xff;
+  }
+
+  return result.slice(0, result.length - padSize);
 }

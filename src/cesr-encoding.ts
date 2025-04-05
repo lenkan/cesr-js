@@ -1,67 +1,84 @@
 import { decodeBase64Int, decodeBase64Url, encodeBase64Int, encodeBase64Url } from "./base64.ts";
-import type { IndexerCodeSize, MatterCodeSize } from "./codes.ts";
-import { IndexCode, IndexerSize, MatterCode, MatterSize } from "./codes.ts";
+import type { CodeSize } from "./codes.ts";
+import { MatterSize } from "./codes.ts";
 
 function padNumber(num: number, length: number) {
   return num.toString().padStart(length, "0");
 }
 
-/**
- * Represents the Raw domain
- */
-export interface Raw {
+export type FrameType = "json" | "indexer" | "matter" | "counter_10" | "counter_20";
+
+export interface Frame {
+  type: FrameType;
   code: string;
-  buffer: Uint8Array;
+  soft: string;
+  text: string;
 }
 
-function findPrimitiveCode(text: string): [string, MatterCodeSize] {
-  let i = 0;
-  let code = "";
-  let size: MatterCodeSize | null = null;
-
-  while (!size && i <= 4) {
-    code = text.slice(0, i);
-    size = MatterSize[code];
-    ++i;
+function prepad(raw: Uint8Array, length: number): Uint8Array {
+  if (raw.byteLength === length) {
+    return raw;
   }
 
-  if (!size) {
-    throw new Error(`Unable to find code table for ${text}`);
-  }
-
-  return [code, size];
+  const padded = new Uint8Array(length + raw.byteLength);
+  padded.set(raw, length);
+  return padded;
 }
 
-function findIndexCode(text: string): [string, IndexerCodeSize] {
-  let i = 0;
-  let code = "";
-  let size: IndexerCodeSize | null = null;
+function findCode(source: Uint8Array, table: Record<string, CodeSize>): CodeSize | null {
+  let prefix = "";
+  let size: CodeSize | null = null;
+  const decoder = new TextDecoder();
 
-  while (!size && i <= 4) {
-    code = text.slice(0, i);
-    size = IndexerSize[text.slice(0, i)];
-    ++i;
+  while (!size) {
+    if (source.length < prefix.length + 1) {
+      return null;
+    }
+
+    // TODO: Table holds the information about longest code, so we should look it up from there.
+    if (prefix.length >= 5) {
+      throw new Error("Expected frame");
+    }
+
+    prefix = decoder.decode(source.slice(0, prefix.length + 1));
+    size = table[prefix];
   }
 
-  if (!size) {
-    throw new Error(`Unable to find code table for ${text}`);
-  }
-
-  return [code, size];
+  return size;
 }
 
-export function decode(text: string): Raw {
-  const [code, size] = findPrimitiveCode(text);
+export interface DecodeResult {
+  frame: Frame | null;
+  raw: Uint8Array;
+  n: number;
+}
 
-  if (!size) {
-    throw new Error(`Unable to find code table for ${text}`);
+export function decode(input: Uint8Array | string, table: Record<string, CodeSize> = MatterSize): DecodeResult {
+  const source = typeof input === "string" ? new TextEncoder().encode(input) : input;
+
+  const code = findCode(source, table);
+  if (!code) {
+    return { frame: null, raw: new Uint8Array(0), n: 0 };
   }
 
-  const padSize = (size.hs + size.ss) % 4;
-  const padding = "A".repeat(padSize);
-  const paw = decodeBase64Url(padding + text.substring(size.hs + size.ss));
-  const buffer = paw.slice(padSize + (size.ls ?? 0));
-  return { code, buffer };
+  const decoder = new TextDecoder();
+  const soft = decoder.decode(source.slice(code.hs, code.hs + code.ss));
+  const size = code.fs ?? code.hs + code.ss + decodeBase64Int(soft) * 4;
+
+  if (source.length < size) {
+    return { frame: null, raw: new Uint8Array(0), n: 0 };
+  }
+
+  const qb64 = decoder.decode(source.slice(0, size));
+  const padSize = (code.hs + code.ss) % 4;
+  const leadSize = code.ls ?? 0;
+  const raw = decodeBase64Url("A".repeat(padSize) + qb64.slice(code.hs + code.ss, size)).slice(padSize + leadSize);
+
+  return {
+    frame: { code: code.prefix, type: code.type as FrameType, soft, text: qb64 },
+    raw,
+    n: size,
+  };
 }
 
 export function encodeDate(date: Date): string {
@@ -75,95 +92,37 @@ export function encodeDate(date: Date): string {
   const hh = padNumber(date.getUTCHours(), 2);
   const mm = padNumber(date.getUTCMinutes(), 2);
   const ss = padNumber(date.getUTCSeconds(), 2);
-  const ms = padNumber(date.getMilliseconds(), 3);
+  const ms = padNumber(date.getUTCMilliseconds(), 3);
 
   const format = `${YYYY}-${MM}-${dd}T${hh}c${mm}c${ss}d${ms}000p00c00`;
   return `1AAG${format}`;
 }
 
-function prepad(raw: Uint8Array, length: number): Uint8Array {
-  const padded = new Uint8Array(length + raw.byteLength);
-  padded.set(raw, length);
-  return padded;
-}
+/**
+ * Encodes the provided raw data into the CESR Text domain.
+ */
+export function encodeText(code: string, raw: Uint8Array, table: Record<string, CodeSize> = MatterSize): string {
+  if (!(raw instanceof Uint8Array)) {
+    throw new Error(`Input must be an Uint8Array`);
+  }
 
-export function encode(code: string, raw: Uint8Array): string {
-  const size = MatterSize[code];
+  const size = table[code];
 
   if (!size) {
     throw new Error(`Unable to find code table for ${code}`);
   }
 
-  if (size.fs === null) {
-    const padded = prepad(raw, size.ls);
-    const soft = encodeBase64Int(padded.length / 3, size.ss);
-    return `${code}${soft}${encodeBase64Url(padded)}`;
-  }
+  const leadSize = size.ls ?? 0;
+  const padSize = (3 - ((raw.byteLength + leadSize) % 3)) % 3;
+  const padded = prepad(raw, padSize + leadSize);
+  const soft = size.ss > 0 ? encodeBase64Int(padded.byteLength / 3, size.ss) : "";
 
-  const padSize = (3 - ((raw.byteLength + size.ls) % 3)) % 3;
-  const padded = prepad(raw, padSize + size.ls);
-
-  return code + encodeBase64Url(padded).slice(padSize);
-}
-
-function resolveIndexCode(primitiveCode: string): [string, IndexerCodeSize] {
-  switch (primitiveCode) {
-    case MatterCode.Ed25519_Sig:
-      return [IndexCode.Ed25519_Sig, IndexerSize[IndexCode.Ed25519_Sig]];
-    case MatterCode.Ed448_Sig:
-      return [IndexCode.Ed448_Sig, IndexerSize[IndexCode.Ed448_Sig]];
-  }
-
-  throw new Error(`Unable to find indexed code for '${primitiveCode}'`);
-}
-
-function resolvePrimitiveCode(indexCode: string): [string, MatterCodeSize] {
-  switch (indexCode) {
-    case IndexCode.Ed25519_Sig:
-      return [MatterCode.Ed25519_Sig, MatterSize[IndexCode.Ed25519_Sig]];
-    case IndexCode.Ed448_Sig:
-      return [MatterCode.Ed448_Sig, MatterSize[IndexCode.Ed448_Sig]];
-  }
-
-  throw new Error(`Unable to find primitive code for '${indexCode}'`);
-}
-
-/**
- * Converts a cryptographic primitive to indexed material
- */
-export function index(text: string, index: number): string {
-  const [code, size] = findPrimitiveCode(text);
-  const [indexCode, indexCodeSize] = resolveIndexCode(code);
-
-  return indexCode + encodeBase64Int(index, indexCodeSize.ss) + text.slice(size.hs + size.ss);
-}
-
-export interface Indexed {
-  value: string;
-  index: number;
-}
-
-/**
- * Converts indexed material to primitive and index
- */
-export function deindex(text: string): Indexed {
-  const [indexCode, indexCodeSize] = findIndexCode(text);
-  const [primitiveCode] = resolvePrimitiveCode(indexCode);
-
-  const index = decodeBase64Int(text.slice(indexCodeSize.hs, indexCodeSize.ss));
-  const value = primitiveCode + text.slice(indexCodeSize.hs + indexCodeSize.ss);
-
-  return {
-    index,
-    value,
-  };
+  return `${code}${soft}${encodeBase64Url(padded).slice(padSize)}`;
 }
 
 const cesr = {
-  encode,
+  encode: encodeText,
   decode,
-  index,
-  deindex,
   encodeDate,
 };
 
