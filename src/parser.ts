@@ -47,10 +47,11 @@ function concat(a: Uint8Array, b: Uint8Array) {
 class Parser {
   #decoder = new TextDecoder();
   #stream: AsyncIterableIterator<Uint8Array<ArrayBufferLike>>;
-  #buffer: Uint8Array | null;
+  #buffer: Uint8Array;
 
   constructor(stream: AsyncIterableIterator<Uint8Array>) {
     this.#stream = stream;
+    this.#buffer = new Uint8Array(0);
   }
 
   async #readBytes(size: number): Promise<Uint8Array | null> {
@@ -58,14 +59,14 @@ class Parser {
       throw new Error(`Size must be a number, got '${size}'`);
     }
 
-    while (!this.#buffer || this.#buffer.length < size) {
+    while (this.#buffer.length < size) {
       const result = await this.#stream.next();
 
       if (result.done) {
         return null;
       }
 
-      this.#buffer = concat(this.#buffer ?? new Uint8Array(0), result.value);
+      this.#buffer = concat(this.#buffer, result.value);
     }
 
     const chunk = this.#buffer.slice(0, size);
@@ -168,18 +169,33 @@ class Parser {
         return;
       }
 
-      const code = this.#decoder.decode(start);
-      if (code === "{") {
-        const prefix = this.#decoder.decode(start) + (await this.#readCharacters(22));
-        const version = parseVersion(prefix);
-        const text = prefix + (await this.#readCharacters(version.size - prefix.length));
-        yield { text, type: "json" };
-      } else if (code === "-") {
-        for await (const frame of this.readCounter()) {
-          yield frame;
+      const tritet = start[0] >>> 5;
+
+      switch (tritet) {
+        case 0b011: {
+          const next = await this.#readBytes(22);
+          if (!next) {
+            throw new Error(`Unexpected end of stream`);
+          }
+
+          const prefix = concat(start, next);
+          const version = parseVersion(prefix);
+          const rest = await this.#readBytes(version.size - prefix.length);
+          if (!rest) {
+            throw new Error(`Unexpected end of stream`);
+          }
+
+          const message = concat(prefix, rest);
+          const text = this.#decoder.decode(message);
+          yield { text, type: "json" };
+          break;
         }
-      } else {
-        throw new Error(`Unexpected start of stream '${code}'`);
+        case 0b001: {
+          yield* this.readCounter();
+          break;
+        }
+        default:
+          throw new Error(`Unsupported cold start tritet 0b${tritet.toString(2).padStart(3, "0")}`);
       }
     }
   }

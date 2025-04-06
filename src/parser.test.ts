@@ -1,11 +1,20 @@
 import { createReadStream } from "fs";
 import assert from "node:assert";
-import { test } from "node:test";
+import { describe, test } from "node:test";
 import { parse } from "./parser.ts";
 import { readFile } from "node:fs/promises";
 import { versify } from "./version.ts";
 import { CountCode_10 } from "./codes.ts";
 import { encodeBase64Int } from "./base64.ts";
+
+async function assertRejects(fn: () => Promise<unknown>, message: string) {
+  try {
+    await fn();
+    assert.fail(`Expected ${fn} to throw`);
+  } catch (error) {
+    assert.strictEqual(error.message, message);
+  }
+}
 
 async function* chunk(filename: string, size = 100): AsyncIterable<Uint8Array> {
   let index = 0;
@@ -110,9 +119,21 @@ test("Should attachments without payload", async () => {
   });
 });
 
-test("Parse JSON without attachments", async () => {
-  const data = ReadableStream.from([new TextEncoder().encode(JSON.stringify(versify({ t: "icp" })))]);
-  const result = await collect(parse(data));
-  assert.equal(result.length, 1);
-  assert.deepStrictEqual(result[0].payload, { v: "KERI10JSON000023_", t: "icp" });
+describe("Parse JSON", () => {
+  const textEncoder = new TextEncoder();
+
+  test("Parse JSON without attachments", async () => {
+    const data = textEncoder.encode(JSON.stringify(versify({ t: "icp" })));
+    const stream = ReadableStream.from([data]);
+    const result = await collect(parse(stream));
+    assert.equal(result.length, 1);
+    assert.deepStrictEqual(result[0].payload, { v: "KERI10JSON000023_", t: "icp" });
+  });
+
+  test("Parse unfinished JSON without full version string", async () => {
+    const data = textEncoder.encode(JSON.stringify(versify({ t: "icp" }))).slice(0, 20);
+    const stream = ReadableStream.from([data]);
+
+    await assertRejects(() => collect(parse(stream)), "Unexpected end of stream");
+  });
 });
