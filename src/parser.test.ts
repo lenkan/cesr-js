@@ -7,15 +7,6 @@ import { versify } from "./version.ts";
 import { CountCode_10 } from "./codes.ts";
 import { encodeBase64Int } from "./base64.ts";
 
-async function assertRejects(fn: () => Promise<unknown>, message: string) {
-  try {
-    await fn();
-    assert.fail(`Expected ${fn} to throw`);
-  } catch (error) {
-    assert.strictEqual(error.message, message);
-  }
-}
-
 async function* chunk(filename: string, size = 100): AsyncIterable<Uint8Array> {
   let index = 0;
 
@@ -134,6 +125,6 @@ describe("Parse JSON", () => {
     const data = textEncoder.encode(JSON.stringify(versify({ t: "icp" }))).slice(0, 20);
     const stream = ReadableStream.from([data]);
 
-    await assertRejects(() => collect(parse(stream)), "Unexpected end of stream");
+    await assert.rejects(() => collect(parse(stream)), new Error("Unexpected end of stream"));
   });
 });
