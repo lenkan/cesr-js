@@ -18,12 +18,6 @@ async function* chunk(filename: string, size = 100): AsyncIterable<Uint8Array> {
   }
 }
 
-async function* iter<T>(iterator: AsyncIterable<T>): AsyncIterableIterator<T> {
-  for await (const item of iterator) {
-    yield item;
-  }
-}
-
 async function collect<T>(iterator: AsyncIterable<T>): Promise<T[]> {
   const result: T[] = [];
 
@@ -35,9 +29,7 @@ async function collect<T>(iterator: AsyncIterable<T>): Promise<T[]> {
 }
 
 test("Test alice", { timeout: 100 }, async () => {
-  const stream = ReadableStream.from(createReadStream("./fixtures/alice.cesr", {}));
-
-  const result = await collect(parse(iter(stream)));
+  const result = await collect(parse(createReadStream("./fixtures/alice.cesr", {})));
 
   assert.equal(result.length, 2);
   assert.equal(result[0].payload.t, "icp");
@@ -69,7 +61,7 @@ test("Test alice", { timeout: 100 }, async () => {
 test("Test witness", { timeout: 100 }, async () => {
   const stream = ReadableStream.from(createReadStream("./fixtures/witness.cesr", {}));
 
-  const result = await collect(parse(iter(stream)));
+  const result = await collect(parse(stream));
 
   assert.equal(result.length, 3);
   assert.equal(result[0].payload.t, "icp");
@@ -78,7 +70,7 @@ test("Test witness", { timeout: 100 }, async () => {
 
 test("Test parse GEDA", async () => {
   const stream = ReadableStream.from(createReadStream("./fixtures/geda.cesr", {}));
-  const events = await collect(parse(iter(stream)));
+  const events = await collect(parse(stream));
 
   assert.equal(events.length, 17);
   assert.equal(events[0].payload.t, "icp");
@@ -89,42 +81,39 @@ test("Test parse GEDA", async () => {
 test("Parse GEDA in chunks", async () => {
   const data = ReadableStream.from(chunk("./fixtures/geda.cesr"));
 
-  const events = await collect(parse(iter(data)));
+  const events = await collect(parse(data));
   assert.equal(events.length, 17);
 });
 
-test("Should attachments without payload", async () => {
-  const sigs = [
-    "2AABAFC2S_PGpOQpbMNwQVOqP5jCUJ7EgFH2hr21V6uCbBAkK30idHj0K-ReRCe_o5iIP2bGhBK2MPeEt1P81ZLwk2YJ",
-    "2AACAGDeP0o3Ns2ycFFonXIQwGClJimMZ6DHnGfUKJ3O9DzUV5AxVi3Q0oq03fpLyVWRXYCWa72i_o6ftwCVVNnYDN4L",
-    "AAAwpoZNY1cZl_0pxlWiHm2RPD1q2XFiFBAzUGOQWeLlBTWbfFtImbZo3cxVKCP2D5Rl49zlaLRekrONYvme2oAC",
-  ];
+describe("Parse count code", () => {
+  test("Should parse attachments without payload", async () => {
+    const sigs = [
+      "2AABAFC2S_PGpOQpbMNwQVOqP5jCUJ7EgFH2hr21V6uCbBAkK30idHj0K-ReRCe_o5iIP2bGhBK2MPeEt1P81ZLwk2YJ",
+      "2AACAGDeP0o3Ns2ycFFonXIQwGClJimMZ6DHnGfUKJ3O9DzUV5AxVi3Q0oq03fpLyVWRXYCWa72i_o6ftwCVVNnYDN4L",
+      "AAAwpoZNY1cZl_0pxlWiHm2RPD1q2XFiFBAzUGOQWeLlBTWbfFtImbZo3cxVKCP2D5Rl49zlaLRekrONYvme2oAC",
+    ];
 
-  const attachment = [`${CountCode_10.ControllerIdxSigs}${encodeBase64Int(sigs.length, 2)}`, ...sigs].join("");
+    const attachment = [CountCode_10.ControllerIdxSigs, encodeBase64Int(sigs.length, 2), ...sigs].join("");
 
-  const data = ReadableStream.from([new TextEncoder().encode(attachment)]);
-  const result = await collect(parse(data));
+    const result = await collect(parse(attachment));
 
-  assert.deepStrictEqual(result[0].attachments, {
-    [CountCode_10.ControllerIdxSigs]: sigs,
+    assert.deepStrictEqual(result[0].attachments, {
+      [CountCode_10.ControllerIdxSigs]: sigs,
+    });
   });
 });
 
 describe("Parse JSON", () => {
-  const textEncoder = new TextEncoder();
-
   test("Parse JSON without attachments", async () => {
-    const data = textEncoder.encode(JSON.stringify(versify({ t: "icp" })));
-    const stream = ReadableStream.from([data]);
-    const result = await collect(parse(stream));
+    const input = JSON.stringify(versify({ t: "icp" }));
+    const result = await collect(parse(input));
     assert.equal(result.length, 1);
     assert.deepStrictEqual(result[0].payload, { v: "KERI10JSON000023_", t: "icp" });
   });
 
   test("Parse unfinished JSON without full version string", async () => {
-    const data = textEncoder.encode(JSON.stringify(versify({ t: "icp" }))).slice(0, 20);
-    const stream = ReadableStream.from([data]);
+    const input = JSON.stringify(versify({ t: "icp" })).slice(0, 20);
 
-    await assert.rejects(() => collect(parse(stream)), new Error("Unexpected end of stream"));
+    await assert.rejects(() => collect(parse(input)), new Error("Unexpected end of stream"));
   });
 });

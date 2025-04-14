@@ -1,33 +1,16 @@
 import { parseVersion } from "./version.ts";
-import { decodeBase64Int } from "./base64.ts";
-import { type CounterCodeSize, IndexerSize, MatterSize, CounterSize_10, CountCode_10 } from "./codes.ts";
+import type { CodeSize } from "./codes.ts";
+import { MatterSize, IndexerSize, CountCode_10, CounterSize_10 } from "./codes.ts";
 import type { DataObject } from "./data-type.ts";
+import { decodeBase64Int } from "./base64.ts";
 
-interface CountFrame {
-  type: "counter";
-  count: number;
+export type FrameType = "json" | "indexer" | "matter" | "counter_10" | "counter_20";
+
+export interface Frame {
+  type: FrameType;
   code: string;
   text: string;
 }
-
-interface IndexedFrame {
-  type: "indexer";
-  code: string;
-  text: string;
-}
-
-interface MatterFrame {
-  type: "matter";
-  code: string;
-  text: string;
-}
-
-interface JsonFrame {
-  type: "json";
-  text: string;
-}
-
-type Frame = CountFrame | IndexedFrame | MatterFrame | JsonFrame;
 
 function concat(a: Uint8Array, b: Uint8Array) {
   if (a.length === 0) {
@@ -44,166 +27,169 @@ function concat(a: Uint8Array, b: Uint8Array) {
   return merged;
 }
 
+// function prepad(raw: Uint8Array, length: number): Uint8Array {
+//   if (raw.byteLength === length) {
+//     return raw;
+//   }
+
+//   if (raw.byteLength > length) {
+//     throw new Error("Cannot pad, input is longer than desired length");
+//   }
+
+//   const padded = new Uint8Array(length + raw.byteLength);
+//   padded.set(raw, length);
+//   return padded;
+// }
+
+interface GroupContext {
+  code: string;
+  table: Record<string, CodeSize>;
+  count: number;
+}
+
 class Parser {
   #decoder = new TextDecoder();
-  #stream: AsyncIterableIterator<Uint8Array<ArrayBufferLike>>;
   #buffer: Uint8Array;
+  #group: GroupContext | null = null;
 
-  constructor(stream: AsyncIterableIterator<Uint8Array>) {
-    this.#stream = stream;
+  constructor() {
     this.#buffer = new Uint8Array(0);
   }
 
-  async #readBytes(size: number): Promise<Uint8Array | null> {
-    if (typeof size !== "number") {
-      throw new Error(`Size must be a number, got '${size}'`);
+  #readJsonFrame(): Frame | null {
+    if (this.#buffer.length < 24) {
+      return null;
     }
 
-    while (this.#buffer.length < size) {
-      const result = await this.#stream.next();
+    const version = parseVersion(this.#buffer.slice(0, 23));
+    if (this.#buffer.length < version.size) {
+      return null;
+    }
 
-      if (result.done) {
+    const frame = this.#buffer.slice(0, version.size);
+    this.#buffer = this.#buffer.slice(version.size);
+
+    return {
+      type: "json",
+      code: "JSON",
+      text: this.#decoder.decode(frame),
+    };
+  }
+
+  #readCode(table: Record<string, CodeSize>): CodeSize | null {
+    let code = "";
+    let size: CodeSize | null = null;
+
+    while (!size) {
+      if (this.#buffer.length < code.length + 1) {
         return null;
       }
 
-      this.#buffer = concat(this.#buffer, result.value);
+      if (code.length >= 4) {
+        throw new Error("Expected frame");
+      }
+
+      code = this.#decoder.decode(this.#buffer.slice(0, code.length + 1));
+      size = table[code];
     }
 
-    const chunk = this.#buffer.slice(0, size);
-    this.#buffer = this.#buffer.slice(size);
-    return chunk;
+    return size;
   }
 
-  async #readCharacters(count: number): Promise<string> {
-    const chunk = await this.#readBytes(count);
-    return this.#decoder.decode(chunk);
-  }
+  #readFrame(table: Record<string, CodeSize>): Frame | null {
+    const code = this.#readCode(table);
 
-  async #readIndexer(): Promise<IndexedFrame> {
-    let code = "";
-
-    while (code.length < 4) {
-      const next = await this.#readBytes(1);
-      if (next === null) {
-        throw new Error("Unexpected end of stream");
-      }
-
-      code += this.#decoder.decode(next);
-      const size = IndexerSize[code];
-
-      if (size && size.fs) {
-        const qb64 = await this.#readCharacters(size.fs - size.hs);
-        return { type: "indexer", code, text: qb64 };
-      }
+    if (!code) {
+      return null;
     }
 
-    throw new Error(`Unexpected end of stream '${code}'`);
-  }
-
-  async #readPrimitive(): Promise<MatterFrame> {
-    let code = "";
-    while (code.length < 4) {
-      const next = await this.#readBytes(1);
-      if (next === null) {
-        throw new Error("Unexpected end of stream");
+    if (code.fs) {
+      if (this.#buffer.length < code.fs) {
+        return null;
       }
 
-      code += this.#decoder.decode(next);
-      const size = MatterSize[code];
+      const frame = this.#buffer.slice(0, code.fs);
+      const qb64 = this.#decoder.decode(frame);
 
-      if (size && size.fs !== null) {
-        const qb64 = await this.#readCharacters(size.fs - size.hs);
-        return { code, type: "matter", text: qb64 };
-      }
-    }
-
-    throw new Error(`Unexpected end of stream '${code}'`);
-  }
-
-  private async *readCounter(): AsyncIterableIterator<Frame> {
-    let code = "-";
-
-    let size: CounterCodeSize | null = null;
-    while (!size && code.length < 4) {
-      const next = await this.#readBytes(1);
-      if (next === null) {
-        throw new Error("Unexpected end of stream");
-      }
-
-      code += this.#decoder.decode(next);
-      size = CounterSize_10[code];
-      if (size && size.fs !== null) {
-        const qb64 = await this.#readCharacters(size.fs - size.hs);
-        let count = decodeBase64Int(qb64);
-        yield { code, type: "counter", count, text: qb64 };
-
-        switch (code) {
+      if (code.type === "counter_10") {
+        const count = decodeBase64Int(qb64.slice(code.hs, code.hs + code.ss));
+        switch (code.prefix) {
           case CountCode_10.ControllerIdxSigs:
-          case CountCode_10.WitnessIdxSigs: {
-            while (count > 0) {
-              yield this.#readIndexer();
-              count--;
-            }
-
+          case CountCode_10.WitnessIdxSigs:
+            this.#group = { code: code.prefix, table: IndexerSize, count };
             break;
-          }
           case CountCode_10.NonTransReceiptCouples:
           case CountCode_10.SealSourceCouples:
-          case CountCode_10.FirstSeenReplayCouples: {
-            while (count > 0) {
-              yield this.#readPrimitive();
-              yield this.#readPrimitive();
-              count--;
-            }
+          case CountCode_10.FirstSeenReplayCouples:
+            this.#group = { code: code.prefix, table: MatterSize, count: count * 2 };
             break;
-          }
         }
       }
+
+      this.#buffer = this.#buffer.slice(frame.length);
+
+      return {
+        type: code.type as FrameType,
+        code: code.prefix,
+        text: qb64,
+      };
+    }
+
+    throw new Error("No variable size yet");
+  }
+
+  #read(): Frame | null {
+    if (this.#buffer.length === 0) {
+      return null;
+    }
+
+    const group = this.#group;
+    if (group && group.count > 0) {
+      const result = this.#readFrame(group.table);
+
+      if (result) {
+        group.count--;
+      }
+
+      return result;
+    }
+
+    const tritet = this.#buffer[0] >>> 5;
+
+    switch (tritet) {
+      case 0b011: {
+        return this.#readJsonFrame();
+      }
+      case 0b001: {
+        return this.#readFrame(CounterSize_10);
+      }
+      default:
+        throw new Error(`Unsupported cold start tritet 0b${tritet.toString(2).padStart(3, "0")}`);
     }
   }
 
-  async *read(): AsyncIterableIterator<Frame> {
-    while (true) {
-      const start = await this.#readBytes(1);
-      if (start === null) {
+  /**
+   * Parses CESR frames from the source buffer.
+   *
+   * @param source
+   * @returns
+   */
+  *parse(source: Uint8Array): IterableIterator<Frame> {
+    this.#buffer = concat(this.#buffer, source);
+
+    while (!this.finished) {
+      const result = this.#read();
+
+      if (!result) {
         return;
       }
 
-      const tritet = start[0] >>> 5;
-
-      switch (tritet) {
-        case 0b011: {
-          const next = await this.#readBytes(22);
-          if (!next) {
-            throw new Error(`Unexpected end of stream`);
-          }
-
-          const prefix = concat(start, next);
-          const version = parseVersion(prefix);
-          const rest = await this.#readBytes(version.size - prefix.length);
-          if (!rest) {
-            throw new Error(`Unexpected end of stream`);
-          }
-
-          const message = concat(prefix, rest);
-          const text = this.#decoder.decode(message);
-          yield { text, type: "json" };
-          break;
-        }
-        case 0b001: {
-          yield* this.readCounter();
-          break;
-        }
-        default:
-          throw new Error(`Unsupported cold start tritet 0b${tritet.toString(2).padStart(3, "0")}`);
-      }
+      yield result;
     }
   }
-}
 
-async function* iter<T>(iterator: AsyncIterable<T>): AsyncIterableIterator<T> {
-  for await (const item of iterator) {
-    yield item;
+  get finished() {
+    return this.#buffer.length === 0;
   }
 }
 
@@ -217,15 +203,31 @@ async function* iter<T>(iterator: AsyncIterable<T>): AsyncIterableIterator<T> {
  * @returns An async iterable of CESR frames
  */
 export async function* read(input: AsyncIterable<Uint8Array>): AsyncIterableIterator<Frame> {
-  const decoder = new Parser(iter(input));
+  const parser = new Parser();
 
-  for await (const frame of decoder.read()) {
-    if (frame === null) {
-      return;
+  for await (const chunk of input) {
+    for (const frame of parser.parse(chunk)) {
+      yield frame;
     }
-
-    yield frame;
   }
+
+  if (!parser.finished) {
+    throw new Error("Unexpected end of stream");
+  }
+}
+
+export type ParserInput = Uint8Array | string | AsyncIterable<Uint8Array>;
+
+function resolveInput(input: ParserInput): AsyncIterable<Uint8Array> {
+  if (typeof input === "string") {
+    return ReadableStream.from([new TextEncoder().encode(input)]);
+  }
+
+  if (input instanceof Uint8Array) {
+    return ReadableStream.from([input]);
+  }
+
+  return input;
 }
 
 /**
@@ -234,12 +236,14 @@ export async function* read(input: AsyncIterable<Uint8Array>): AsyncIterableIter
  * @param input Incoming stream of bytes
  * @returns An async iterable of messages with attachments
  */
-export async function* parse(input: AsyncIterable<Uint8Array>): AsyncIterableIterator<Message> {
+export async function* parse(input: ParserInput): AsyncIterableIterator<Message> {
+  const stream = resolveInput(input);
+
   let payload: MessagePayload | null = null;
   let group: string | null = null;
   let attachments: Record<string, string[]> = {};
 
-  for await (const frame of read(input)) {
+  for await (const frame of read(stream)) {
     if (frame.type === "json") {
       if (payload) {
         yield { payload, attachments };
@@ -248,15 +252,15 @@ export async function* parse(input: AsyncIterable<Uint8Array>): AsyncIterableIte
       payload = JSON.parse(frame.text);
       attachments = {};
       group = null;
-    } else if (frame.code.startsWith("-")) {
+    } else if (frame.type === "counter_10") {
       group = frame.code;
     } else if (group) {
-      attachments[group] = [...(attachments[group] ?? []), frame.code + frame.text];
+      attachments[group] = [...(attachments[group] ?? []), frame.text];
     }
   }
 
   if (payload || Object.keys(attachments).length > 0) {
-    yield { payload: payload ?? {}, attachments };
+    yield { payload: payload ?? {}, attachments: attachments ?? [] };
   }
 }
 
