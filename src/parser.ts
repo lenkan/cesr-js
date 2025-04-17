@@ -3,14 +3,7 @@ import type { CodeSize } from "./codes.ts";
 import { MatterSize, IndexerSize, CountCode_10, CounterSize_10 } from "./codes.ts";
 import type { DataObject } from "./data-type.ts";
 import { decodeBase64Int } from "./base64.ts";
-
-export type FrameType = "json" | "indexer" | "matter" | "counter_10" | "counter_20";
-
-export interface Frame {
-  type: FrameType;
-  code: string;
-  text: string;
-}
+import { decode, type Frame } from "./cesr-encoding.ts";
 
 function concat(a: Uint8Array, b: Uint8Array) {
   if (a.length === 0) {
@@ -26,20 +19,6 @@ function concat(a: Uint8Array, b: Uint8Array) {
   merged.set(b, a.length);
   return merged;
 }
-
-// function prepad(raw: Uint8Array, length: number): Uint8Array {
-//   if (raw.byteLength === length) {
-//     return raw;
-//   }
-
-//   if (raw.byteLength > length) {
-//     throw new Error("Cannot pad, input is longer than desired length");
-//   }
-
-//   const padded = new Uint8Array(length + raw.byteLength);
-//   padded.set(raw, length);
-//   return padded;
-// }
 
 interface GroupContext {
   code: string;
@@ -72,70 +51,36 @@ class Parser {
     return {
       type: "json",
       code: "JSON",
+      soft: "",
       text: this.#decoder.decode(frame),
     };
   }
 
-  #readCode(table: Record<string, CodeSize>): CodeSize | null {
-    let code = "";
-    let size: CodeSize | null = null;
-
-    while (!size) {
-      if (this.#buffer.length < code.length + 1) {
-        return null;
-      }
-
-      if (code.length >= 4) {
-        throw new Error("Expected frame");
-      }
-
-      code = this.#decoder.decode(this.#buffer.slice(0, code.length + 1));
-      size = table[code];
-    }
-
-    return size;
-  }
-
   #readFrame(table: Record<string, CodeSize>): Frame | null {
-    const code = this.#readCode(table);
+    const result = decode(this.#buffer, table);
 
-    if (!code) {
+    if (!result.frame) {
       return null;
     }
 
-    if (code.fs) {
-      if (this.#buffer.length < code.fs) {
-        return null;
+    this.#buffer = this.#buffer.slice(result.n);
+
+    if (result.frame.type === "counter_10") {
+      const count = decodeBase64Int(result.frame.soft);
+      switch (result.frame.code) {
+        case CountCode_10.ControllerIdxSigs:
+        case CountCode_10.WitnessIdxSigs:
+          this.#group = { code: result.frame.code, table: IndexerSize, count };
+          break;
+        case CountCode_10.NonTransReceiptCouples:
+        case CountCode_10.SealSourceCouples:
+        case CountCode_10.FirstSeenReplayCouples:
+          this.#group = { code: result.frame.code, table: MatterSize, count: count * 2 };
+          break;
       }
-
-      const frame = this.#buffer.slice(0, code.fs);
-      const qb64 = this.#decoder.decode(frame);
-
-      if (code.type === "counter_10") {
-        const count = decodeBase64Int(qb64.slice(code.hs, code.hs + code.ss));
-        switch (code.prefix) {
-          case CountCode_10.ControllerIdxSigs:
-          case CountCode_10.WitnessIdxSigs:
-            this.#group = { code: code.prefix, table: IndexerSize, count };
-            break;
-          case CountCode_10.NonTransReceiptCouples:
-          case CountCode_10.SealSourceCouples:
-          case CountCode_10.FirstSeenReplayCouples:
-            this.#group = { code: code.prefix, table: MatterSize, count: count * 2 };
-            break;
-        }
-      }
-
-      this.#buffer = this.#buffer.slice(frame.length);
-
-      return {
-        type: code.type as FrameType,
-        code: code.prefix,
-        text: qb64,
-      };
     }
 
-    throw new Error("No variable size yet");
+    return result.frame;
   }
 
   #read(): Frame | null {

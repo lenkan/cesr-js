@@ -10,6 +10,7 @@ if [ "$tag" = "dev" ]; then
     version="${version}-dev.$(git rev-parse --short HEAD)"
 fi
 
+npm run clean
 npm install
 npm run build
 
