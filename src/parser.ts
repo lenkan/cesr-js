@@ -1,7 +1,6 @@
 import { parseVersion } from "./version.ts";
 import type { CodeSize } from "./codes.ts";
 import { MatterSize, IndexerSize, CountCode_10, CounterSize_10 } from "./codes.ts";
-import type { DataObject } from "./data-type.ts";
 import { decodeBase64Int } from "./base64.ts";
 import { decode, type Frame } from "./cesr-encoding.ts";
 
@@ -153,10 +152,10 @@ class Parser {
  * @param input Incoming stream of bytes
  * @returns An async iterable of CESR frames
  */
-export async function* read(input: AsyncIterable<Uint8Array>): AsyncIterableIterator<Frame> {
+export async function* parse(input: ParserInput): AsyncIterableIterator<Frame> {
   const parser = new Parser();
 
-  for await (const chunk of input) {
+  for await (const chunk of resolveInput(input)) {
     for (const frame of parser.parse(chunk)) {
       yield frame;
     }
@@ -179,45 +178,4 @@ function resolveInput(input: ParserInput): AsyncIterable<Uint8Array> {
   }
 
   return input;
-}
-
-/**
- * Parses JSON messages with CESR attachments from an incoming stream of bytes.
- *
- * @param input Incoming stream of bytes
- * @returns An async iterable of messages with attachments
- */
-export async function* parse(input: ParserInput): AsyncIterableIterator<Message> {
-  const stream = resolveInput(input);
-
-  let payload: MessagePayload | null = null;
-  let group: string | null = null;
-  let attachments: Record<string, string[]> = {};
-
-  for await (const frame of read(stream)) {
-    if (frame.type === "json") {
-      if (payload) {
-        yield { payload, attachments };
-      }
-
-      payload = JSON.parse(frame.text);
-      attachments = {};
-      group = null;
-    } else if (frame.type === "counter_10") {
-      group = frame.code;
-    } else if (group) {
-      attachments[group] = [...(attachments[group] ?? []), frame.text];
-    }
-  }
-
-  if (payload || Object.keys(attachments).length > 0) {
-    yield { payload: payload ?? {}, attachments: attachments ?? [] };
-  }
-}
-
-export type MessagePayload = DataObject;
-
-export interface Message {
-  payload: MessagePayload;
-  attachments: Record<string, string[]>;
 }

@@ -1,4 +1,4 @@
-import { parse } from "../parser.ts";
+import { parseMessages } from "../message.ts";
 
 interface Arguments {
   options: Record<string, string | boolean>;
@@ -83,11 +83,11 @@ export async function execute(cli: CommandLineInterface) {
 
   const stream = cli.read(input);
 
-  for await (const chunk of parse(stream)) {
+  for await (const message of parseMessages(stream)) {
     if (app.options["--pretty"]) {
-      console.dir(chunk, { depth: 100, colors: true });
+      console.dir(message, { depth: 100, colors: true });
     } else {
-      console.log(JSON.stringify(chunk));
+      console.log(JSON.stringify(message));
     }
   }
 }
