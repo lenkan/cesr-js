@@ -78,6 +78,19 @@ test("Test parse GEDA", async () => {
   assert.equal(events[2].payload.t, "rot");
 });
 
+test("Test parse credential", async () => {
+  const stream = ReadableStream.from(createReadStream("./fixtures/credential.cesr", {}));
+  const events = await collect(parse(stream));
+
+  assert.equal(events.length, 6);
+  assert.equal(events[0].payload.t, "icp");
+  assert.equal(events[1].payload.t, "ixn");
+  assert.equal(events[2].payload.t, "ixn");
+  assert.equal(events[3].payload.t, "vcp");
+  assert.equal(events[4].payload.t, "iss");
+  assert.match(events[5].payload.v as string, /^ACDC/);
+});
+
 test("Parse GEDA in chunks", async () => {
   const data = ReadableStream.from(chunk("./fixtures/geda.cesr"));
 

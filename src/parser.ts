@@ -50,7 +50,7 @@ class Parser {
 
     return {
       type: "json",
-      code: "JSON",
+      code: version.protocol,
       soft: "",
       text: this.#decoder.decode(frame),
     };
@@ -76,6 +76,12 @@ class Parser {
         case CountCode_10.SealSourceCouples:
         case CountCode_10.FirstSeenReplayCouples:
           this.#group = { code: result.frame.code, table: MatterSize, count: count * 2 };
+          break;
+        case CountCode_10.SealSourceTriples:
+          this.#group = { code: result.frame.code, table: MatterSize, count: count * 3 };
+          break;
+        case CountCode_10.TransReceiptQuadruples:
+          this.#group = { code: result.frame.code, table: MatterSize, count: count * 4 };
           break;
       }
     }
