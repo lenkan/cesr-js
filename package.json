@@ -8,7 +8,7 @@
     "Composable Event Streaming Representation"
   ],
   "bin": {
-    "cesr": "./dist/cli/node-cli.js"
+    "cesr": "dist/cli/node-cli.js"
   },
   "scripts": {
     "build": "tsc -p tsconfig.build.json",
