@@ -20,7 +20,8 @@
     "format": "prettier --write ."
   },
   "exports": {
-    ".": "./dist/main.js"
+    ".": "./dist/main.js",
+    "./__unstable__": "./dist/__unstable__.js"
   },
   "files": [
     "dist"
