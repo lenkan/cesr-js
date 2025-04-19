@@ -16,10 +16,37 @@ test("CESR string", () => {
   assert.equal(result, "7AAAAAAHFITqGxJjULTjbxZ1Ciow-4WgTVll");
 });
 
-describe("decode variable size", () => {
-  const input = "7AAAAAAHFITqGxJjULTjbxZ1Ciow-4WgTVll";
+describe("decode", () => {
+  test("decodes legacy JSON", () => {
+    const input = '{"v":"KERI10JSON000023_","t":"icp"}';
+    const result = decode(input);
 
-  test("decodes text domain", () => {
+    assert.partialDeepStrictEqual(result, {
+      frame: {
+        type: "message",
+        code: "KERI",
+        text: input,
+      },
+      n: 35,
+    });
+  });
+
+  test("decodes JSON", () => {
+    const input = '{"v":"KERICAAJSONAAAi.","t":"icp"}';
+    const result = decode(input);
+
+    assert.partialDeepStrictEqual(result, {
+      frame: {
+        type: "message",
+        code: "KERI",
+        text: input,
+      },
+      n: 34,
+    });
+  });
+
+  test("decodes text variable size", () => {
+    const input = "7AAAAAAHFITqGxJjULTjbxZ1Ciow-4WgTVll";
     const result = decode(input, MatterSize);
 
     assert.partialDeepStrictEqual(result, {

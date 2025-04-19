@@ -1,12 +1,13 @@
 import { decodeBase64Int, decodeBase64Url, encodeBase64Int, encodeBase64Url } from "./base64.ts";
 import type { CodeSize } from "./codes.ts";
 import { MatterSize } from "./codes.ts";
+import { decodeVersion } from "./version.ts";
 
 function padNumber(num: number, length: number) {
   return num.toString().padStart(length, "0");
 }
 
-export type FrameType = "json" | "indexer" | "matter" | "counter_10" | "counter_20";
+export type FrameType = "message" | "indexer" | "matter" | "counter_10" | "counter_20";
 
 export interface Frame {
   type: FrameType;
@@ -17,7 +18,7 @@ export interface Frame {
   raw: Uint8Array;
 }
 
-function prepad(raw: Uint8Array, length: number): Uint8Array {
+function prepadBytes(raw: Uint8Array, length: number): Uint8Array {
   if (raw.byteLength === length) {
     return raw;
   }
@@ -49,28 +50,66 @@ function findCode(source: Uint8Array, table: Record<string, CodeSize>): CodeSize
   return size;
 }
 
+function decodeJSON(source: Uint8Array): DecodeResult {
+  if (source.length < 25) {
+    return { frame: null, n: 0 };
+  }
+
+  const version = decodeVersion(source.slice(0, 24));
+  if (source.length < version.size) {
+    return { frame: null, n: 0 };
+  }
+
+  const frame = source.slice(0, version.size);
+
+  return {
+    frame: {
+      type: "message",
+      code: version.protocol,
+      soft: "",
+      count: 0,
+      raw: frame,
+      text: new TextDecoder().decode(frame),
+    },
+    n: version.size,
+  };
+}
+
 export interface DecodeResult {
   frame: Frame | null;
   n: number;
 }
 
 export function decode(input: Uint8Array | string, table: Record<string, CodeSize> = MatterSize): DecodeResult {
-  const source = typeof input === "string" ? new TextEncoder().encode(input) : input;
+  // Assumes UTF-8 encoded string
+  if (typeof input === "string") {
+    return decode(new TextEncoder().encode(input), table);
+  }
 
-  const code = findCode(source, table);
+  if (input.length === 0) {
+    return { frame: null, n: 0 };
+  }
+
+  const tritet = input[0] >>> 5;
+  switch (tritet) {
+    case 0b011:
+      return decodeJSON(input);
+  }
+
+  const code = findCode(input, table);
   if (!code) {
     return { frame: null, n: 0 };
   }
 
   const decoder = new TextDecoder();
-  const soft = decoder.decode(source.slice(code.hs, code.hs + code.ss));
+  const soft = decoder.decode(input.slice(code.hs, code.hs + code.ss));
   const size = code.fs ?? code.hs + code.ss + decodeBase64Int(soft) * 4;
 
-  if (source.length < size) {
+  if (input.length < size) {
     return { frame: null, n: 0 };
   }
 
-  const qb64 = decoder.decode(source.slice(0, size));
+  const qb64 = decoder.decode(input.slice(0, size));
   const padSize = (code.hs + code.ss) % 4;
   const leadSize = code.ls ?? 0;
   const raw = decodeBase64Url("A".repeat(padSize) + qb64.slice(code.hs + code.ss, size)).slice(padSize + leadSize);
@@ -121,7 +160,7 @@ export function encodeText(code: string, raw: Uint8Array, table: Record<string, 
 
   const leadSize = size.ls ?? 0;
   const padSize = (3 - ((raw.byteLength + leadSize) % 3)) % 3;
-  const padded = prepad(raw, padSize + leadSize);
+  const padded = prepadBytes(raw, padSize + leadSize);
   const soft = size.ss > 0 ? encodeBase64Int(padded.byteLength / 3, size.ss) : "";
 
   return `${code}${soft}${encodeBase64Url(padded).slice(padSize)}`;

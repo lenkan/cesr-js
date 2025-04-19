@@ -1,4 +1,3 @@
-import { parseVersion } from "./version.ts";
 import type { CodeSize } from "./codes.ts";
 import { MatterSize, IndexerSize, CountCode_10, CounterSize_10 } from "./codes.ts";
 import { decode, type Frame } from "./cesr-encoding.ts";
@@ -25,35 +24,11 @@ interface GroupContext {
 }
 
 class Parser {
-  #decoder = new TextDecoder();
   #buffer: Uint8Array;
   #group: GroupContext | null = null;
 
   constructor() {
     this.#buffer = new Uint8Array(0);
-  }
-
-  #readJsonFrame(): Frame | null {
-    if (this.#buffer.length < 24) {
-      return null;
-    }
-
-    const version = parseVersion(this.#buffer.slice(0, 23));
-    if (this.#buffer.length < version.size) {
-      return null;
-    }
-
-    const frame = this.#buffer.slice(0, version.size);
-    this.#buffer = this.#buffer.slice(version.size);
-
-    return {
-      type: "json",
-      code: version.protocol,
-      soft: "",
-      count: 0,
-      raw: frame,
-      text: this.#decoder.decode(frame),
-    };
   }
 
   #readFrame(table: Record<string, CodeSize>): Frame | null {
@@ -109,7 +84,9 @@ class Parser {
 
     switch (tritet) {
       case 0b011: {
-        return this.#readJsonFrame();
+        const frame = decode(this.#buffer, MatterSize);
+        this.#buffer = this.#buffer.slice(frame.n);
+        return frame.frame;
       }
       case 0b001: {
         return this.#readFrame(CounterSize_10);

@@ -118,7 +118,7 @@ describe("Parse count code", () => {
 
 describe("Parse JSON", () => {
   test("Parse JSON without attachments", async () => {
-    const input = JSON.stringify(versify({ t: "icp" }));
+    const input = JSON.stringify(versify({ t: "icp" }, true));
     const result = await collect(parseMessages(input));
     assert.equal(result.length, 1);
     assert.deepStrictEqual(result[0].payload, { v: "KERI10JSON000023_", t: "icp" });
