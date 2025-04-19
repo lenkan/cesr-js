@@ -12,7 +12,9 @@ export interface Frame {
   type: FrameType;
   code: string;
   soft: string;
+  count: number;
   text: string;
+  raw: Uint8Array;
 }
 
 function prepad(raw: Uint8Array, length: number): Uint8Array {
@@ -49,7 +51,6 @@ function findCode(source: Uint8Array, table: Record<string, CodeSize>): CodeSize
 
 export interface DecodeResult {
   frame: Frame | null;
-  raw: Uint8Array;
   n: number;
 }
 
@@ -58,7 +59,7 @@ export function decode(input: Uint8Array | string, table: Record<string, CodeSiz
 
   const code = findCode(source, table);
   if (!code) {
-    return { frame: null, raw: new Uint8Array(0), n: 0 };
+    return { frame: null, n: 0 };
   }
 
   const decoder = new TextDecoder();
@@ -66,7 +67,7 @@ export function decode(input: Uint8Array | string, table: Record<string, CodeSiz
   const size = code.fs ?? code.hs + code.ss + decodeBase64Int(soft) * 4;
 
   if (source.length < size) {
-    return { frame: null, raw: new Uint8Array(0), n: 0 };
+    return { frame: null, n: 0 };
   }
 
   const qb64 = decoder.decode(source.slice(0, size));
@@ -75,8 +76,14 @@ export function decode(input: Uint8Array | string, table: Record<string, CodeSiz
   const raw = decodeBase64Url("A".repeat(padSize) + qb64.slice(code.hs + code.ss, size)).slice(padSize + leadSize);
 
   return {
-    frame: { code: code.prefix, type: code.type as FrameType, soft, text: qb64 },
-    raw,
+    frame: {
+      type: code.type as FrameType,
+      code: code.prefix,
+      soft,
+      count: soft ? decodeBase64Int(soft) : 0,
+      text: qb64,
+      raw,
+    },
     n: size,
   };
 }

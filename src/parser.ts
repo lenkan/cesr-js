@@ -1,7 +1,6 @@
 import { parseVersion } from "./version.ts";
 import type { CodeSize } from "./codes.ts";
 import { MatterSize, IndexerSize, CountCode_10, CounterSize_10 } from "./codes.ts";
-import { decodeBase64Int } from "./base64.ts";
 import { decode, type Frame } from "./cesr-encoding.ts";
 
 function concat(a: Uint8Array, b: Uint8Array) {
@@ -51,6 +50,8 @@ class Parser {
       type: "json",
       code: version.protocol,
       soft: "",
+      count: 0,
+      raw: frame,
       text: this.#decoder.decode(frame),
     };
   }
@@ -65,7 +66,7 @@ class Parser {
     this.#buffer = this.#buffer.slice(result.n);
 
     if (result.frame.type === "counter_10") {
-      const count = decodeBase64Int(result.frame.soft);
+      const count = result.frame.count;
       switch (result.frame.code) {
         case CountCode_10.ControllerIdxSigs:
         case CountCode_10.WitnessIdxSigs:
