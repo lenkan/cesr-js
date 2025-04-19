@@ -1,4 +1,4 @@
-export { parse, type Message, type MessagePayload } from "./parser.ts";
+export * from "./parser.ts";
 export * from "./version.ts";
 export * from "./codes.ts";
 export * from "./cesr-encoding.ts";

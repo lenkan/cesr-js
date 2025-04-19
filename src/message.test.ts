@@ -1,7 +1,7 @@
 import { createReadStream } from "fs";
 import assert from "node:assert";
 import { describe, test } from "node:test";
-import { parse } from "./parser.ts";
+import { parseMessages } from "./message.ts";
 import { readFile } from "node:fs/promises";
 import { versify } from "./version.ts";
 import { CountCode_10 } from "./codes.ts";
@@ -29,7 +29,7 @@ async function collect<T>(iterator: AsyncIterable<T>): Promise<T[]> {
 }
 
 test("Test alice", { timeout: 100 }, async () => {
-  const result = await collect(parse(createReadStream("./fixtures/alice.cesr", {})));
+  const result = await collect(parseMessages(createReadStream("./fixtures/alice.cesr", {})));
 
   assert.equal(result.length, 2);
   assert.equal(result[0].payload.t, "icp");
@@ -61,7 +61,7 @@ test("Test alice", { timeout: 100 }, async () => {
 test("Test witness", { timeout: 100 }, async () => {
   const stream = ReadableStream.from(createReadStream("./fixtures/witness.cesr", {}));
 
-  const result = await collect(parse(stream));
+  const result = await collect(parseMessages(stream));
 
   assert.equal(result.length, 3);
   assert.equal(result[0].payload.t, "icp");
@@ -70,7 +70,7 @@ test("Test witness", { timeout: 100 }, async () => {
 
 test("Test parse GEDA", async () => {
   const stream = ReadableStream.from(createReadStream("./fixtures/geda.cesr", {}));
-  const events = await collect(parse(stream));
+  const events = await collect(parseMessages(stream));
 
   assert.equal(events.length, 17);
   assert.equal(events[0].payload.t, "icp");
@@ -80,7 +80,7 @@ test("Test parse GEDA", async () => {
 
 test("Test parse credential", async () => {
   const stream = ReadableStream.from(createReadStream("./fixtures/credential.cesr", {}));
-  const events = await collect(parse(stream));
+  const events = await collect(parseMessages(stream));
 
   assert.equal(events.length, 6);
   assert.equal(events[0].payload.t, "icp");
@@ -94,7 +94,7 @@ test("Test parse credential", async () => {
 test("Parse GEDA in chunks", async () => {
   const data = ReadableStream.from(chunk("./fixtures/geda.cesr"));
 
-  const events = await collect(parse(data));
+  const events = await collect(parseMessages(data));
   assert.equal(events.length, 17);
 });
 
@@ -108,7 +108,7 @@ describe("Parse count code", () => {
 
     const attachment = [CountCode_10.ControllerIdxSigs, encodeBase64Int(sigs.length, 2), ...sigs].join("");
 
-    const result = await collect(parse(attachment));
+    const result = await collect(parseMessages(attachment));
 
     assert.deepStrictEqual(result[0].attachments, {
       [CountCode_10.ControllerIdxSigs]: sigs,
@@ -119,7 +119,7 @@ describe("Parse count code", () => {
 describe("Parse JSON", () => {
   test("Parse JSON without attachments", async () => {
     const input = JSON.stringify(versify({ t: "icp" }));
-    const result = await collect(parse(input));
+    const result = await collect(parseMessages(input));
     assert.equal(result.length, 1);
     assert.deepStrictEqual(result[0].payload, { v: "KERI10JSON000023_", t: "icp" });
   });
@@ -127,6 +127,6 @@ describe("Parse JSON", () => {
   test("Parse unfinished JSON without full version string", async () => {
     const input = JSON.stringify(versify({ t: "icp" })).slice(0, 20);
 
-    await assert.rejects(() => collect(parse(input)), new Error("Unexpected end of stream"));
+    await assert.rejects(() => collect(parseMessages(input)), new Error("Unexpected end of stream"));
   });
 });

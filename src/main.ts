@@ -1,1 +1,2 @@
-export { parse, type Message, type MessagePayload } from "./parser.ts";
+export { parse } from "./parser.ts";
+export { Frame, FrameType } from "./cesr-encoding.ts";

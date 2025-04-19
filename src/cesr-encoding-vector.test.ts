@@ -16,7 +16,7 @@ for (const vector of vectors) {
         assert(result.frame);
         assert.deepEqual(result.frame.code, vector.code);
         assert.deepEqual(result.frame.text, vector.qb64);
-        assert.deepEqual(result.raw, raw);
+        assert.deepEqual(result.frame.raw, raw);
       });
 
       test(`encode qb64 ${vector.type} ${vector.name} - ${vector.qb64.substring(0, 10)}`, () => {
@@ -34,33 +34,33 @@ for (const vector of vectors) {
         assert(result.frame);
         assert.deepEqual(result.frame.code, vector.code);
         assert.deepEqual(result.frame.text, vector.qb64);
-        assert.deepEqual(result.raw, raw);
+        assert.deepEqual(result.frame.raw, raw);
       });
 
       break;
     }
     case "counter_10": {
       test(`decode qb64 ${vector.type} ${vector.name} - ${vector.qb64.substring(0, 10)}`, () => {
-        // TODO: Decode count value for counters
         const result = cesr.decode(vector.qb64, CounterSize_10);
 
         assert(result.frame);
         assert.strictEqual(result.frame.code, vector.code);
         assert.strictEqual(result.frame.text, vector.qb64);
         assert.strictEqual(decodeBase64Int(result.frame.soft), vector.count);
+        assert.strictEqual(result.frame.count, vector.count);
       });
 
       break;
     }
     case "counter_20": {
       test(`decode qb64 ${vector.type} ${vector.name} - ${vector.qb64.substring(0, 10)}`, () => {
-        // TODO: Decode count value for counters
         const result = cesr.decode(vector.qb64, CounterSize_20);
 
         assert(result.frame);
         assert.deepEqual(result.frame.code, vector.code);
         assert.deepEqual(result.frame.text, vector.qb64);
         assert.strictEqual(decodeBase64Int(result.frame.soft), vector.count);
+        assert.strictEqual(result.frame.count, vector.count);
       });
 
       break;

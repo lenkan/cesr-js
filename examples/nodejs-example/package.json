@@ -2,6 +2,6 @@
   "name": "nodejs-example",
   "private": true,
   "dependencies": {
-    "cesr": "file://../.."
+    "cesr": "file://../../"
   }
 }

@@ -5,8 +5,7 @@ const url = new URL("/lenkan/cesr-js/refs/heads/main/fixtures/geda.cesr", "https
 const response = await fetch(url);
 
 if (response.body) {
-  for await (const message of parse(response.body)) {
-    console.log(message.payload);
-    console.log(message.attachments);
+  for await (const frame of parse(response.body)) {
+    console.log(frame);
   }
 }
