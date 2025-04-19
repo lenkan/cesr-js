@@ -8,28 +8,36 @@ import { parse, type ParserInput } from "./parser.ts";
  * @returns An async iterable of messages with attachments
  */
 export async function* parseMessages(input: ParserInput): AsyncIterableIterator<Message> {
-  let payload: MessagePayload | null = null;
   let group: string | null = null;
-  let attachments: Record<string, string[]> = {};
+  let message: Message | null = null;
 
   for await (const frame of parse(input)) {
-    if (frame.type === "json") {
-      if (payload) {
-        yield { payload, attachments };
-      }
+    switch (frame.type) {
+      case "json": {
+        if (message) {
+          yield message;
+        }
 
-      payload = JSON.parse(frame.text);
-      attachments = {};
-      group = null;
-    } else if (frame.type === "counter_10") {
-      group = frame.code;
-    } else if (group) {
-      attachments[group] = [...(attachments[group] ?? []), frame.text];
+        message = { payload: JSON.parse(frame.text), attachments: {} };
+        group = null;
+        break;
+      }
+      case "counter_10":
+      case "counter_20":
+        group = frame.code;
+        break;
+      default: {
+        message = message ?? { payload: {}, attachments: {} };
+        if (group) {
+          message.attachments[group] = [...(message.attachments[group] ?? []), frame.text];
+        }
+        break;
+      }
     }
   }
 
-  if (payload || Object.keys(attachments).length > 0) {
-    yield { payload: payload ?? {}, attachments: attachments ?? [] };
+  if (message) {
+    yield message;
   }
 }
 
