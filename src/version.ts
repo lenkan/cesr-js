@@ -1,96 +1,130 @@
 import { type DataObject } from "./data-type.ts";
-import { decodeBase64Int } from "./base64.ts";
+import { decodeBase64Int, encodeBase64Int } from "./base64.ts";
 
 export interface Version {
   protocol: string;
   format: string;
-  version: string;
+  major: number;
+  minor: number;
   size: number;
+  legacy?: boolean;
 }
 
-// PPPPvvKKKKllllll_
-const LEGACY_MATCH = /^[A-Z]{4}[0-9]{2}[A-Z]{4}.*$/;
+// VERSION = "PPPPVVVKKKKBBBB.";
+// LEGACY_VERSION = "PPPPvvKKKKllllll_";
+const REGEX_PROTOCOL = /^[A-Z]{4}$/;
+const REGEX_FORMAT = /^[A-Z]{4}$/;
+const REGEX_VERSION = /^\{"v":"(.*?)".*$/;
 
-// PPPPVVVKKKKBBBB.
-const MATCH = /^[A-Z]{4}[0-9]{3}[A-Z]{4}.*$/;
-
-export function parseVersion(data: Uint8Array | string): Version {
+export function decodeVersion(data: Uint8Array | string): Version {
   if (typeof data !== "string") {
-    return parseVersion(new TextDecoder().decode(data));
+    return decodeVersion(new TextDecoder().decode(data));
   }
 
-  const value = data.slice(6);
-  if (LEGACY_MATCH.test(value)) {
-    const protocol = value.slice(0, 4);
-    const version = value.slice(4, 6);
-    const format = value.slice(6, 10);
-    const size = parseInt(value.slice(10, 16), 16);
+  const match = data.match(REGEX_VERSION);
+  if (!match) {
+    throw new Error(`Unable to extract "v" field from ${data}`);
+  }
 
-    return {
-      protocol,
-      version,
-      format,
-      size,
-    };
-  } else if (MATCH.test(value)) {
+  const value = match[1];
+
+  if (value.endsWith(".") && value.length === 16) {
     const protocol = value.slice(0, 4);
-    const version = value.slice(4, 7);
+    const major = decodeBase64Int(value.slice(4, 5));
+    const minor = decodeBase64Int(value.slice(5, 7));
     const format = value.slice(7, 11);
     const size = decodeBase64Int(value.slice(12, 15));
 
     return {
       protocol,
-      version,
+      major,
+      minor,
       format,
       size,
     };
   }
 
-  throw new Error(`Unexpected version string ${value}`);
-}
+  if (value.endsWith("_") && value.length === 17) {
+    const protocol = value.slice(0, 4);
+    const major = parseInt(value.slice(4, 5), 16);
+    const minor = parseInt(value.slice(5, 6), 16);
+    const format = value.slice(6, 10);
+    const size = parseInt(value.slice(10, 16), 16);
 
-function formatSize(size: number) {
-  return size.toString(16).padStart(6, "0");
-}
-
-function formatVersion(version: Version) {
-  switch (version.format) {
-    case "JSON":
-      break;
-    default:
-      throw new Error(`Unsupported format ${version.format}`);
+    return {
+      protocol,
+      major,
+      minor,
+      format,
+      size,
+      legacy: true,
+    };
   }
 
-  switch (version.protocol) {
-    case "KERI":
-      return `KERI10${version.format}${formatSize(version.size)}_`;
-    default:
-      throw new Error(`Unsupported protocol ${version.protocol}`);
-  }
+  throw new Error(`Invalid version string ${value}`);
 }
 
-// const DUMMY_VERSION = "PPPPVVVKKKKBBBB.";
-// const DUMMY_LEGACY_VERSION = "PPPPvvKKKKllllll_";
+function encodeHex(value: number, length: number) {
+  if (value >= 16 ** length) {
+    throw new Error(`value ${value} too big for hex length ${length}`);
+  }
 
-export function versify<T extends DataObject>(data: T): T & { v: string } {
+  return value.toString(16).padStart(length, "0");
+}
+
+export function encodeVersion(version: Version): string {
+  if (!REGEX_PROTOCOL.test(version.protocol)) {
+    throw new Error("Protocol must be 4 characters");
+  }
+
+  if (!REGEX_FORMAT.test(version.format)) {
+    throw new Error("Format must be 4 characters");
+  }
+
+  if (version.legacy) {
+    return [
+      version.protocol,
+      encodeHex(version.major, 1),
+      encodeHex(version.minor, 1),
+      version.format,
+      encodeHex(version.size, 6),
+      "_",
+    ].join("");
+  }
+
+  return [
+    version.protocol,
+    encodeBase64Int(version.major, 1),
+    encodeBase64Int(version.minor, 2),
+    version.format,
+    encodeBase64Int(version.size, 4),
+    ".",
+  ].join("");
+}
+
+export function versify<T extends DataObject>(data: T, legacy = false): T & { v: string } {
   const encoder = new TextEncoder();
   const str = encoder.encode(
     JSON.stringify({
-      v: formatVersion({
+      v: encodeVersion({
         protocol: "KERI",
         size: 0,
         format: "JSON",
-        version: "1.0",
+        major: 1,
+        minor: 0,
+        legacy,
       }),
       ...data,
     }),
   );
 
-  const version = formatVersion({
+  const version = encodeVersion({
     protocol: "KERI",
     format: "JSON",
     size: str.byteLength,
-    version: "1.0",
+    major: 1,
+    minor: 0,
+    legacy,
   });
 
   return {

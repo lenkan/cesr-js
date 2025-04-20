@@ -13,7 +13,7 @@ export async function* parseMessages(input: ParserInput): AsyncIterableIterator<
 
   for await (const frame of parse(input)) {
     switch (frame.type) {
-      case "json": {
+      case "message": {
         if (message) {
           yield message;
         }
