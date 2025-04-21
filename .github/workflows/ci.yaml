@@ -37,3 +37,24 @@ jobs:
 
       - name: Run tests
         run: npm test
+
+  test-examples:
+    runs-on: ubuntu-24.04
+
+    steps:
+      - name: Checkout repository
+        uses: actions/checkout@v2
+
+      - name: Set up Node.js
+        uses: actions/setup-node@v2
+        with:
+          node-version: 22
+
+      - name: Install dependencies
+        run: npm install --frozen-lockfile
+
+      - name: Run build
+        run: npm run build
+
+      - name: Run tests
+        run: ./test_examples.sh
