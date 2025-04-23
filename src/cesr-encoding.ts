@@ -147,7 +147,7 @@ export function encodeDate(date: Date): string {
 /**
  * Encodes the provided raw data into the CESR Text domain.
  */
-export function encodeText(code: string, raw: Uint8Array, table: Record<string, CodeSize> = MatterSize): string {
+export function encode(code: string, raw: Uint8Array, table: Record<string, CodeSize> = MatterSize): string {
   if (!(raw instanceof Uint8Array)) {
     throw new Error(`Input must be an Uint8Array`);
   }
@@ -165,11 +165,3 @@ export function encodeText(code: string, raw: Uint8Array, table: Record<string, 
 
   return `${code}${soft}${encodeBase64Url(padded).slice(padSize)}`;
 }
-
-const cesr = {
-  encode: encodeText,
-  decode,
-  encodeDate,
-};
-
-export default cesr;

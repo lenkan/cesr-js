@@ -1,7 +1,7 @@
 import { describe, test } from "node:test";
 import assert from "node:assert/strict";
 import { Buffer } from "node:buffer";
-import { decode, encodeDate, encodeText } from "./cesr-encoding.ts";
+import { decode, encodeDate, encode } from "./cesr-encoding.ts";
 import { CounterSize_10, MatterSize } from "./codes.ts";
 
 test("cesr date", () => {
@@ -11,7 +11,7 @@ test("cesr date", () => {
 
 test("CESR string", () => {
   const raw = Buffer.from("1484ea1b126350b4e36f16750a2a30fb85a04d5965", "hex");
-  const result = encodeText("7AAA", raw);
+  const result = encode("7AAA", raw);
 
   assert.equal(result, "7AAAAAAHFITqGxJjULTjbxZ1Ciow-4WgTVll");
 });
