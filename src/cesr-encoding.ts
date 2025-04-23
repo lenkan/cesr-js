@@ -147,6 +147,42 @@ export function encodeDate(date: Date): string {
 /**
  * Encodes the provided raw data into the CESR Text domain.
  */
+export function encodeCounter(code: string, count: number, table: Record<string, CodeSize>): string {
+  const size = table[code];
+
+  if (!size) {
+    throw new Error(`Unable to find code table for ${code}`);
+  }
+
+  if (size.ss === 0) {
+    throw new Error(`Invalid soft size (${size.ss}) for count code`);
+  }
+
+  const soft = encodeBase64Int(count, size.ss);
+  return `${code}${soft}`;
+}
+
+/**
+ * Encodes the provided raw data into the CESR Text domain.
+ */
+export function encodeIndexer(code: string, index: number, raw: Uint8Array, table: Record<string, CodeSize>): string {
+  const size = table[code];
+
+  if (!size) {
+    throw new Error(`Unable to find code table for ${code}`);
+  }
+
+  const leadSize = size.ls ?? 0;
+  const padSize = (3 - ((raw.byteLength + leadSize) % 3)) % 3;
+  const padded = prepadBytes(raw, padSize + leadSize);
+  const soft = encodeBase64Int(index, size.ss);
+
+  return `${code}${soft}${encodeBase64Url(padded).slice(padSize)}`;
+}
+
+/**
+ * Encodes the provided raw data into the CESR Text domain.
+ */
 export function encode(code: string, raw: Uint8Array, table: Record<string, CodeSize> = MatterSize): string {
   if (!(raw instanceof Uint8Array)) {
     throw new Error(`Input must be an Uint8Array`);

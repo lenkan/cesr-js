@@ -1,8 +1,8 @@
 import { describe, test } from "node:test";
 import assert from "node:assert/strict";
 import { Buffer } from "node:buffer";
-import { decode, encodeDate, encode } from "./cesr-encoding.ts";
-import { CounterSize_10, MatterSize } from "./codes.ts";
+import { decode, encodeDate, encode, encodeCounter, encodeIndexer } from "./cesr-encoding.ts";
+import { CountCode_10, CounterSize_10, IndexCode, IndexerSize, MatterSize } from "./codes.ts";
 
 test("cesr date", () => {
   const result = encodeDate(new Date(Date.parse("2024-11-23T16:02:27.123Z")));
@@ -14,6 +14,38 @@ test("CESR string", () => {
   const result = encode("7AAA", raw);
 
   assert.equal(result, "7AAAAAAHFITqGxJjULTjbxZ1Ciow-4WgTVll");
+});
+
+describe("Encode counter", () => {
+  test("Encode attachment group", () => {
+    const count = 39;
+    const result = encodeCounter(CountCode_10.AttachmentGroup, count, CounterSize_10);
+    assert.equal(result, "-VAn");
+  });
+
+  test("Encode big attachment group", () => {
+    const count = 39;
+    const result = encodeCounter(CountCode_10.BigAttachmentGroup, count, CounterSize_10);
+    assert.equal(result, "-0VAAAAn");
+  });
+});
+
+describe("Encode indexer", () => {
+  test("Encode indexed signature", () => {
+    const raw = Uint8Array.from(
+      Buffer.from(
+        "hLFzAwI4x0znVHkP_9jcH3liL11oeEhkIcsBS7KUHOq6uf8Rh9Kqa2Vo1F_Ai5Hlsvfc5AtvhBpPfYDIoUQrvA",
+        "base64url",
+      ),
+    );
+
+    const result = encodeIndexer(IndexCode.Ed25519_Sig, 3, raw, IndexerSize);
+    assert.equal(result, "ADCEsXMDAjjHTOdUeQ__2NwfeWIvXWh4SGQhywFLspQc6rq5_xGH0qprZWjUX8CLkeWy99zkC2-EGk99gMihRCu8");
+
+    const decoded = decode(result, IndexerSize);
+    assert(decoded.frame);
+    assert.deepStrictEqual(decoded.frame.raw, raw);
+  });
 });
 
 describe("decode", () => {
