@@ -3,20 +3,19 @@ import assert from "node:assert";
 import { Buffer } from "node:buffer";
 import { encode, decode } from "./cesr-encoding.ts";
 import vectors from "../fixtures/cesr_test_vectors.json" with { type: "json" };
-import { CounterSize_10, CounterSize_20, IndexerSize, MatterSize } from "./codes.ts";
+import { IndexerSize } from "./codes.ts";
 import { decodeBase64Int } from "./base64.ts";
 
 for (const vector of vectors) {
   switch (vector.type) {
     case "matter": {
       test(`decode qb64 ${vector.type} ${vector.name} - ${vector.qb64.substring(0, 10)}`, () => {
-        const result = decode(vector.qb64, MatterSize);
+        const frame = decode(vector.qb64);
         const raw = Uint8Array.from(Buffer.from(vector.raw as string, "hex"));
 
-        assert(result.frame);
-        assert.deepEqual(result.frame.code, vector.code);
-        assert.deepEqual(result.frame.text, vector.qb64);
-        assert.deepEqual(result.frame.raw, raw);
+        assert.deepEqual(frame.code, vector.code);
+        assert.deepEqual(frame.text, vector.qb64);
+        assert.deepEqual(frame.raw, raw);
       });
 
       test(`encode qb64 ${vector.type} ${vector.name} - ${vector.qb64.substring(0, 10)}`, () => {
@@ -28,39 +27,38 @@ for (const vector of vectors) {
     }
     case "indexer": {
       test(`decode qb64 ${vector.type} ${vector.name} - ${vector.qb64.substring(0, 10)}`, () => {
-        const result = decode(vector.qb64, IndexerSize);
+        const frame = decode(vector.qb64, { table: IndexerSize });
         const raw = Uint8Array.from(Buffer.from(vector.raw as string, "hex"));
 
-        assert(result.frame);
-        assert.deepEqual(result.frame.code, vector.code);
-        assert.deepEqual(result.frame.text, vector.qb64);
-        assert.deepEqual(result.frame.raw, raw);
+        assert.deepEqual(frame.code, vector.code);
+        assert.deepEqual(frame.text, vector.qb64);
+        assert.deepEqual(frame.raw, raw);
       });
 
       break;
     }
     case "counter_10": {
       test(`decode qb64 ${vector.type} ${vector.name} - ${vector.qb64.substring(0, 10)}`, () => {
-        const result = decode(vector.qb64, CounterSize_10);
+        const frame = decode(vector.qb64);
 
-        assert(result.frame);
-        assert.strictEqual(result.frame.code, vector.code);
-        assert.strictEqual(result.frame.text, vector.qb64);
-        assert.strictEqual(decodeBase64Int(result.frame.soft), vector.count);
-        assert.strictEqual(result.frame.count, vector.count);
+        assert.strictEqual(frame.code, vector.code);
+        assert.strictEqual(frame.text, vector.qb64);
+        assert(frame.soft);
+        assert.strictEqual(decodeBase64Int(frame.soft), vector.count);
+        assert.strictEqual(frame.count, vector.count);
       });
 
       break;
     }
     case "counter_20": {
       test(`decode qb64 ${vector.type} ${vector.name} - ${vector.qb64.substring(0, 10)}`, () => {
-        const result = decode(vector.qb64, CounterSize_20);
+        const frame = decode(vector.qb64, { major: 2 });
 
-        assert(result.frame);
-        assert.deepEqual(result.frame.code, vector.code);
-        assert.deepEqual(result.frame.text, vector.qb64);
-        assert.strictEqual(decodeBase64Int(result.frame.soft), vector.count);
-        assert.strictEqual(result.frame.count, vector.count);
+        assert.deepEqual(frame.code, vector.code);
+        assert.deepEqual(frame.text, vector.qb64);
+        assert(frame.soft);
+        assert.strictEqual(decodeBase64Int(frame.soft), vector.count);
+        assert.strictEqual(frame.count, vector.count);
       });
 
       break;
