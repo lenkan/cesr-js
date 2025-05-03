@@ -1,8 +1,9 @@
 import { describe, test } from "node:test";
 import assert from "node:assert/strict";
 import { Buffer } from "node:buffer";
-import { decode, encodeDate, encode, encodeCounter, encodeIndexer } from "./cesr-encoding.ts";
+import { encodeDate, encode, encodeCounter, encodeIndexer } from "./cesr-encoding.ts";
 import { CountCode_10, CounterSize_10, IndexCode, IndexerSize } from "./codes.ts";
+import { decode } from "./parser.ts";
 
 test("cesr date", () => {
   const result = encodeDate(new Date(Date.parse("2024-11-23T16:02:27.123Z")));

@@ -1,8 +1,8 @@
 import test, { describe } from "node:test";
 import assert from "node:assert/strict";
-import { CountCode_10, CounterSize_10, IndexCode } from "./codes.ts";
-import { Parser } from "./parser.ts";
+import { CountCode_10, IndexCode } from "./codes.ts";
 import { encodeBase64Int } from "./base64.ts";
+import { parseSync } from "./parser.ts";
 
 describe("Parse count code", () => {
   test("Should parse attachments without payload", async () => {
@@ -14,8 +14,7 @@ describe("Parse count code", () => {
 
     const attachment = [CountCode_10.ControllerIdxSigs, encodeBase64Int(sigs.length, 2), ...sigs].join("");
 
-    const parser = new Parser(CounterSize_10);
-    const result = Array.from(parser.parse(attachment));
+    const result = Array.from(parseSync(attachment));
 
     assert.equal(result.length, 4);
     assert.deepEqual(result[0].code, CountCode_10.ControllerIdxSigs);

@@ -53,7 +53,7 @@ export interface ParserOptions {
   context?: Context;
 }
 
-export class Parser {
+class Parser {
   #buffer: Uint8Array;
   #stack: Context[] = [];
   #genus: ParserGenus;
@@ -291,11 +291,10 @@ export class Parser {
  */
 export function* parseSync(input: Uint8Array | string): IterableIterator<Frame> {
   if (typeof input === "string") {
-    return parseSync(new TextEncoder().encode(input));
+    input = new TextEncoder().encode(input);
   }
 
   const parser = new Parser();
-
   for (const frame of parser.parse(input)) {
     yield frame;
   }
@@ -336,4 +335,18 @@ function resolveInput(input: ParserInput): AsyncIterable<Uint8Array> {
   }
 
   return input;
+}
+
+/**
+ * Decodes one CESR frame from the input
+ */
+export function decode(input: Uint8Array | string, options?: ParserOptions): Frame {
+  const parser = new Parser(options);
+  const frame = Array.from(parser.parse(input));
+
+  if (!frame.length) {
+    throw new Error("Unable to decode input");
+  }
+
+  return frame[0];
 }

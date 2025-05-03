@@ -1,9 +1,10 @@
 import { test } from "node:test";
 import assert from "node:assert";
 import { Buffer } from "node:buffer";
-import { encode, decode } from "./cesr-encoding.ts";
+import { encode } from "./cesr-encoding.ts";
 import vectors from "../fixtures/cesr_test_vectors.json" with { type: "json" };
 import { decodeBase64Int } from "./base64.ts";
+import { decode } from "./parser.ts";
 
 for (const vector of vectors) {
   switch (vector.type) {

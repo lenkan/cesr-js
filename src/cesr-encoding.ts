@@ -1,8 +1,6 @@
 import { encodeBase64Int, encodeBase64Url } from "./base64.ts";
 import type { CodeSize } from "./codes.ts";
 import { MatterSize } from "./codes.ts";
-import type { Frame, ParserOptions } from "./parser.ts";
-import { Parser } from "./parser.ts";
 
 function padNumber(num: number, length: number) {
   return num.toString().padStart(length, "0");
@@ -16,17 +14,6 @@ function prepadBytes(raw: Uint8Array, length: number): Uint8Array {
   const padded = new Uint8Array(length + raw.byteLength);
   padded.set(raw, length);
   return padded;
-}
-
-export function decode(input: Uint8Array | string, options?: ParserOptions): Frame {
-  const parser = new Parser(options);
-  const frame = Array.from(parser.parse(input));
-
-  if (!frame.length) {
-    throw new Error("Unable to decode input");
-  }
-
-  return frame[0];
 }
 
 export function encodeDate(date: Date): string {
