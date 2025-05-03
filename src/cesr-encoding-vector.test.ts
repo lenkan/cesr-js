@@ -52,7 +52,7 @@ for (const vector of vectors) {
     }
     case "counter_20": {
       test(`decode qb64 ${vector.type} ${vector.name} - ${vector.qb64.substring(0, 10)}`, () => {
-        const frame = decode(vector.qb64, { genus: { major: 2, protocol: "KERI" } });
+        const frame = decode(vector.qb64, { version: 2 });
 
         assert.deepEqual(frame.code, vector.code);
         assert.deepEqual(frame.text, vector.qb64);

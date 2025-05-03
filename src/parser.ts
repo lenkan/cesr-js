@@ -43,27 +43,19 @@ function readRaw(qb64: string, code: CodeSize): Uint8Array {
   return raw;
 }
 
-export interface ParserGenus {
-  protocol: string;
-  major: number;
-}
-
 export interface ParserOptions {
-  genus?: ParserGenus;
+  version?: number;
   context?: Context;
 }
 
 class Parser {
   #buffer: Uint8Array;
   #stack: Context[] = [];
-  #genus: ParserGenus;
+  #version: number;
 
   constructor(options: ParserOptions = {}) {
     this.#buffer = new Uint8Array(0);
-    this.#genus = options.genus ?? {
-      protocol: "KERI",
-      major: 1,
-    };
+    this.#version = options.version ?? 1;
 
     if (options.context) {
       this.#stack.push(options.context);
@@ -82,7 +74,7 @@ class Parser {
       }
     }
 
-    switch (this.#genus.major) {
+    switch (this.#version) {
       case 1:
         return {
           ...MatterSize,
@@ -95,7 +87,7 @@ class Parser {
         };
     }
 
-    throw new Error(`Unsupported protocol ${this.#genus.protocol}`);
+    throw new Error(`Unsupported protocol ${this.#version}`);
   }
 
   get #context(): Context | null {
@@ -115,7 +107,6 @@ class Parser {
   #readCodeSize(table: Record<string, CodeSize>): CodeSize | null {
     let prefix = "";
     let size: CodeSize | null = null;
-
     const decoder = new TextDecoder();
 
     while (!size) {
@@ -208,14 +199,8 @@ class Parser {
       return null;
     }
 
-    const frame = this.#buffer.slice(0, version.size);
-
-    this.#genus = {
-      protocol: version.protocol,
-      major: version.major,
-    };
-
-    this.#buffer = this.#buffer.slice(version.size);
+    this.#version = version.major;
+    const frame = this.#readBytes(version.size);
 
     return {
       type: "message",
