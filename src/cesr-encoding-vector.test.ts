@@ -3,7 +3,6 @@ import assert from "node:assert";
 import { Buffer } from "node:buffer";
 import { encode, decode } from "./cesr-encoding.ts";
 import vectors from "../fixtures/cesr_test_vectors.json" with { type: "json" };
-import { CountCode_10, IndexerSize } from "./codes.ts";
 import { decodeBase64Int } from "./base64.ts";
 
 for (const vector of vectors) {
