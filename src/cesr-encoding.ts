@@ -20,15 +20,13 @@ function prepadBytes(raw: Uint8Array, length: number): Uint8Array {
 
 export function decode(input: Uint8Array | string, options?: ParserOptions): Frame {
   const parser = new Parser(options);
-  parser.update(input);
+  const frame = Array.from(parser.parse(input));
 
-  const frame = parser.read();
-
-  if (!frame) {
+  if (!frame.length) {
     throw new Error("Unable to decode input");
   }
 
-  return frame;
+  return frame[0];
 }
 
 export function encodeDate(date: Date): string {

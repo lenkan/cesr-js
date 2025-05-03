@@ -226,19 +226,16 @@ export class Parser {
     };
   }
 
-  /**
-   * Returns the next frame from the underlying buffer.
-   *
-   * If the buffer is empty, or does not contain a complete frame, null is returned.
-   */
-  read(): Frame | null {
-    const input = this.#buffer;
-
-    if (input.length === 0) {
-      return null;
+  #update(source: Uint8Array | string): void {
+    if (typeof source === "string") {
+      this.#update(new TextEncoder().encode(source));
+    } else {
+      this.#buffer = concat(this.#buffer, source);
     }
+  }
 
-    const start = input[0];
+  #read(): Frame | null {
+    const start = this.#buffer[0];
     switch (start) {
       case 0b01111011:
         return this.#readJSON();
@@ -264,16 +261,17 @@ export class Parser {
     }
   }
 
-  /**
-   * Updates the underlying buffer with new data.
-   *
-   * @param source The source data to append to the buffer.
-   */
-  update(source: Uint8Array | string): void {
-    if (typeof source === "string") {
-      this.update(new TextEncoder().encode(source));
-    } else {
-      this.#buffer = concat(this.#buffer, source);
+  *parse(source: Uint8Array | string): IterableIterator<Frame> {
+    this.#update(source);
+
+    while (this.#buffer.length > 0) {
+      const frame = this.#read();
+
+      if (!frame) {
+        return null;
+      }
+
+      yield frame;
     }
   }
 
@@ -297,15 +295,8 @@ export function* parseSync(input: Uint8Array | string): IterableIterator<Frame> 
   }
 
   const parser = new Parser();
-  parser.update(input);
 
-  while (!parser.finished) {
-    const frame = parser.read();
-
-    if (!frame) {
-      throw new Error("Unexpected end of stream");
-    }
-
+  for (const frame of parser.parse(input)) {
     yield frame;
   }
 }
@@ -323,16 +314,7 @@ export async function* parse(input: ParserInput): AsyncIterableIterator<Frame> {
   const parser = new Parser();
 
   for await (const chunk of resolveInput(input)) {
-    parser.update(chunk);
-
-    while (true) {
-      const frame = parser.read();
-
-      if (!frame) {
-        // No complete frames, wait for more data
-        break;
-      }
-
+    for (const frame of parser.parse(chunk)) {
       yield frame;
     }
   }

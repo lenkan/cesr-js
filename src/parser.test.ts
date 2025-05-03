@@ -1,6 +1,6 @@
 import test, { describe } from "node:test";
 import assert from "node:assert/strict";
-import { CountCode_10, CounterSize_10 } from "./codes.ts";
+import { CountCode_10, CounterSize_10, IndexCode } from "./codes.ts";
 import { Parser } from "./parser.ts";
 import { encodeBase64Int } from "./base64.ts";
 
@@ -15,9 +15,12 @@ describe("Parse count code", () => {
     const attachment = [CountCode_10.ControllerIdxSigs, encodeBase64Int(sigs.length, 2), ...sigs].join("");
 
     const parser = new Parser(CounterSize_10);
-    parser.update(attachment);
-    const result = parser.read();
+    const result = Array.from(parser.parse(attachment));
 
-    assert.deepEqual(result?.code, CountCode_10.ControllerIdxSigs);
+    assert.equal(result.length, 4);
+    assert.deepEqual(result[0].code, CountCode_10.ControllerIdxSigs);
+    assert.deepEqual(result[1].code, IndexCode.Ed25519_Big_Sig);
+    assert.deepEqual(result[2].code, IndexCode.Ed25519_Big_Sig);
+    assert.deepEqual(result[3].code, IndexCode.Ed25519_Sig);
   });
 });
