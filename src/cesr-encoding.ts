@@ -18,7 +18,7 @@ function prepadBytes(raw: Uint8Array, length: number): Uint8Array {
   return padded;
 }
 
-export function decode(input: Uint8Array | string, options: ParserOptions = { table: MatterSize }): Frame {
+export function decode(input: Uint8Array | string, options?: ParserOptions): Frame {
   const parser = new Parser(options);
   parser.update(input);
 

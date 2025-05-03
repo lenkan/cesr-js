@@ -31,10 +31,9 @@ function concat(a: Uint8Array, b: Uint8Array) {
   return merged;
 }
 
-interface GroupContext {
-  code: string;
+interface Context {
+  type: FrameType;
   count: number;
-  table: Record<string, CodeSize>;
 }
 
 function readRaw(qb64: string, code: CodeSize): Uint8Array {
@@ -44,34 +43,62 @@ function readRaw(qb64: string, code: CodeSize): Uint8Array {
   return raw;
 }
 
+export interface ParserGenus {
+  protocol: string;
+  major: number;
+}
+
 export interface ParserOptions {
-  protocol?: string;
-  major?: number;
-  table?: Record<string, CodeSize>;
+  genus?: ParserGenus;
+  context?: Context;
 }
 
 export class Parser {
   #buffer: Uint8Array;
-  #stack: GroupContext[] = [];
-  #protocol = "KERI";
-  #major = 1;
+  #stack: Context[] = [];
+  #genus: ParserGenus;
 
   constructor(options: ParserOptions = {}) {
     this.#buffer = new Uint8Array(0);
+    this.#genus = options.genus ?? {
+      protocol: "KERI",
+      major: 1,
+    };
 
-    this.#protocol = options.protocol ?? "KERI";
-    this.#major = options.major ?? 1;
-
-    if (options.table) {
-      this.#stack.push({
-        code: "",
-        table: options.table,
-        count: 1,
-      });
+    if (options.context) {
+      this.#stack.push(options.context);
     }
   }
 
-  get #context(): GroupContext | null {
+  #nextTable(): Record<string, CodeSize> {
+    const context = this.#context;
+
+    if (context && context.count > 0) {
+      switch (context.type) {
+        case "indexer":
+          return IndexerSize;
+        case "matter":
+          return MatterSize;
+      }
+    }
+
+    switch (this.#genus.major) {
+      case 1:
+        return {
+          ...MatterSize,
+          ...CounterSize_10,
+        };
+      case 2:
+        return {
+          ...MatterSize,
+          ...CounterSize_20,
+        };
+    }
+
+    throw new Error(`Unsupported protocol ${this.#genus.protocol}`);
+  }
+
+  get #context(): Context | null {
     return this.#stack[this.#stack.length - 1] ?? null;
   }
 
@@ -108,58 +135,43 @@ export class Parser {
     return size;
   }
 
-  #readCounter(): Frame | null {
+  #readMatter(table: Record<string, CodeSize>): Frame | null {
     const decoder = new TextDecoder();
-
-    let code: CodeSize | null = null;
-    switch (this.#protocol) {
-      case "KERI":
-      case "ACDC":
-        {
-          switch (this.#major) {
-            case 1: {
-              code = this.#readCodeSize(CounterSize_10);
-              break;
-            }
-            case 2: {
-              code = this.#readCodeSize(CounterSize_20);
-              break;
-            }
-            default:
-              throw new Error(`Unsupported major version ${this.#protocol} ${this.#major}`);
-          }
-        }
-        break;
-      default:
-        throw new Error(`Unsupported protocol ${this.#protocol}`);
-    }
+    const code = this.#readCodeSize(table);
 
     if (!code || this.#buffer.length < code.ss + code.hs) {
       return null;
     }
 
-    const qb64 = decoder.decode(this.#readBytes(code.ss + code.hs));
-    const hard = qb64.slice(0, code.hs);
-    const soft = qb64.slice(code.hs);
+    const prefix = decoder.decode(this.#peekBytes(code.ss + code.hs));
+    const hard = prefix.slice(0, code.hs);
+    const soft = prefix.slice(code.hs);
     const count = decodeBase64Int(soft);
+    const size = code.fs ?? code.hs + code.ss + decodeBase64Int(soft) * 4;
+
+    if (this.#buffer.length < size) {
+      return null;
+    }
+
+    const qb64 = decoder.decode(this.#readBytes(size));
 
     switch (code.type) {
       case "counter_10": {
         switch (code.prefix) {
           case CountCode_10.ControllerIdxSigs:
           case CountCode_10.WitnessIdxSigs:
-            this.#stack.push({ code: code.prefix, table: IndexerSize, count });
+            this.#stack.push({ type: "indexer", count });
             break;
           case CountCode_10.NonTransReceiptCouples:
           case CountCode_10.SealSourceCouples:
           case CountCode_10.FirstSeenReplayCouples:
-            this.#stack.push({ code: code.prefix, table: MatterSize, count: count * 2 });
+            this.#stack.push({ type: "matter", count: count * 2 });
             break;
           case CountCode_10.SealSourceTriples:
-            this.#stack.push({ code: code.prefix, table: MatterSize, count: count * 3 });
+            this.#stack.push({ type: "matter", count: count * 3 });
             break;
           case CountCode_10.TransReceiptQuadruples:
-            this.#stack.push({ code: code.prefix, table: MatterSize, count: count * 4 });
+            this.#stack.push({ type: "matter", count: count * 4 });
             break;
         }
         break;
@@ -168,23 +180,21 @@ export class Parser {
         switch (code.prefix) {
           case CountCode_20.ControllerIdxSigs:
           case CountCode_20.WitnessIdxSigs: {
-            this.#stack.push({ code: code.prefix, table: IndexerSize, count });
+            this.#stack.push({ type: "indexer", count });
             break;
           }
         }
         break;
       }
-      default:
-        throw new Error(`Unsupported count code ${code.prefix}`);
     }
 
     return {
-      type: code.type as "counter_10" | "counter_20",
+      type: code.type as FrameType,
       code: hard,
       soft,
       count,
       text: qb64,
-      raw: new Uint8Array(0),
+      raw: readRaw(qb64, code),
     };
   }
 
@@ -200,8 +210,11 @@ export class Parser {
 
     const frame = this.#buffer.slice(0, version.size);
 
-    this.#protocol = version.protocol;
-    this.#major = version.major;
+    this.#genus = {
+      protocol: version.protocol,
+      major: version.major,
+    };
+
     this.#buffer = this.#buffer.slice(version.size);
 
     return {
@@ -210,39 +223,6 @@ export class Parser {
       soft: "",
       raw: frame,
       text: new TextDecoder().decode(frame),
-    };
-  }
-
-  #readMatter(table: Record<string, CodeSize>): Frame | null {
-    const code = this.#readCodeSize(table);
-
-    if (!code) {
-      return null;
-    }
-
-    const decoder = new TextDecoder();
-    if (this.#buffer.length < code.hs + code.ss) {
-      return null;
-    }
-
-    const prefix = decoder.decode(this.#peekBytes(code.hs + code.ss));
-    const hard = prefix.slice(0, code.hs);
-    const soft = prefix.slice(code.hs);
-    const size = code.fs ?? code.hs + code.ss + decodeBase64Int(soft) * 4;
-
-    if (this.#buffer.length < size) {
-      return null;
-    }
-
-    const qb64 = decoder.decode(this.#readBytes(size));
-
-    return {
-      type: code.type as FrameType,
-      code: hard,
-      soft,
-      count: soft.length ? decodeBase64Int(soft) : undefined,
-      text: qb64,
-      raw: readRaw(qb64, code),
     };
   }
 
@@ -262,13 +242,13 @@ export class Parser {
     switch (start) {
       case 0b01111011:
         return this.#readJSON();
-      case 0b00101101:
-        return this.#readCounter();
     }
 
     const context = this.#context;
+    const table = this.#nextTable();
+
     if (context && context.count > 0) {
-      const result = this.#readMatter(context.table);
+      const result = this.#readMatter(table);
 
       if (result) {
         context.count--;
@@ -279,9 +259,9 @@ export class Parser {
       }
 
       return result;
+    } else {
+      return this.#readMatter(table);
     }
-
-    throw new Error("Unexpected frame type");
   }
 
   /**

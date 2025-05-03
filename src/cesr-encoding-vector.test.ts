@@ -3,7 +3,7 @@ import assert from "node:assert";
 import { Buffer } from "node:buffer";
 import { encode, decode } from "./cesr-encoding.ts";
 import vectors from "../fixtures/cesr_test_vectors.json" with { type: "json" };
-import { IndexerSize } from "./codes.ts";
+import { CountCode_10, IndexerSize } from "./codes.ts";
 import { decodeBase64Int } from "./base64.ts";
 
 for (const vector of vectors) {
@@ -27,7 +27,7 @@ for (const vector of vectors) {
     }
     case "indexer": {
       test(`decode qb64 ${vector.type} ${vector.name} - ${vector.qb64.substring(0, 10)}`, () => {
-        const frame = decode(vector.qb64, { table: IndexerSize });
+        const frame = decode(vector.qb64, { context: { type: "indexer", count: 1 } });
         const raw = Uint8Array.from(Buffer.from(vector.raw as string, "hex"));
 
         assert.deepEqual(frame.code, vector.code);
@@ -39,7 +39,7 @@ for (const vector of vectors) {
     }
     case "counter_10": {
       test(`decode qb64 ${vector.type} ${vector.name} - ${vector.qb64.substring(0, 10)}`, () => {
-        const frame = decode(vector.qb64);
+        const frame = decode(vector.qb64, {});
 
         assert.strictEqual(frame.code, vector.code);
         assert.strictEqual(frame.text, vector.qb64);
@@ -52,7 +52,7 @@ for (const vector of vectors) {
     }
     case "counter_20": {
       test(`decode qb64 ${vector.type} ${vector.name} - ${vector.qb64.substring(0, 10)}`, () => {
-        const frame = decode(vector.qb64, { major: 2 });
+        const frame = decode(vector.qb64, { genus: { major: 2, protocol: "KERI" } });
 
         assert.deepEqual(frame.code, vector.code);
         assert.deepEqual(frame.text, vector.qb64);

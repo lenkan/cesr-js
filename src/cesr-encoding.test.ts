@@ -2,7 +2,7 @@ import { describe, test } from "node:test";
 import assert from "node:assert/strict";
 import { Buffer } from "node:buffer";
 import { decode, encodeDate, encode, encodeCounter, encodeIndexer } from "./cesr-encoding.ts";
-import { CountCode_10, CounterSize_10, IndexCode, IndexerSize, MatterSize } from "./codes.ts";
+import { CountCode_10, CounterSize_10, IndexCode, IndexerSize } from "./codes.ts";
 
 test("cesr date", () => {
   const result = encodeDate(new Date(Date.parse("2024-11-23T16:02:27.123Z")));
@@ -42,7 +42,7 @@ describe("Encode indexer", () => {
     const result = encodeIndexer(IndexCode.Ed25519_Sig, 3, raw, IndexerSize);
     assert.equal(result, "ADCEsXMDAjjHTOdUeQ__2NwfeWIvXWh4SGQhywFLspQc6rq5_xGH0qprZWjUX8CLkeWy99zkC2-EGk99gMihRCu8");
 
-    const frame = decode(result, { table: IndexerSize });
+    const frame = decode(result, { context: { type: "indexer", count: 1 } });
     assert.deepStrictEqual(frame.raw, raw);
   });
 });
@@ -92,7 +92,7 @@ describe("decode", () => {
   test("decode count code", () => {
     const input = "-VAi";
 
-    const result = decode(input, { table: CounterSize_10 });
+    const result = decode(input, {});
 
     assert.partialDeepStrictEqual(result, {
       type: "counter_10",
