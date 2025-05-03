@@ -1,11 +1,10 @@
 import { createReadStream } from "fs";
-import assert from "node:assert";
+import assert from "node:assert/strict";
 import { describe, test } from "node:test";
 import { parseMessages } from "./message.ts";
 import { readFile } from "node:fs/promises";
 import { versify } from "./version.ts";
-import { CountCode_10 } from "./codes.ts";
-import { encodeBase64Int } from "./base64.ts";
+import { CountCode_10, CountCode_20 } from "./codes.ts";
 
 async function* chunk(filename: string, size = 100): AsyncIterable<Uint8Array> {
   let index = 0;
@@ -98,35 +97,40 @@ test("Parse GEDA in chunks", async () => {
   assert.equal(events.length, 17);
 });
 
-describe("Parse count code", () => {
-  test("Should parse attachments without payload", async () => {
-    const sigs = [
-      "2AABAFC2S_PGpOQpbMNwQVOqP5jCUJ7EgFH2hr21V6uCbBAkK30idHj0K-ReRCe_o5iIP2bGhBK2MPeEt1P81ZLwk2YJ",
-      "2AACAGDeP0o3Ns2ycFFonXIQwGClJimMZ6DHnGfUKJ3O9DzUV5AxVi3Q0oq03fpLyVWRXYCWa72i_o6ftwCVVNnYDN4L",
-      "AAAwpoZNY1cZl_0pxlWiHm2RPD1q2XFiFBAzUGOQWeLlBTWbfFtImbZo3cxVKCP2D5Rl49zlaLRekrONYvme2oAC",
-    ];
-
-    const attachment = [CountCode_10.ControllerIdxSigs, encodeBase64Int(sigs.length, 2), ...sigs].join("");
-
-    const result = await collect(parseMessages(attachment));
-
-    assert.deepStrictEqual(result[0].attachments, {
-      [CountCode_10.ControllerIdxSigs]: sigs,
-    });
-  });
-});
-
 describe("Parse JSON", () => {
   test("Parse JSON without attachments", async () => {
     const input = JSON.stringify(versify({ t: "icp" }, true));
     const result = await collect(parseMessages(input));
     assert.equal(result.length, 1);
-    assert.deepStrictEqual(result[0].payload, { v: "KERI10JSON000023_", t: "icp" });
+    assert.deepEqual(result[0].payload, { v: "KERI10JSON000023_", t: "icp" });
   });
 
   test("Parse unfinished JSON without full version string", async () => {
     const input = JSON.stringify(versify({ t: "icp" })).slice(0, 20);
 
     await assert.rejects(() => collect(parseMessages(input)), new Error("Unexpected end of stream"));
+  });
+});
+
+describe("Parse CESR 2", async () => {
+  test("Parse CESR 2", async () => {
+    const input = await readFile("./fixtures/cesr_20.cesr");
+    const result = await collect(parseMessages(input));
+
+    assert.equal(result.length, 2);
+    assert.equal(result[0].payload.t, "icp");
+    assert.equal(result[0].payload.v, "KERICAAJSONAAEq.");
+    assert.deepEqual(result[0].attachments, {
+      [CountCode_20.ControllerIdxSigs]: [
+        "AADp5fDEoh8d0VRY27hpkRdVsTKEkUzrH2csEK6FKgjnrgmb2u4m0YhvJCMC5ZO0Zes_okqKcTSjjqpfiJjoa2AH",
+      ],
+    });
+    assert.equal(result[1].payload.t, "ixn");
+    assert.equal(result[1].payload.v, "KERICAAJSONAADK.");
+    assert.deepEqual(result[1].attachments, {
+      [CountCode_20.ControllerIdxSigs]: [
+        "AABMz1FSzJ8RWzB1D9zF82cOFA4eLc8UsEOa5Ixiu90_ZizqHVOEoD5ajzxO2nLg7iEkyqdcXDAH4A9SSFPgLJQH",
+      ],
+    });
   });
 });

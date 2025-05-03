@@ -1,2 +1,1 @@
-export { parse } from "./parser.ts";
-export { Frame, FrameType } from "./cesr-encoding.ts";
+export { parse, ParserInput, Frame, FrameType } from "./parser.ts";

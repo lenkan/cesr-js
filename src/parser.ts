@@ -1,6 +1,20 @@
 import type { CodeSize } from "./codes.ts";
-import { MatterSize, IndexerSize, CountCode_10, CounterSize_10 } from "./codes.ts";
-import { decode, type Frame } from "./cesr-encoding.ts";
+import { MatterSize, IndexerSize, CountCode_10, CounterSize_10, CounterSize_20, CountCode_20 } from "./codes.ts";
+import { decodeVersion } from "./version.ts";
+import { decodeBase64Int, decodeBase64Url } from "./base64.ts";
+
+export type FrameType = "message" | "indexer" | "matter" | "counter_10" | "counter_20";
+
+export interface Frame {
+  type: FrameType;
+  code: string;
+  soft: string;
+  count?: number;
+  index?: number;
+  ondex?: number;
+  text: string;
+  raw: Uint8Array;
+}
 
 function concat(a: Uint8Array, b: Uint8Array) {
   if (a.length === 0) {
@@ -17,107 +31,257 @@ function concat(a: Uint8Array, b: Uint8Array) {
   return merged;
 }
 
-interface GroupContext {
-  code: string;
-  table: Record<string, CodeSize>;
+interface Context {
+  type: FrameType;
   count: number;
+}
+
+function readRaw(qb64: string, code: CodeSize): Uint8Array {
+  const padSize = (code.hs + code.ss) % 4;
+  const leadSize = code.ls ?? 0;
+  const raw = decodeBase64Url("A".repeat(padSize) + qb64.slice(code.hs + code.ss)).slice(padSize + leadSize);
+  return raw;
+}
+
+export interface ParserOptions {
+  version?: number;
+  context?: Context;
 }
 
 class Parser {
   #buffer: Uint8Array;
-  #group: GroupContext | null = null;
+  #stack: Context[] = [];
+  #version: number;
 
-  constructor() {
+  constructor(options: ParserOptions = {}) {
     this.#buffer = new Uint8Array(0);
+    this.#version = options.version ?? 1;
+
+    if (options.context) {
+      this.#stack.push(options.context);
+    }
   }
 
-  #readFrame(table: Record<string, CodeSize>): Frame | null {
-    const result = decode(this.#buffer, table);
+  #nextTable(): Record<string, CodeSize> {
+    const context = this.#context;
 
-    if (!result.frame) {
-      return null;
-    }
-
-    this.#buffer = this.#buffer.slice(result.n);
-
-    if (result.frame.type === "counter_10") {
-      const count = result.frame.count;
-      switch (result.frame.code) {
-        case CountCode_10.ControllerIdxSigs:
-        case CountCode_10.WitnessIdxSigs:
-          this.#group = { code: result.frame.code, table: IndexerSize, count };
-          break;
-        case CountCode_10.NonTransReceiptCouples:
-        case CountCode_10.SealSourceCouples:
-        case CountCode_10.FirstSeenReplayCouples:
-          this.#group = { code: result.frame.code, table: MatterSize, count: count * 2 };
-          break;
-        case CountCode_10.SealSourceTriples:
-          this.#group = { code: result.frame.code, table: MatterSize, count: count * 3 };
-          break;
-        case CountCode_10.TransReceiptQuadruples:
-          this.#group = { code: result.frame.code, table: MatterSize, count: count * 4 };
-          break;
+    if (context && context.count > 0) {
+      switch (context.type) {
+        case "indexer":
+          return IndexerSize;
+        case "matter":
+          return MatterSize;
       }
     }
 
-    return result.frame;
+    switch (this.#version) {
+      case 1:
+        return {
+          ...MatterSize,
+          ...CounterSize_10,
+        };
+      case 2:
+        return {
+          ...MatterSize,
+          ...CounterSize_20,
+        };
+    }
+
+    throw new Error(`Unsupported protocol ${this.#version}`);
+  }
+
+  get #context(): Context | null {
+    return this.#stack[this.#stack.length - 1] ?? null;
+  }
+
+  #peekBytes(size: number): Uint8Array {
+    return this.#buffer.slice(0, size);
+  }
+
+  #readBytes(size: number): Uint8Array {
+    const result = this.#peekBytes(size);
+    this.#buffer = this.#buffer.slice(size);
+    return result;
+  }
+
+  #readCodeSize(table: Record<string, CodeSize>): CodeSize | null {
+    let prefix = "";
+    let size: CodeSize | null = null;
+    const decoder = new TextDecoder();
+
+    while (!size) {
+      if (this.#buffer.length < prefix.length + 1) {
+        return null;
+      }
+
+      // TODO: Table holds the information about longest code, so we should look it up from there.
+      if (prefix.length >= 5) {
+        throw new Error(`Expected frame, no code found '${prefix}' ${Object.keys(table)} `);
+      }
+
+      prefix = decoder.decode(this.#peekBytes(prefix.length + 1));
+      size = table[prefix];
+    }
+
+    return size;
+  }
+
+  #readMatter(table: Record<string, CodeSize>): Frame | null {
+    const decoder = new TextDecoder();
+    const code = this.#readCodeSize(table);
+
+    if (!code || this.#buffer.length < code.ss + code.hs) {
+      return null;
+    }
+
+    const prefix = decoder.decode(this.#peekBytes(code.ss + code.hs));
+    const hard = prefix.slice(0, code.hs);
+    const soft = prefix.slice(code.hs);
+    const count = decodeBase64Int(soft);
+    const size = code.fs ?? code.hs + code.ss + decodeBase64Int(soft) * 4;
+
+    if (this.#buffer.length < size) {
+      return null;
+    }
+
+    const qb64 = decoder.decode(this.#readBytes(size));
+
+    switch (code.type) {
+      case "counter_10": {
+        switch (code.prefix) {
+          case CountCode_10.ControllerIdxSigs:
+          case CountCode_10.WitnessIdxSigs:
+            this.#stack.push({ type: "indexer", count });
+            break;
+          case CountCode_10.NonTransReceiptCouples:
+          case CountCode_10.SealSourceCouples:
+          case CountCode_10.FirstSeenReplayCouples:
+            this.#stack.push({ type: "matter", count: count * 2 });
+            break;
+          case CountCode_10.SealSourceTriples:
+            this.#stack.push({ type: "matter", count: count * 3 });
+            break;
+          case CountCode_10.TransReceiptQuadruples:
+            this.#stack.push({ type: "matter", count: count * 4 });
+            break;
+        }
+        break;
+      }
+      case "counter_20": {
+        switch (code.prefix) {
+          case CountCode_20.ControllerIdxSigs:
+          case CountCode_20.WitnessIdxSigs: {
+            this.#stack.push({ type: "indexer", count });
+            break;
+          }
+        }
+        break;
+      }
+    }
+
+    return {
+      type: code.type as FrameType,
+      code: hard,
+      soft,
+      count,
+      text: qb64,
+      raw: readRaw(qb64, code),
+    };
+  }
+
+  #readJSON(): Frame | null {
+    if (this.#buffer.length < 25) {
+      return null;
+    }
+
+    const version = decodeVersion(this.#buffer.slice(0, 24));
+    if (this.#buffer.length < version.size) {
+      return null;
+    }
+
+    this.#version = version.major;
+    const frame = this.#readBytes(version.size);
+
+    return {
+      type: "message",
+      code: version.protocol,
+      soft: "",
+      raw: frame,
+      text: new TextDecoder().decode(frame),
+    };
+  }
+
+  #update(source: Uint8Array | string): void {
+    if (typeof source === "string") {
+      this.#update(new TextEncoder().encode(source));
+    } else {
+      this.#buffer = concat(this.#buffer, source);
+    }
   }
 
   #read(): Frame | null {
-    if (this.#buffer.length === 0) {
-      return null;
+    const start = this.#buffer[0];
+    switch (start) {
+      case 0b01111011:
+        return this.#readJSON();
     }
 
-    const group = this.#group;
-    if (group && group.count > 0) {
-      const result = this.#readFrame(group.table);
+    const context = this.#context;
+    const table = this.#nextTable();
+
+    if (context && context.count > 0) {
+      const result = this.#readMatter(table);
 
       if (result) {
-        group.count--;
+        context.count--;
+
+        if (context.count === 0) {
+          this.#stack.pop();
+        }
       }
 
       return result;
-    }
-
-    const tritet = this.#buffer[0] >>> 5;
-
-    switch (tritet) {
-      case 0b011: {
-        const frame = decode(this.#buffer, MatterSize);
-        this.#buffer = this.#buffer.slice(frame.n);
-        return frame.frame;
-      }
-      case 0b001: {
-        return this.#readFrame(CounterSize_10);
-      }
-      default:
-        throw new Error(`Unsupported cold start tritet 0b${tritet.toString(2).padStart(3, "0")}`);
+    } else {
+      return this.#readMatter(table);
     }
   }
 
-  /**
-   * Parses CESR frames from the source buffer.
-   *
-   * @param source
-   * @returns
-   */
-  *parse(source: Uint8Array): IterableIterator<Frame> {
-    this.#buffer = concat(this.#buffer, source);
+  *parse(source: Uint8Array | string): IterableIterator<Frame> {
+    this.#update(source);
 
-    while (!this.finished) {
-      const result = this.#read();
+    while (this.#buffer.length > 0) {
+      const frame = this.#read();
 
-      if (!result) {
-        return;
+      if (!frame) {
+        return null;
       }
 
-      yield result;
+      yield frame;
     }
   }
 
   get finished() {
     return this.#buffer.length === 0;
+  }
+}
+
+/**
+ * Parses CESR frames from an incoming stream of bytes.
+ *
+ * Inspect the {@link Frame.type} property to determine the type of frame.
+ *
+ *
+ * @param input Incoming stream of bytes
+ * @returns An iterable of CESR frames
+ */
+export function* parseSync(input: Uint8Array | string): IterableIterator<Frame> {
+  if (typeof input === "string") {
+    input = new TextEncoder().encode(input);
+  }
+
+  const parser = new Parser();
+  for (const frame of parser.parse(input)) {
+    yield frame;
   }
 }
 
@@ -156,4 +320,18 @@ function resolveInput(input: ParserInput): AsyncIterable<Uint8Array> {
   }
 
   return input;
+}
+
+/**
+ * Decodes one CESR frame from the input
+ */
+export function decode(input: Uint8Array | string, options?: ParserOptions): Frame {
+  const parser = new Parser(options);
+  const frame = Array.from(parser.parse(input));
+
+  if (!frame.length) {
+    throw new Error("Unable to decode input");
+  }
+
+  return frame[0];
 }
