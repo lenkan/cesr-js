@@ -72,9 +72,8 @@ export function encodeBase64Url(uint8: Uint8Array): string {
 }
 
 export function decodeBase64Url(input: string): Uint8Array {
-  // CREDIT: https://gist.github.com/enepomnyaschih/72c423f727d395eeaa09697058238727
-  if (!(typeof input === "string")) {
-    throw new TypeError("`input` must be a string.");
+  if (typeof input !== "string") {
+    throw new Error(`input must be a string`);
   }
 
   if (input.length === 0) {
