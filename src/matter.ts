@@ -1,7 +1,7 @@
 import { decodeBase64Url } from "./base64.ts";
 import { MatterCode, MatterTable } from "./codes.ts";
 import { Decoder } from "./decoder.ts";
-import { Encoder } from "./encoder.ts";
+import { encode } from "./encoder.ts";
 
 function padNumber(num: number, length: number) {
   return num.toString().padStart(length, "0");
@@ -46,7 +46,6 @@ export interface MatterInit {
 }
 
 export class Matter {
-  static readonly encoder = new Encoder(MatterTable);
   static readonly decoder = new Decoder(MatterTable);
 
   readonly code: string;
@@ -54,9 +53,14 @@ export class Matter {
   readonly text: string;
 
   constructor(init: MatterInit) {
+    const size = MatterTable[init.code];
+    if (!size) {
+      throw new Error(`Invalid code: ${init.code}`);
+    }
+
     this.code = init.code;
     this.raw = init.raw;
-    this.text = Matter.encoder.encode(init);
+    this.text = encode(init, MatterTable[init.code]);
   }
 
   static string(txt: string): Matter {

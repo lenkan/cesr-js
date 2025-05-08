@@ -1,6 +1,6 @@
 import { IndexCode, IndexTable } from "./codes.ts";
 import { Decoder } from "./decoder.ts";
-import { Encoder } from "./encoder.ts";
+import { encode } from "./encoder.ts";
 
 export interface IndexerInit {
   code: string;
@@ -10,7 +10,6 @@ export interface IndexerInit {
 }
 
 export class Indexer {
-  static readonly encoder = new Encoder(IndexTable);
   static readonly decoder = new Decoder(IndexTable);
 
   readonly code: string;
@@ -20,11 +19,16 @@ export class Indexer {
   readonly text: string;
 
   constructor(frame: IndexerInit) {
+    const size = IndexTable[frame.code];
+    if (!size) {
+      throw new Error(`Invalid code: ${frame.code}`);
+    }
+
     this.code = frame.code;
     this.raw = frame.raw ?? new Uint8Array(0);
     this.index = frame.index ?? 0;
     this.ondex = frame.ondex;
-    this.text = Indexer.encoder.encode({ code: this.code, raw: this.raw, index: this.index, ondex: this.ondex });
+    this.text = encode({ code: this.code, raw: this.raw, index: this.index, ondex: this.ondex }, size);
   }
 
   static signature(alg: string, raw: Uint8Array, index: number): Indexer {
