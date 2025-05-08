@@ -1,5 +1,5 @@
-import { IndexCode, IndexTable } from "./codes.ts";
-import { Decoder } from "./decoder.ts";
+import { IndexCode, IndexSchemeTable, IndexTable } from "./codes.ts";
+import { decode } from "./decoder.ts";
 import { encode } from "./encoder.ts";
 
 export interface IndexerInit {
@@ -10,7 +10,8 @@ export interface IndexerInit {
 }
 
 export class Indexer {
-  static readonly decoder = new Decoder(IndexTable);
+  static sizes = IndexTable;
+  static hards = IndexSchemeTable;
 
   readonly code: string;
   readonly raw: Uint8Array;
@@ -29,6 +30,10 @@ export class Indexer {
     this.index = frame.index ?? 0;
     this.ondex = frame.ondex;
     this.text = encode({ code: this.code, raw: this.raw, index: this.index, ondex: this.ondex }, size);
+  }
+
+  static decode(input: Uint8Array | string): Indexer {
+    return new Indexer(decode(input, Indexer));
   }
 
   static signature(alg: string, raw: Uint8Array, index: number): Indexer {

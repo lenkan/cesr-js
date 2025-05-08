@@ -30,7 +30,7 @@ describe("Encode counter v2", () => {
 describe("Counter v1 test vector", () => {
   for (const entry of vectors.filter((v) => v.type === "counter_10")) {
     test(`decode qb64 ${entry.type} ${entry.name} - ${entry.qb64.substring(0, 10)}`, () => {
-      const frame = CounterV1.decoder.decode(entry.qb64);
+      const frame = CounterV1.decode(entry.qb64);
 
       assert.deepEqual(frame.code, entry.code);
       assert.deepEqual(frame.count, entry.count);
@@ -48,7 +48,7 @@ describe("Counter v1 test vector", () => {
 describe("Counter v1 test vector", () => {
   for (const entry of vectors.filter((v) => v.type === "counter_20")) {
     test(`decode qb64 ${entry.type} ${entry.name} - ${entry.qb64.substring(0, 10)}`, () => {
-      const frame = CounterV2.decoder.decode(entry.qb64);
+      const frame = CounterV2.decode(entry.qb64);
 
       assert.deepEqual(frame.code, entry.code);
       assert.deepEqual(frame.count, entry.count);

@@ -1,1 +1,1 @@
-export { parse, ParserInput, Frame, FrameType } from "./parser.ts";
+export { parse, ParserInput } from "./parser.ts";

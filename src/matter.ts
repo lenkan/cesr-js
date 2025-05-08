@@ -1,44 +1,11 @@
 import { decodeBase64Url } from "./base64.ts";
-import { MatterCode, MatterTable } from "./codes.ts";
-import { Decoder } from "./decoder.ts";
+import { MatterCode, MatterSchemeTable, MatterTable } from "./codes.ts";
+import { decode } from "./decoder.ts";
 import { encode } from "./encoder.ts";
 
 function padNumber(num: number, length: number) {
   return num.toString().padStart(length, "0");
 }
-
-// function getHardSize(input: Uint8Array): number {
-//   const start = input[0];
-
-//   if (start >= 65 && start <= 90) {
-//     // 'A' - 'Z'
-//     return 1;
-//   }
-
-//   if (start >= 97 && start <= 122) {
-//     // 'a' - 'z'
-//     return 1;
-//   }
-
-//   switch (start) {
-//     case 48: // '0'
-//       return 2;
-//     case 49: // '1'
-//     case 50: // '2'
-//     case 51: // '3'
-//       return 4;
-//     case 52: // '4'
-//     case 53: // '5'
-//     case 54: // '6'
-//       return 2;
-//     case 55: // '7'
-//     case 56: // '8'
-//     case 57: // '9'
-//       return 4;
-//   }
-
-//   throw new Error(`Invalid character in input (${start})`);
-// }
 
 export interface MatterInit {
   code: string;
@@ -46,7 +13,8 @@ export interface MatterInit {
 }
 
 export class Matter {
-  static readonly decoder = new Decoder(MatterTable);
+  static sizes = MatterTable;
+  static hards = MatterSchemeTable;
 
   readonly code: string;
   readonly raw: Uint8Array;
@@ -61,6 +29,10 @@ export class Matter {
     this.code = init.code;
     this.raw = init.raw;
     this.text = encode(init, MatterTable[init.code]);
+  }
+
+  static decode(input: Uint8Array | string): Matter {
+    return new Matter(decode(input, Matter));
   }
 
   static string(txt: string): Matter {

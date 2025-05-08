@@ -2,6 +2,7 @@ import test, { describe } from "node:test";
 import assert from "node:assert/strict";
 import { Matter } from "./matter.ts";
 import vectors from "../fixtures/cesr_test_vectors.json" with { type: "json" };
+import { decode } from "./decoder.ts";
 
 describe("Encode values", () => {
   test("cesr date", () => {
@@ -28,7 +29,7 @@ describe("Encode values", () => {
 describe("Test vector", () => {
   for (const entry of vectors.filter((v) => v.type === "matter")) {
     test(`decode qb64 ${entry.type} ${entry.name} - ${entry.qb64.substring(0, 10)}`, () => {
-      const frame = Matter.decoder.decode(entry.qb64);
+      const frame = decode(entry.qb64, Matter);
       const raw = Uint8Array.from(Buffer.from(entry.raw as string, "hex"));
 
       assert.deepEqual(frame.code, entry.code);

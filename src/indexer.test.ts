@@ -24,7 +24,7 @@ describe("Encode indexer", () => {
 describe("Text index vector", () => {
   for (const entry of vectors.filter((v) => v.type === "indexer")) {
     test(`decode qb64 ${entry.type} ${entry.name} - ${entry.qb64.substring(0, 10)}`, () => {
-      const frame = Indexer.decoder.decode(entry.qb64);
+      const frame = Indexer.decode(entry.qb64);
       const raw = Uint8Array.from(Buffer.from(entry.raw as string, "hex"));
 
       assert.equal(frame.code, entry.code);
