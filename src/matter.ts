@@ -11,6 +11,9 @@ export interface MatterInit {
   raw: Uint8Array;
 }
 
+export type MatterDigest = "blake3_256" | "blake3_512";
+export type MatterSignature = "ed25519" | "secp256k1";
+
 export class Matter {
   readonly code: string;
   readonly raw: Uint8Array;
@@ -40,6 +43,28 @@ export class Matter {
         return new Matter({ code: MatterCode.StrB64_L2, raw });
       default:
         throw new Error(`Could not determine lead size`);
+    }
+  }
+
+  static signature(alg: MatterSignature, data: Uint8Array): Matter {
+    switch (alg) {
+      case "ed25519":
+        return new Matter({ code: MatterCode.Ed25519_Sig, raw: data });
+      case "secp256k1":
+        return new Matter({ code: MatterCode.ECDSA_256k1_Sig, raw: data });
+      default:
+        throw new Error(`Unsupported signature algorithm: ${alg}`);
+    }
+  }
+
+  static digest(alg: MatterDigest, data: Uint8Array): Matter {
+    switch (alg) {
+      case "blake3_256":
+        return new Matter({ code: MatterCode.Blake3_256, raw: data });
+      case "blake3_512":
+        return new Matter({ code: MatterCode.Blake3_256, raw: data });
+      default:
+        throw new Error(`Unsupported digest algorithm: ${alg}`);
     }
   }
 

@@ -6,4 +6,3 @@ export * from "./base64.ts";
 export * from "./matter.ts";
 export * from "./counter.ts";
 export * from "./indexer.ts";
-export * from "./decoder.ts";
