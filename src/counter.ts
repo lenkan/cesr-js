@@ -1,33 +1,31 @@
-import { CountCode_10, CountCode_20, CountSchemeTable, CountTable_10, CountTable_20 } from "./codes.ts";
-import { decode } from "./decoder.ts";
-import { encode } from "./encoder.ts";
+import { CountCode_10, CountCode_20, CountTable_10, CountTable_20 } from "./codes.ts";
+import { encode, decode } from "./encoding.ts";
 
 export interface CounterInit {
   code: string;
   count: number;
 }
 
-export class CounterV1 {
-  static sizes = CountTable_10;
-  static hards = CountSchemeTable;
+export interface Counter {
+  code: string;
+  count: number;
+  text: string;
+}
 
+export class CounterV1 implements Counter {
   readonly code: string;
   readonly count: number;
   readonly text: string;
+  readonly name: string;
 
   constructor(init: CounterInit) {
-    const size = CountTable_10[init.code];
-    if (!size) {
-      throw new Error(`Invalid code: ${init.code}`);
-    }
-
     this.code = init.code;
     this.count = init.count;
-    this.text = encode(init, size);
+    this.text = encode(init, CountTable_10);
   }
 
   static decode(qb64: string | Uint8Array) {
-    return new CounterV1(decode(qb64, CounterV1));
+    return new CounterV1(decode(qb64, CountTable_10));
   }
 
   static attachments(count: number) {
@@ -39,27 +37,19 @@ export class CounterV1 {
   }
 }
 
-export class CounterV2 {
-  static sizes = CountTable_20;
-  static hards = CountSchemeTable;
-
+export class CounterV2 implements Counter {
   readonly code: string;
   readonly count: number;
   readonly text: string;
 
   constructor(init: CounterInit) {
-    const size = CountTable_20[init.code];
-    if (!size) {
-      throw new Error(`Invalid code: ${init.code}`);
-    }
-
     this.code = init.code;
     this.count = init.count;
-    this.text = encode(init, size);
+    this.text = encode(init, CountTable_20);
   }
 
   static decode(qb64: string | Uint8Array) {
-    return new CounterV2(decode(qb64, CounterV2));
+    return new CounterV2(decode(qb64, CountTable_20));
   }
 
   static attachments(count: number) {

@@ -1,5 +1,43 @@
+import { encodeBase64Int, encodeBase64Url } from "./base64.ts";
 import { decodeBase64Int, decodeBase64Url } from "./base64.ts";
-import type { FrameData } from "./frame.ts";
+
+export interface FrameData {
+  code: string;
+  raw?: Uint8Array;
+  count?: number;
+  index?: number;
+  ondex?: number;
+}
+
+function prepadBytes(raw: Uint8Array, length: number): Uint8Array {
+  if (raw.byteLength === length) {
+    return raw;
+  }
+
+  const padded = new Uint8Array(length + raw.byteLength);
+  padded.set(raw, length);
+  return padded;
+}
+
+export function encode(frame: FrameData, table: CodeTable): string {
+  const size = table.sizes[frame.code];
+
+  if (!size) {
+    throw new Error(`Unable to find code table for ${frame.code}`);
+  }
+
+  const raw = frame.raw ?? new Uint8Array(0);
+  const leadSize = size.ls ?? 0;
+  const padSize = (3 - ((raw.byteLength + leadSize) % 3)) % 3;
+  const padded = prepadBytes(raw, padSize + leadSize);
+  const ms = (size.ss ?? 0) - (size.os ?? 0);
+  const os = size.os ?? 0;
+
+  const soft = ms ? encodeBase64Int(frame.count ?? frame.index ?? padded.byteLength / 3, ms) : "";
+  const other = os ? encodeBase64Int(frame.ondex ?? 0, os ?? 0) : "";
+
+  return `${frame.code}${soft}${other}${encodeBase64Url(padded).slice(padSize)}`;
+}
 
 export interface CodeSize {
   hs: number;
@@ -10,20 +48,17 @@ export interface CodeSize {
   xs?: number;
 }
 
-export type CodeTable = Record<string, CodeSize>;
-export type CodeSchemeTable = Record<string, number>;
+export interface CodeTable {
+  sizes: Record<string, CodeSize>;
+  hards: Record<string, number>;
+}
 
 export interface DecodeResult {
   frame: Required<FrameData> | null;
   n: number;
 }
 
-export interface DecodeTable {
-  hards: CodeSchemeTable;
-  sizes: CodeTable;
-}
-
-function findHardSize(input: Uint8Array, table: DecodeTable): number {
+function findHardSize(input: Uint8Array, table: CodeTable): number {
   const decoder = new TextDecoder();
   const start = input[0] === 45 ? decoder.decode(input.slice(0, 2)) : decoder.decode(input.slice(0, 1));
   const hs = table.hards[start];
@@ -35,7 +70,7 @@ function findHardSize(input: Uint8Array, table: DecodeTable): number {
   return hs;
 }
 
-export function decode(input: Uint8Array | string, table: DecodeTable): Required<FrameData> {
+export function decode(input: Uint8Array | string, table: CodeTable): Required<FrameData> {
   const result = read(input, table);
 
   if (result.frame === null) {
@@ -45,7 +80,7 @@ export function decode(input: Uint8Array | string, table: DecodeTable): Required
   return result.frame;
 }
 
-export function read(input: Uint8Array | string, table: DecodeTable): DecodeResult {
+export function read(input: Uint8Array | string, table: CodeTable): DecodeResult {
   if (typeof input === "string") {
     input = new TextEncoder().encode(input);
   }
@@ -66,7 +101,7 @@ export function read(input: Uint8Array | string, table: DecodeTable): DecodeResu
   const size = table.sizes[hard];
 
   if (!size) {
-    throw new Error(`Unknown code ${hard}, ${Object.keys(table.sizes)}`);
+    throw new Error(`Unknown code ${hard}`);
   }
 
   const cs = size.hs + size.ss;

@@ -1,7 +1,6 @@
 import { decodeBase64Url } from "./base64.ts";
-import { MatterCode, MatterSchemeTable, MatterTable } from "./codes.ts";
-import { decode } from "./decoder.ts";
-import { encode } from "./encoder.ts";
+import { MatterCode, MatterTable } from "./codes.ts";
+import { encode, decode } from "./encoding.ts";
 
 function padNumber(num: number, length: number) {
   return num.toString().padStart(length, "0");
@@ -13,26 +12,18 @@ export interface MatterInit {
 }
 
 export class Matter {
-  static sizes = MatterTable;
-  static hards = MatterSchemeTable;
-
   readonly code: string;
   readonly raw: Uint8Array;
   readonly text: string;
 
   constructor(init: MatterInit) {
-    const size = MatterTable[init.code];
-    if (!size) {
-      throw new Error(`Invalid code: ${init.code}`);
-    }
-
     this.code = init.code;
     this.raw = init.raw;
-    this.text = encode(init, MatterTable[init.code]);
+    this.text = encode(init, MatterTable);
   }
 
   static decode(input: Uint8Array | string): Matter {
-    return new Matter(decode(input, Matter));
+    return new Matter(decode(input, MatterTable));
   }
 
   static string(txt: string): Matter {

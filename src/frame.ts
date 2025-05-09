@@ -4,11 +4,3 @@ import type { Matter } from "./matter.ts";
 import type { Message } from "./version.ts";
 
 export type Frame = Message | Matter | CounterV1 | CounterV2 | Indexer;
-
-export interface FrameData {
-  code: string;
-  raw?: Uint8Array;
-  count?: number;
-  index?: number;
-  ondex?: number;
-}
