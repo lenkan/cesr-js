@@ -4,7 +4,7 @@ import { Indexer } from "./indexer.ts";
 import { Matter } from "./matter.ts";
 import { CounterV1, CounterV2 } from "./counter.ts";
 import type { Frame } from "./frame.ts";
-import { read } from "./encoding.ts";
+import { decodeStream } from "./encoding.ts";
 
 function concat(a: Uint8Array, b: Uint8Array) {
   if (a.length === 0) {
@@ -60,7 +60,7 @@ class Parser {
   }
 
   #readMatter(): Matter | null {
-    const result = read(this.#buffer, MatterTable);
+    const result = decodeStream(this.#buffer, MatterTable);
     this.#buffer = this.#buffer.slice(result.n);
     return result.frame && new Matter(result.frame);
   }
@@ -77,7 +77,7 @@ class Parser {
   }
 
   #readCounterV1(): CounterV1 | null {
-    const result = read(this.#buffer, CountTable_10);
+    const result = decodeStream(this.#buffer, CountTable_10);
     this.#buffer = this.#buffer.slice(result.n);
 
     if (!result.frame) {
@@ -107,7 +107,7 @@ class Parser {
   }
 
   #readCounterV2(): CounterV2 | null {
-    const result = read(this.#buffer, CountTable_20);
+    const result = decodeStream(this.#buffer, CountTable_20);
     this.#buffer = this.#buffer.slice(result.n);
 
     if (!result.frame) {
@@ -127,7 +127,7 @@ class Parser {
   }
 
   #readIndexer(): Indexer | null {
-    const result = read(this.#buffer, IndexTable);
+    const result = decodeStream(this.#buffer, IndexTable);
     this.#buffer = this.#buffer.slice(result.n);
 
     if (!result.frame) {

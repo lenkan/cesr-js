@@ -17,9 +17,9 @@ describe("Parse count code", () => {
     const result = Array.from(parseSync(attachment));
 
     assert.equal(result.length, 4);
-    assert.deepEqual(result[0].code, CountCode_10.ControllerIdxSigs);
-    assert.deepEqual(result[1].code, IndexCode.Ed25519_Big_Sig);
-    assert.deepEqual(result[2].code, IndexCode.Ed25519_Big_Sig);
-    assert.deepEqual(result[3].code, IndexCode.Ed25519_Sig);
+    assert.partialDeepStrictEqual(result[0], { code: CountCode_10.ControllerIdxSigs });
+    assert.partialDeepStrictEqual(result[1], { code: IndexCode.Ed25519_Big_Sig });
+    assert.partialDeepStrictEqual(result[2], { code: IndexCode.Ed25519_Big_Sig });
+    assert.partialDeepStrictEqual(result[3], { code: IndexCode.Ed25519_Sig });
   });
 });

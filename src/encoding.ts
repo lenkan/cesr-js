@@ -9,6 +9,37 @@ export interface FrameData {
   ondex?: number;
 }
 
+export interface CodeSize {
+  hs: number;
+  fs: number;
+  ss: number;
+  os?: number;
+  ls?: number;
+  xs?: number;
+}
+
+export interface CodeTable {
+  sizes: Record<string, CodeSize>;
+  hards: Record<string, number>;
+}
+
+/**
+ * The result of decoding a stream. The frame property will
+ * be null if there is not enough data to decode a frame.
+ *
+ * The n property indicates the number of bytes consumed
+ */
+export interface DecodeStreamResult {
+  /**
+   * The decoded frame. This will be null if there is not enough data in the input
+   */
+  frame: Required<FrameData> | null;
+  /**
+   * The number of bytes consumed from the input
+   */
+  n: number;
+}
+
 function prepadBytes(raw: Uint8Array, length: number): Uint8Array {
   if (raw.byteLength === length) {
     return raw;
@@ -39,25 +70,6 @@ export function encode(frame: FrameData, table: CodeTable): string {
   return `${frame.code}${soft}${other}${encodeBase64Url(padded).slice(padSize)}`;
 }
 
-export interface CodeSize {
-  hs: number;
-  fs: number;
-  ss: number;
-  os?: number;
-  ls?: number;
-  xs?: number;
-}
-
-export interface CodeTable {
-  sizes: Record<string, CodeSize>;
-  hards: Record<string, number>;
-}
-
-export interface DecodeResult {
-  frame: Required<FrameData> | null;
-  n: number;
-}
-
 function findHardSize(input: Uint8Array, table: CodeTable): number {
   const decoder = new TextDecoder();
   const start = input[0] === 45 ? decoder.decode(input.slice(0, 2)) : decoder.decode(input.slice(0, 1));
@@ -71,7 +83,7 @@ function findHardSize(input: Uint8Array, table: CodeTable): number {
 }
 
 export function decode(input: Uint8Array | string, table: CodeTable): Required<FrameData> {
-  const result = read(input, table);
+  const result = decodeStream(input, table);
 
   if (result.frame === null) {
     throw new Error("Not enough data in input");
@@ -80,7 +92,7 @@ export function decode(input: Uint8Array | string, table: CodeTable): Required<F
   return result.frame;
 }
 
-export function read(input: Uint8Array | string, table: CodeTable): DecodeResult {
+export function decodeStream(input: Uint8Array | string, table: CodeTable): DecodeStreamResult {
   if (typeof input === "string") {
     input = new TextEncoder().encode(input);
   }
