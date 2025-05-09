@@ -3,281 +3,281 @@
     "code": "N",
     "name": "Big",
     "type": "matter",
-    "raw": "4b41e828b7987111",
-    "qb64": "NEtB6Ci3mHER",
-    "qb2": "344b41e828b7987111"
+    "raw": "ab751375c52b5e9e",
+    "qb64": "NKt1E3XFK16e",
+    "qb2": "34ab751375c52b5e9e"
   },
   {
     "code": "F",
     "name": "Blake2b_256",
     "type": "matter",
-    "raw": "693c6431a3133c7f16ced6946d9000131f70eb33f49380f719e6950637a8344b",
-    "qb64": "FGk8ZDGjEzx_Fs7WlG2QABMfcOsz9JOA9xnmlQY3qDRL",
-    "qb2": "14693c6431a3133c7f16ced6946d9000131f70eb33f49380f719e6950637a8344b"
+    "raw": "2867bec57c9506656b63e9bfbb1b9c20f2e4cc36ae6c52fef913407986fff16e",
+    "qb64": "FChnvsV8lQZla2Ppv7sbnCDy5Mw2rmxS_vkTQHmG__Fu",
+    "qb2": "142867bec57c9506656b63e9bfbb1b9c20f2e4cc36ae6c52fef913407986fff16e"
   },
   {
     "code": "0E",
     "name": "Blake2b_512",
     "type": "matter",
-    "raw": "daa61957dba154beeca609dfc767f24ec60e2d87c89972e54c7ab2e6736bfd750350fcf70d1848a80f9e8168954c00f8844f1e226df6b93daf39ad3d181bbf28",
-    "qb64": "0EDaphlX26FUvuymCd_HZ_JOxg4th8iZcuVMerLmc2v9dQNQ_PcNGEioD56BaJVMAPiETx4ibfa5Pa85rT0YG78o",
-    "qb2": "d040daa61957dba154beeca609dfc767f24ec60e2d87c89972e54c7ab2e6736bfd750350fcf70d1848a80f9e8168954c00f8844f1e226df6b93daf39ad3d181bbf28"
+    "raw": "a71673de291579a1263bcc9df5d53eabc5b4740e1c25e5a72a2e71651d5f46929ed57b4c5b28745924fdded950dc1dde2929e246e07ba748ca8e8c1833c33457",
+    "qb64": "0ECnFnPeKRV5oSY7zJ311T6rxbR0Dhwl5acqLnFlHV9Gkp7Ve0xbKHRZJP3e2VDcHd4pKeJG4HunSMqOjBgzwzRX",
+    "qb2": "d040a71673de291579a1263bcc9df5d53eabc5b4740e1c25e5a72a2e71651d5f46929ed57b4c5b28745924fdded950dc1dde2929e246e07ba748ca8e8c1833c33457"
   },
   {
     "code": "G",
     "name": "Blake2s_256",
     "type": "matter",
-    "raw": "900284953279675df7afb87350753264f1dd6da56aab46ce50eaf4b1e49a5d8c",
-    "qb64": "GJAChJUyeWdd96-4c1B1MmTx3W2laqtGzlDq9LHkml2M",
-    "qb2": "18900284953279675df7afb87350753264f1dd6da56aab46ce50eaf4b1e49a5d8c"
+    "raw": "d385395e19295de894f6e46c824f09b528a3b75e0c04b18d9cf97afbb22dd483",
+    "qb64": "GNOFOV4ZKV3olPbkbIJPCbUoo7deDASxjZz5evuyLdSD",
+    "qb2": "18d385395e19295de894f6e46c824f09b528a3b75e0c04b18d9cf97afbb22dd483"
   },
   {
     "code": "E",
     "name": "Blake3_256",
     "type": "matter",
-    "raw": "848198ac2a59ce1f968eac96e57ebc90e42eb59119878deea82308fa4e9fd619",
-    "qb64": "EISBmKwqWc4flo6sluV-vJDkLrWRGYeN7qgjCPpOn9YZ",
-    "qb2": "10848198ac2a59ce1f968eac96e57ebc90e42eb59119878deea82308fa4e9fd619"
+    "raw": "7e3357c2ebbc3cc13a12aff84c6e5b6481453546ab1f066269e30ca2bdd54394",
+    "qb64": "EH4zV8LrvDzBOhKv-ExuW2SBRTVGqx8GYmnjDKK91UOU",
+    "qb2": "107e3357c2ebbc3cc13a12aff84c6e5b6481453546ab1f066269e30ca2bdd54394"
   },
   {
     "code": "0D",
     "name": "Blake3_512",
     "type": "matter",
-    "raw": "cd9356bf9a986163f47c36842057de49c7431561db36838ce960a4736f79bd1de46c53ff193f53601c320ee600ee0338795ae8ca759d0103d6b63c28bfebcc7c",
-    "qb64": "0DDNk1a_mphhY_R8NoQgV95Jx0MVYds2g4zpYKRzb3m9HeRsU_8ZP1NgHDIO5gDuAzh5WujKdZ0BA9a2PCi_68x8",
-    "qb2": "d030cd9356bf9a986163f47c36842057de49c7431561db36838ce960a4736f79bd1de46c53ff193f53601c320ee600ee0338795ae8ca759d0103d6b63c28bfebcc7c"
+    "raw": "dfb816b6aa7b76f4e9f58a283fe5406dc56508cfa892b0c145417a48899221a9fac836fd275c4457ecf436aa5bddbc0c5c73632d77dc7cabd1a1a9cafcb8e6f0",
+    "qb64": "0DDfuBa2qnt29On1iig_5UBtxWUIz6iSsMFFQXpIiZIhqfrINv0nXERX7PQ2qlvdvAxcc2Mtd9x8q9Ghqcr8uObw",
+    "qb2": "d030dfb816b6aa7b76f4e9f58a283fe5406dc56508cfa892b0c145417a48899221a9fac836fd275c4457ecf436aa5bddbc0c5c73632d77dc7cabd1a1a9cafcb8e6f0"
   },
   {
     "code": "Z",
     "name": "Blind",
     "type": "matter",
-    "raw": "a1efd421a6fda1b190b0f0af637bae236cb99a81cb1e0c176d320567a55f7c3a",
-    "qb64": "ZKHv1CGm_aGxkLDwr2N7riNsuZqByx4MF20yBWelX3w6",
-    "qb2": "64a1efd421a6fda1b190b0f0af637bae236cb99a81cb1e0c176d320567a55f7c3a"
+    "raw": "0dc3299b8c85b14ae09d75b603e1bfa28f908cc739262808c90ef0484577264a",
+    "qb64": "ZA3DKZuMhbFK4J11tgPhv6KPkIzHOSYoCMkO8EhFdyZK",
+    "qb2": "640dc3299b8c85b14ae09d75b603e1bfa28f908cc739262808c90ef0484577264a"
   },
   {
     "code": "7AAB",
     "name": "Bytes_Big_L0",
     "type": "matter",
-    "raw": "4de16b837d3430bfdcb5d04db2f1d0809c52",
-    "qb64": "7AABAAAGTeFrg300ML_ctdBNsvHQgJxS",
-    "qb2": "ec00010000064de16b837d3430bfdcb5d04db2f1d0809c52"
+    "raw": "46209b",
+    "qb64": "7AABAAABRiCb",
+    "qb2": "ec000100000146209b"
   },
   {
     "code": "8AAB",
     "name": "Bytes_Big_L1",
     "type": "matter",
-    "raw": "eae031fadfb68207847811cc71ebdb7147",
-    "qb64": "8AABAAAGAOrgMfrftoIHhHgRzHHr23FH",
-    "qb2": "f0000100000600eae031fadfb68207847811cc71ebdb7147"
+    "raw": "564437912abcd3de",
+    "qb64": "8AABAAADAFZEN5EqvNPe",
+    "qb2": "f0000100000300564437912abcd3de"
   },
   {
     "code": "9AAB",
     "name": "Bytes_Big_L2",
     "type": "matter",
-    "raw": "22c35d6574b98fed4c3eba7f96",
-    "qb64": "9AABAAAFAAAiw11ldLmP7Uw-un-W",
-    "qb2": "f40001000005000022c35d6574b98fed4c3eba7f96"
+    "raw": "f554c3435086173b7889cf044183814cb08fadde9890",
+    "qb64": "9AABAAAIAAD1VMNDUIYXO3iJzwRBg4FMsI-t3piQ",
+    "qb2": "f400010000080000f554c3435086173b7889cf044183814cb08fadde9890"
   },
   {
     "code": "4B",
     "name": "Bytes_L0",
     "type": "matter",
-    "raw": "3071b2357aa2acb56995d9064c7fba06a51f67e53f52e283e0f47c",
-    "qb64": "4BAJMHGyNXqirLVpldkGTH-6BqUfZ-U_UuKD4PR8",
-    "qb2": "e010093071b2357aa2acb56995d9064c7fba06a51f67e53f52e283e0f47c"
+    "raw": "68cee649042e58c26cf96ba0ec9843",
+    "qb64": "4BAFaM7mSQQuWMJs-Wug7JhD",
+    "qb2": "e0100568cee649042e58c26cf96ba0ec9843"
   },
   {
     "code": "5B",
     "name": "Bytes_L1",
     "type": "matter",
-    "raw": "a570194d936ddb55",
-    "qb64": "5BADAKVwGU2TbdtV",
-    "qb2": "e4100300a570194d936ddb55"
+    "raw": "b740da09fc734da93dd04024184d326568893a26",
+    "qb64": "5BAHALdA2gn8c02pPdBAJBhNMmVoiTom",
+    "qb2": "e4100700b740da09fc734da93dd04024184d326568893a26"
   },
   {
     "code": "6B",
     "name": "Bytes_L2",
     "type": "matter",
-    "raw": "4fbd634beacc7a5605e041d7930c973656b38b11a112",
-    "qb64": "6BAIAABPvWNL6sx6VgXgQdeTDJc2VrOLEaES",
-    "qb2": "e8100800004fbd634beacc7a5605e041d7930c973656b38b11a112"
+    "raw": "e3504b731885f93b29513bc203",
+    "qb64": "6BAFAADjUEtzGIX5OylRO8ID",
+    "qb2": "e810050000e3504b731885f93b29513bc203"
   },
   {
     "code": "1AAG",
     "name": "DateTime",
     "type": "matter",
-    "raw": "8f0ac6d54b864e8aa795b967935d32ba4df32759dc2289fd",
-    "qb64": "1AAGjwrG1UuGToqnlblnk10yuk3zJ1ncIon9",
-    "qb2": "d400068f0ac6d54b864e8aa795b967935d32ba4df32759dc2289fd"
+    "raw": "c9e7ecf8d277f0413080a53e98a8aaea64d20151a82f12c9",
+    "qb64": "1AAGyefs-NJ38EEwgKU-mKiq6mTSAVGoLxLJ",
+    "qb2": "d40006c9e7ecf8d277f0413080a53e98a8aaea64d20151a82f12c9"
   },
   {
     "code": "1AAB",
     "name": "ECDSA_256k1",
     "type": "matter",
-    "raw": "a4ba72207512bc5595b0b5fd4114ba27d2a4a5ce542ac9ddd20112db641bf56119",
-    "qb64": "1AABpLpyIHUSvFWVsLX9QRS6J9Kkpc5UKsnd0gES22Qb9WEZ",
-    "qb2": "d40001a4ba72207512bc5595b0b5fd4114ba27d2a4a5ce542ac9ddd20112db641bf56119"
+    "raw": "03fdd84c1ff215934c01429b5e3651a6b3663bd33385773fe76581155e75981a91",
+    "qb64": "1AABA_3YTB_yFZNMAUKbXjZRprNmO9MzhXc_52WBFV51mBqR",
+    "qb2": "d4000103fdd84c1ff215934c01429b5e3651a6b3663bd33385773fe76581155e75981a91"
   },
   {
     "code": "1AAA",
     "name": "ECDSA_256k1N",
     "type": "matter",
-    "raw": "bdc5fcebc65941b54b49bd206b527692915bfb6fb8889fcd46da76df21856ad59e",
-    "qb64": "1AAAvcX868ZZQbVLSb0ga1J2kpFb-2-4iJ_NRtp23yGFatWe",
-    "qb2": "d40000bdc5fcebc65941b54b49bd206b527692915bfb6fb8889fcd46da76df21856ad59e"
+    "raw": "cbb2d5da880dfbbc76a90fff47eb0d1a48ed048eac0350b2abad7089c497906081",
+    "qb64": "1AAAy7LV2ogN-7x2qQ__R-sNGkjtBI6sA1Cyq61wicSXkGCB",
+    "qb2": "d40000cbb2d5da880dfbbc76a90fff47eb0d1a48ed048eac0350b2abad7089c497906081"
   },
   {
     "code": "J",
     "name": "ECDSA_256k1_Seed",
     "type": "matter",
-    "raw": "5c39f4874795479482f8ebecf40688c4d17f9215c1dc04a2b2d6dd715b2b27a5",
-    "qb64": "JFw59IdHlUeUgvjr7PQGiMTRf5IVwdwEorLW3XFbKyel",
-    "qb2": "245c39f4874795479482f8ebecf40688c4d17f9215c1dc04a2b2d6dd715b2b27a5"
+    "raw": "3573070dda14ab5543e3b68b0c6f9e7039274a5790c1ec497fb2fe8870d24076",
+    "qb64": "JDVzBw3aFKtVQ-O2iwxvnnA5J0pXkMHsSX-y_ohw0kB2",
+    "qb2": "243573070dda14ab5543e3b68b0c6f9e7039274a5790c1ec497fb2fe8870d24076"
   },
   {
     "code": "0C",
     "name": "ECDSA_256k1_Sig",
     "type": "matter",
-    "raw": "af06744d0bcba9fc7c59b27a198bd0b854eee34d49844cf6008701423b864160b10f06312bf54bb77240842559faf4e8d423091e6d9a4adc9afde1d4b2f56133",
-    "qb64": "0CCvBnRNC8up_HxZsnoZi9C4VO7jTUmETPYAhwFCO4ZBYLEPBjEr9Uu3ckCEJVn69OjUIwkebZpK3Jr94dSy9WEz",
-    "qb2": "d020af06744d0bcba9fc7c59b27a198bd0b854eee34d49844cf6008701423b864160b10f06312bf54bb77240842559faf4e8d423091e6d9a4adc9afde1d4b2f56133"
+    "raw": "235e96265f9b129b6cf904e98fd1259fc95594605c79c366138ada568d1a6beeea16085657d96a17f1f7415ba3d68b676e508cc303d4e2a8c378e93b7270bfc0",
+    "qb64": "0CAjXpYmX5sSm2z5BOmP0SWfyVWUYFx5w2YTitpWjRpr7uoWCFZX2WoX8fdBW6PWi2duUIzDA9TiqMN46TtycL_A",
+    "qb2": "d020235e96265f9b129b6cf904e98fd1259fc95594605c79c366138ada568d1a6beeea16085657d96a17f1f7415ba3d68b676e508cc303d4e2a8c378e93b7270bfc0"
   },
   {
     "code": "1AAJ",
     "name": "ECDSA_256r1",
     "type": "matter",
-    "raw": "cb9b16339a8740f8880edf1cbbd0c106e51e3b1922bc061558a31f78e75a27582b",
-    "qb64": "1AAJy5sWM5qHQPiIDt8cu9DBBuUeOxkivAYVWKMfeOdaJ1gr",
-    "qb2": "d40009cb9b16339a8740f8880edf1cbbd0c106e51e3b1922bc061558a31f78e75a27582b"
+    "raw": "c12cd55e9fe28559a98504820222edb9dc0b0f37eccfb3127cd73b141a6ab19be9",
+    "qb64": "1AAJwSzVXp_ihVmphQSCAiLtudwLDzfsz7MSfNc7FBpqsZvp",
+    "qb2": "d40009c12cd55e9fe28559a98504820222edb9dc0b0f37eccfb3127cd73b141a6ab19be9"
   },
   {
     "code": "1AAI",
     "name": "ECDSA_256r1N",
     "type": "matter",
-    "raw": "95390c30c51ad7c1ddf4b6354f7af2643485ffa660f50ee0c3b9aced38c271813a",
-    "qb64": "1AAIlTkMMMUa18Hd9LY1T3ryZDSF_6Zg9Q7gw7ms7TjCcYE6",
-    "qb2": "d4000895390c30c51ad7c1ddf4b6354f7af2643485ffa660f50ee0c3b9aced38c271813a"
+    "raw": "04c11f57b3a8fa013b41c21ab5cbd9d5158fc67223328e311d52bef2e60dcdf945",
+    "qb64": "1AAIBMEfV7Oo-gE7QcIatcvZ1RWPxnIjMo4xHVK-8uYNzflF",
+    "qb2": "d4000804c11f57b3a8fa013b41c21ab5cbd9d5158fc67223328e311d52bef2e60dcdf945"
   },
   {
     "code": "Q",
     "name": "ECDSA_256r1_Seed",
     "type": "matter",
-    "raw": "295085bed3b7fdb9e0a5e933c62dd914a87ad2fb682188e0d46491194b68fef1",
-    "qb64": "QClQhb7Tt_254KXpM8Yt2RSoetL7aCGI4NRkkRlLaP7x",
-    "qb2": "40295085bed3b7fdb9e0a5e933c62dd914a87ad2fb682188e0d46491194b68fef1"
+    "raw": "79b1877d58fb9efe8e306a44706841b054de72e0fc3e877356b3d16329834e03",
+    "qb64": "QHmxh31Y-57-jjBqRHBoQbBU3nLg_D6Hc1az0WMpg04D",
+    "qb2": "4079b1877d58fb9efe8e306a44706841b054de72e0fc3e877356b3d16329834e03"
   },
   {
     "code": "0I",
     "name": "ECDSA_256r1_Sig",
     "type": "matter",
-    "raw": "7b8ca107fd8fe6926bcfde53aeee72d72f84114f04eae1cbc2807c6292e35be8249f7698b3690a21e553fd61e062dba2a915ffe855e9c975b2cae762c91130bf",
-    "qb64": "0IB7jKEH_Y_mkmvP3lOu7nLXL4QRTwTq4cvCgHxikuNb6CSfdpizaQoh5VP9YeBi26KpFf_oVenJdbLK52LJETC_",
-    "qb2": "d0807b8ca107fd8fe6926bcfde53aeee72d72f84114f04eae1cbc2807c6292e35be8249f7698b3690a21e553fd61e062dba2a915ffe855e9c975b2cae762c91130bf"
+    "raw": "923ddc77c9558bfa007a17a33d9bfa2a3b3e933fbc4b8238860aa06f4cf0a09d8fd2cd7073ebb7d1c23e0ef724e3da9ee6119f2acf406f3050dc3dc012e9adad",
+    "qb64": "0ICSPdx3yVWL-gB6F6M9m_oqOz6TP7xLgjiGCqBvTPCgnY_SzXBz67fRwj4O9yTj2p7mEZ8qz0BvMFDcPcAS6a2t",
+    "qb2": "d080923ddc77c9558bfa007a17a33d9bfa2a3b3e933fbc4b8238860aa06f4cf0a09d8fd2cd7073ebb7d1c23e0ef724e3da9ee6119f2acf406f3050dc3dc012e9adad"
   },
   {
     "code": "D",
     "name": "Ed25519",
     "type": "matter",
-    "raw": "660a93bc3bcb552f68a3cd39090cad72899af26d3ef7b8966b200fca54bb0fb9",
-    "qb64": "DGYKk7w7y1UvaKPNOQkMrXKJmvJtPve4lmsgD8pUuw-5",
-    "qb2": "0c660a93bc3bcb552f68a3cd39090cad72899af26d3ef7b8966b200fca54bb0fb9"
+    "raw": "ec3c4123c14148e0f9612404d3c7d8e4455f5e10e517767c0d57a43e8cf37f14",
+    "qb64": "DOw8QSPBQUjg-WEkBNPH2ORFX14Q5Rd2fA1XpD6M838U",
+    "qb2": "0cec3c4123c14148e0f9612404d3c7d8e4455f5e10e517767c0d57a43e8cf37f14"
   },
   {
     "code": "B",
     "name": "Ed25519N",
     "type": "matter",
-    "raw": "cdd19f0ae2e22f59db6708808c36ed796c1fc956ca2373c1be44c444ce851438",
-    "qb64": "BM3Rnwri4i9Z22cIgIw27XlsH8lWyiNzwb5ExETOhRQ4",
-    "qb2": "04cdd19f0ae2e22f59db6708808c36ed796c1fc956ca2373c1be44c444ce851438"
+    "raw": "784a44c669d11816234904df81b6c52ee1f56cf1b2e31822049ca82154ff20d2",
+    "qb64": "BHhKRMZp0RgWI0kE34G2xS7h9WzxsuMYIgScqCFU_yDS",
+    "qb2": "04784a44c669d11816234904df81b6c52ee1f56cf1b2e31822049ca82154ff20d2"
   },
   {
     "code": "A",
     "name": "Ed25519_Seed",
     "type": "matter",
-    "raw": "6e0312f9fef140d66942f63b38d4612bac340b7cb894ac2e313dfac951182d0a",
-    "qb64": "AG4DEvn-8UDWaUL2OzjUYSusNAt8uJSsLjE9-slRGC0K",
-    "qb2": "006e0312f9fef140d66942f63b38d4612bac340b7cb894ac2e313dfac951182d0a"
+    "raw": "3b51c4c4fb19c5a73777241dde5405311087828bdb65f0173ef408929dfb4ce3",
+    "qb64": "ADtRxMT7GcWnN3ckHd5UBTEQh4KL22XwFz70CJKd-0zj",
+    "qb2": "003b51c4c4fb19c5a73777241dde5405311087828bdb65f0173ef408929dfb4ce3"
   },
   {
     "code": "0B",
     "name": "Ed25519_Sig",
     "type": "matter",
-    "raw": "34056078f92d0507b41f30c9246ae2cdc69cd65db26b92e7d82bf7b10eedc2db6e2f25344a097766f4b462aa1764d877e996a236dd062d97d8e4d44c9b029288",
-    "qb64": "0BA0BWB4-S0FB7QfMMkkauLNxpzWXbJrkufYK_exDu3C224vJTRKCXdm9LRiqhdk2HfplqI23QYtl9jk1EybApKI",
-    "qb2": "d01034056078f92d0507b41f30c9246ae2cdc69cd65db26b92e7d82bf7b10eedc2db6e2f25344a097766f4b462aa1764d877e996a236dd062d97d8e4d44c9b029288"
+    "raw": "526062b0e42535e2bdb88ab0adb8a5b7721611745ab3ff1eef7077eccbb859b269fcfc477ffd58839bcd8d8cad6adf1671bf150bd6a15abd92bf2ca421527d3d",
+    "qb64": "0BBSYGKw5CU14r24irCtuKW3chYRdFqz_x7vcHfsy7hZsmn8_Ed__ViDm82NjK1q3xZxvxUL1qFavZK_LKQhUn09",
+    "qb2": "d010526062b0e42535e2bdb88ab0adb8a5b7721611745ab3ff1eef7077eccbb859b269fcfc477ffd58839bcd8d8cad6adf1671bf150bd6a15abd92bf2ca421527d3d"
   },
   {
     "code": "1AAD",
     "name": "Ed448",
     "type": "matter",
-    "raw": "320d144f7e9180d0303edc370fecd98b36f49f9d07ab3bc9bb6e7564e1932258ec6fd520f7a6b0b8c0464a57f238f9082f703480d2f66a62ea",
-    "qb64": "1AADMg0UT36RgNAwPtw3D-zZizb0n50HqzvJu251ZOGTIljsb9Ug96awuMBGSlfyOPkIL3A0gNL2amLq",
-    "qb2": "d40003320d144f7e9180d0303edc370fecd98b36f49f9d07ab3bc9bb6e7564e1932258ec6fd520f7a6b0b8c0464a57f238f9082f703480d2f66a62ea"
+    "raw": "961d4db1b216010d01c05afb3c6d641aa02ae969e31e3fbfa20641f345b29e3f0b2dbaf7ea25661d8bbcc0a9f76663f6fdf5fe31c95641ab5a",
+    "qb64": "1AADlh1NsbIWAQ0BwFr7PG1kGqAq6WnjHj-_ogZB80Wynj8LLbr36iVmHYu8wKn3ZmP2_fX-MclWQata",
+    "qb2": "d40003961d4db1b216010d01c05afb3c6d641aa02ae969e31e3fbfa20641f345b29e3f0b2dbaf7ea25661d8bbcc0a9f76663f6fdf5fe31c95641ab5a"
   },
   {
     "code": "1AAC",
     "name": "Ed448N",
     "type": "matter",
-    "raw": "31beed172a1ce2a6f4186a868f2a28ab4175e07ea58be2abd8ca6bbfa42ee153ab2739c9bd49b939583208f8713bedb2f0ff300a213503065c",
-    "qb64": "1AACMb7tFyoc4qb0GGqGjyooq0F14H6li-Kr2Mprv6Qu4VOrJznJvUm5OVgyCPhxO-2y8P8wCiE1AwZc",
-    "qb2": "d4000231beed172a1ce2a6f4186a868f2a28ab4175e07ea58be2abd8ca6bbfa42ee153ab2739c9bd49b939583208f8713bedb2f0ff300a213503065c"
+    "raw": "d806b1b20f84edf1e3420733e1fa5504a34f8f315612d1b0b2113fe5b4530eba8b541856c4c38f3ac25a3298d99ddcfd0c54cb400078b5a44d",
+    "qb64": "1AAC2Aaxsg-E7fHjQgcz4fpVBKNPjzFWEtGwshE_5bRTDrqLVBhWxMOPOsJaMpjZndz9DFTLQAB4taRN",
+    "qb2": "d40002d806b1b20f84edf1e3420733e1fa5504a34f8f315612d1b0b2113fe5b4530eba8b541856c4c38f3ac25a3298d99ddcfd0c54cb400078b5a44d"
   },
   {
     "code": "K",
     "name": "Ed448_Seed",
     "type": "matter",
-    "raw": "ea78d3d6828d5c88e5fb3012883c35af295b03a3ed8c38b9b1d32f8dc746e500dc585f90aa3bd0e9807fd8e114f4fad00efd19632c630ae8",
-    "qb64": "KOp409aCjVyI5fswEog8Na8pWwOj7Yw4ubHTL43HRuUA3FhfkKo70OmAf9jhFPT60A79GWMsYwro",
-    "qb2": "28ea78d3d6828d5c88e5fb3012883c35af295b03a3ed8c38b9b1d32f8dc746e500dc585f90aa3bd0e9807fd8e114f4fad00efd19632c630ae8"
+    "raw": "2025c390d086654f4ae07991f7e843738f4fe813b1a50230d33084f914449db2afd6b3409655e551e2bd66ccbdbd64874359bea1d9bc7607",
+    "qb64": "KCAlw5DQhmVPSuB5kffoQ3OPT-gTsaUCMNMwhPkURJ2yr9azQJZV5VHivWbMvb1kh0NZvqHZvHYH",
+    "qb2": "282025c390d086654f4ae07991f7e843738f4fe813b1a50230d33084f914449db2afd6b3409655e551e2bd66ccbdbd64874359bea1d9bc7607"
   },
   {
     "code": "1AAE",
     "name": "Ed448_Sig",
     "type": "matter",
-    "raw": "8c51374666c53b7b66fbe6ee4bad44b63653de7380e97f1b2335a7b20757d1b188d14126b3e846",
-    "qb64": "1AAEjFE3RmbFO3tm--buS61EtjZT3nOA6X8bIzWnsgdX0bGI0UEms-hG",
-    "qb2": "d400048c51374666c53b7b66fbe6ee4bad44b63653de7380e97f1b2335a7b20757d1b188d14126b3e846"
+    "raw": "96a7da69cacb0701faaaafc5b63839cbf8fec7b579ca1d48a63b194eebc51d5052b33f0a640bca",
+    "qb64": "1AAElqfaacrLBwH6qq_Ftjg5y_j-x7V5yh1IpjsZTuvFHVBSsz8KZAvK",
+    "qb2": "d4000496a7da69cacb0701faaaafc5b63839cbf8fec7b579ca1d48a63b194eebc51d5052b33f0a640bca"
   },
   {
     "code": "T",
     "name": "Great",
     "type": "matter",
-    "raw": "375a019c8e14fd13cf9ace7ee058",
-    "qb64": "TDdaAZyOFP0Tz5rOfuBY",
-    "qb2": "4c375a019c8e14fd13cf9ace7ee058"
+    "raw": "d7bfe27bcf9f943f921c20374a22",
+    "qb64": "TNe_4nvPn5Q_khwgN0oi",
+    "qb2": "4cd7bfe27bcf9f943f921c20374a22"
   },
   {
     "code": "V",
     "name": "Label1",
     "type": "matter",
-    "raw": "0c",
-    "qb64": "VAAM",
-    "qb2": "54000c"
+    "raw": "1a",
+    "qb64": "VAAa",
+    "qb2": "54001a"
   },
   {
     "code": "W",
     "name": "Label2",
     "type": "matter",
-    "raw": "2ad3",
-    "qb64": "WCrT",
-    "qb2": "582ad3"
+    "raw": "070f",
+    "qb64": "WAcP",
+    "qb2": "58070f"
   },
   {
     "code": "S",
     "name": "Large",
     "type": "matter",
-    "raw": "b07f77a88c223191738d7e",
-    "qb64": "SLB_d6iMIjGRc41-",
-    "qb2": "48b07f77a88c223191738d7e"
+    "raw": "27f689ad543a077cb8540d",
+    "qb64": "SCf2ia1UOgd8uFQN",
+    "qb2": "4827f689ad543a077cb8540d"
   },
   {
     "code": "0H",
     "name": "Long",
     "type": "matter",
-    "raw": "527bfbcc",
-    "qb64": "0HBSe_vM",
-    "qb2": "d070527bfbcc"
+    "raw": "c47beec7",
+    "qb64": "0HDEe-7H",
+    "qb2": "d070c47beec7"
   },
   {
     "code": "1AAL",
@@ -299,297 +299,297 @@
     "code": "I",
     "name": "SHA2_256",
     "type": "matter",
-    "raw": "1cbdbbb061da6351453b4aa94d895337bba39494b4d1ea011ec1c97c27fd242a",
-    "qb64": "IBy9u7Bh2mNRRTtKqU2JUze7o5SUtNHqAR7ByXwn_SQq",
-    "qb2": "201cbdbbb061da6351453b4aa94d895337bba39494b4d1ea011ec1c97c27fd242a"
+    "raw": "33903b1e4a968152bb3fc2026f0a2a666e57c51c5a5900d0616b9730782686f7",
+    "qb64": "IDOQOx5KloFSuz_CAm8KKmZuV8UcWlkA0GFrlzB4Job3",
+    "qb2": "2033903b1e4a968152bb3fc2026f0a2a666e57c51c5a5900d0616b9730782686f7"
   },
   {
     "code": "0G",
     "name": "SHA2_512",
     "type": "matter",
-    "raw": "88d1769d73f205958664168914413da0e2e469fe5952bf5e0ad0a5ec344e28639d56601cc67b6d62d6ece4408859a72e55edf6a3a7afd409d522950ad4ec7867",
-    "qb64": "0GCI0Xadc_IFlYZkFokUQT2g4uRp_llSv14K0KXsNE4oY51WYBzGe21i1uzkQIhZpy5V7fajp6_UCdUilQrU7Hhn",
-    "qb2": "d06088d1769d73f205958664168914413da0e2e469fe5952bf5e0ad0a5ec344e28639d56601cc67b6d62d6ece4408859a72e55edf6a3a7afd409d522950ad4ec7867"
+    "raw": "bfd51938dbda9860b623a49d82675b9d0935802a49a4815c90ecfc756ba53e6c2acabfb6c551ac6263fe073969772bb4dd73d425029ef9f2dffede879173d250",
+    "qb64": "0GC_1Rk429qYYLYjpJ2CZ1udCTWAKkmkgVyQ7Px1a6U-bCrKv7bFUaxiY_4HOWl3K7Tdc9QlAp758t_-3oeRc9JQ",
+    "qb2": "d060bfd51938dbda9860b623a49d82675b9d0935802a49a4815c90ecfc756ba53e6c2acabfb6c551ac6263fe073969772bb4dd73d425029ef9f2dffede879173d250"
   },
   {
     "code": "H",
     "name": "SHA3_256",
     "type": "matter",
-    "raw": "92f3418f8d81fa21ddb6c89b8b17fe868fdae8e7fea7a6416f89d980fa286f42",
-    "qb64": "HJLzQY-Ngfoh3bbIm4sX_oaP2ujn_qemQW-J2YD6KG9C",
-    "qb2": "1c92f3418f8d81fa21ddb6c89b8b17fe868fdae8e7fea7a6416f89d980fa286f42"
+    "raw": "7f9671087e0b08d36244d3ce57eda80f9212da8c0979a15c78ff42c44168e3f0",
+    "qb64": "HH-WcQh-CwjTYkTTzlftqA-SEtqMCXmhXHj_QsRBaOPw",
+    "qb2": "1c7f9671087e0b08d36244d3ce57eda80f9212da8c0979a15c78ff42c44168e3f0"
   },
   {
     "code": "0F",
     "name": "SHA3_512",
     "type": "matter",
-    "raw": "18eec98bb09b7d7abeed2469126813154c352c412baf6b12fcfe6af3e8fe51d9a66af49d32e0a7c60a71125c976010885c85a2dccc751d0279ed359088e2b431",
-    "qb64": "0FAY7smLsJt9er7tJGkSaBMVTDUsQSuvaxL8_mrz6P5R2aZq9J0y4KfGCnESXJdgEIhchaLczHUdAnntNZCI4rQx",
-    "qb2": "d05018eec98bb09b7d7abeed2469126813154c352c412baf6b12fcfe6af3e8fe51d9a66af49d32e0a7c60a71125c976010885c85a2dccc751d0279ed359088e2b431"
+    "raw": "1f09b0562fbba9285934691c69f1e6ddef435f139732741b2f1d0321bdfd3346e61150c391058c18d3af398e2cb7419d668eddbc8084d38fb83aaab50b8bee7c",
+    "qb64": "0FAfCbBWL7upKFk0aRxp8ebd70NfE5cydBsvHQMhvf0zRuYRUMORBYwY0685jiy3QZ1mjt28gITTj7g6qrULi-58",
+    "qb2": "d0501f09b0562fbba9285934691c69f1e6ddef435f139732741b2f1d0321bdfd3346e61150c391058c18d3af398e2cb7419d668eddbc8084d38fb83aaab50b8bee7c"
   },
   {
     "code": "0A",
     "name": "Salt_128",
     "type": "matter",
-    "raw": "52a8521e17ff266042a6aa25f2bc12de",
-    "qb64": "0ABSqFIeF_8mYEKmqiXyvBLe",
-    "qb2": "d00052a8521e17ff266042a6aa25f2bc12de"
+    "raw": "233b87ac38b0bc8dff2e96b6776679b7",
+    "qb64": "0AAjO4esOLC8jf8ulrZ3Znm3",
+    "qb2": "d000233b87ac38b0bc8dff2e96b6776679b7"
   },
   {
     "code": "M",
     "name": "Short",
     "type": "matter",
-    "raw": "a3dc",
-    "qb64": "MKPc",
-    "qb2": "30a3dc"
+    "raw": "9d3d",
+    "qb64": "MJ09",
+    "qb2": "309d3d"
   },
   {
     "code": "7AAA",
     "name": "StrB64_Big_L0",
     "type": "matter",
-    "raw": "1484ea1b126350b4e36f16750a2a30fb85a04d5965",
-    "qb64": "7AAAAAAHFITqGxJjULTjbxZ1Ciow-4WgTVll",
-    "qb2": "ec00000000071484ea1b126350b4e36f16750a2a30fb85a04d5965"
+    "raw": "8bc3b1728c7bedb0b57b37cdbcecd8",
+    "qb64": "7AAAAAAFi8Oxcox77bC1ezfNvOzY",
+    "qb2": "ec00000000058bc3b1728c7bedb0b57b37cdbcecd8"
   },
   {
     "code": "8AAA",
     "name": "StrB64_Big_L1",
     "type": "matter",
-    "raw": "51314e10d5",
-    "qb64": "8AAAAAACAFExThDV",
-    "qb2": "f000000000020051314e10d5"
+    "raw": "c78d13dea42764c3b70898",
+    "qb64": "8AAAAAAEAMeNE96kJ2TDtwiY",
+    "qb2": "f0000000000400c78d13dea42764c3b70898"
   },
   {
     "code": "9AAA",
     "name": "StrB64_Big_L2",
     "type": "matter",
-    "raw": "54cc4f285401edc87e2c78a430f805ba7dac8e4e1f4912974f",
-    "qb64": "9AAAAAAJAABUzE8oVAHtyH4seKQw-AW6fayOTh9JEpdP",
-    "qb2": "f40000000009000054cc4f285401edc87e2c78a430f805ba7dac8e4e1f4912974f"
+    "raw": "99429b13e2d65482878e03bb7736b8f6f72dd8f653265ec2ce45f0ef",
+    "qb64": "9AAAAAAKAACZQpsT4tZUgoeOA7t3Nrj29y3Y9lMmXsLORfDv",
+    "qb2": "f4000000000a000099429b13e2d65482878e03bb7736b8f6f72dd8f653265ec2ce45f0ef"
   },
   {
     "code": "4A",
     "name": "StrB64_L0",
     "type": "matter",
-    "raw": "c49be8",
-    "qb64": "4AABxJvo",
-    "qb2": "e00001c49be8"
+    "raw": "fc1df3fc94f7aa346d",
+    "qb64": "4AAD_B3z_JT3qjRt",
+    "qb2": "e00003fc1df3fc94f7aa346d"
   },
   {
     "code": "5A",
     "name": "StrB64_L1",
     "type": "matter",
-    "raw": "3657",
-    "qb64": "5AABADZX",
-    "qb2": "e40001003657"
+    "raw": "af3dc7efcd",
+    "qb64": "5AACAK89x-_N",
+    "qb2": "e4000200af3dc7efcd"
   },
   {
     "code": "6A",
     "name": "StrB64_L2",
     "type": "matter",
-    "raw": "21020476",
-    "qb64": "6AACAAAhAgR2",
-    "qb2": "e80002000021020476"
+    "raw": "6624ae962ba7d3eaacbac4cf3a9ee66d31a297",
+    "qb64": "6AAHAABmJK6WK6fT6qy6xM86nuZtMaKX",
+    "qb2": "e8000700006624ae962ba7d3eaacbac4cf3a9ee66d31a297"
   },
   {
     "code": "R",
     "name": "Tall",
     "type": "matter",
-    "raw": "08b3d8ef87",
-    "qb64": "RAiz2O-H",
-    "qb2": "4408b3d8ef87"
+    "raw": "99fda1922b",
+    "qb64": "RJn9oZIr",
+    "qb2": "4499fda1922b"
   },
   {
     "code": "U",
     "name": "Vast",
     "type": "matter",
-    "raw": "25b9f62f127f099bb9a6e035b777b79ac2",
-    "qb64": "UCW59i8SfwmbuabgNbd3t5rC",
-    "qb2": "5025b9f62f127f099bb9a6e035b777b79ac2"
+    "raw": "2ee2e4b78d0c10057a85a43df3f226e038",
+    "qb64": "UC7i5LeNDBAFeoWkPfPyJuA4",
+    "qb2": "502ee2e4b78d0c10057a85a43df3f226e038"
   },
   {
     "code": "C",
     "name": "X25519",
     "type": "matter",
-    "raw": "d4f73eb850a76a1d280ff057d8fdb8f610cfff64684accd7a92c964f05801017",
-    "qb64": "CNT3PrhQp2odKA_wV9j9uPYQz_9kaErM16kslk8FgBAX",
-    "qb2": "08d4f73eb850a76a1d280ff057d8fdb8f610cfff64684accd7a92c964f05801017"
+    "raw": "facc9766bf292ad411ac3914c6e2e69d78704f21eaca2f8a2aa6be3ef51fa0c5",
+    "qb64": "CPrMl2a_KSrUEaw5FMbi5p14cE8h6soviiqmvj71H6DF",
+    "qb2": "08facc9766bf292ad411ac3914c6e2e69d78704f21eaca2f8a2aa6be3ef51fa0c5"
   },
   {
     "code": "7AAC",
     "name": "X25519_Cipher_Big_L0",
     "type": "matter",
-    "raw": "e9da5106c2057469fc41aa1fe864945703805e10e0",
-    "qb64": "7AACAAAH6dpRBsIFdGn8Qaof6GSUVwOAXhDg",
-    "qb2": "ec0002000007e9da5106c2057469fc41aa1fe864945703805e10e0"
+    "raw": "0499575778dd398b75f7ea5488c2d13f771094631f9a219f",
+    "qb64": "7AACAAAIBJlXV3jdOYt19-pUiMLRP3cQlGMfmiGf",
+    "qb2": "ec00020000080499575778dd398b75f7ea5488c2d13f771094631f9a219f"
   },
   {
     "code": "8AAC",
     "name": "X25519_Cipher_Big_L1",
     "type": "matter",
-    "raw": "0a122f135318d02e3ac9ae7cc115eed4335c2d7447ede0",
-    "qb64": "8AACAAAIAAoSLxNTGNAuOsmufMEV7tQzXC10R-3g",
-    "qb2": "f00002000008000a122f135318d02e3ac9ae7cc115eed4335c2d7447ede0"
+    "raw": "beb1",
+    "qb64": "8AACAAABAL6x",
+    "qb2": "f0000200000100beb1"
   },
   {
     "code": "9AAC",
     "name": "X25519_Cipher_Big_L2",
     "type": "matter",
-    "raw": "8b2ad158ca6180d597098e12ffbc84aba89106960d6855d2f26dd4e0",
-    "qb64": "9AACAAAKAACLKtFYymGA1ZcJjhL_vISrqJEGlg1oVdLybdTg",
-    "qb2": "f4000200000a00008b2ad158ca6180d597098e12ffbc84aba89106960d6855d2f26dd4e0"
+    "raw": "73c8715bea70345e09d16fe35e60ddb2e9f68ed3bd546153ec50ae41",
+    "qb64": "9AACAAAKAABzyHFb6nA0XgnRb-NeYN2y6faO071UYVPsUK5B",
+    "qb2": "f4000200000a000073c8715bea70345e09d16fe35e60ddb2e9f68ed3bd546153ec50ae41"
   },
   {
     "code": "4C",
     "name": "X25519_Cipher_L0",
     "type": "matter",
-    "raw": "e7e2a14ff0c84ab6abe265427f4f3372538e31bce6",
-    "qb64": "4CAH5-KhT_DISrar4mVCf08zclOOMbzm",
-    "qb2": "e02007e7e2a14ff0c84ab6abe265427f4f3372538e31bce6"
+    "raw": "3b7b3d01332a70fc6db91595",
+    "qb64": "4CAEO3s9ATMqcPxtuRWV",
+    "qb2": "e020043b7b3d01332a70fc6db91595"
   },
   {
     "code": "5C",
     "name": "X25519_Cipher_L1",
     "type": "matter",
-    "raw": "1c727a044601268bee275165688865a65ed107da",
-    "qb64": "5CAHABxyegRGASaL7idRZWiIZaZe0Qfa",
-    "qb2": "e42007001c727a044601268bee275165688865a65ed107da"
+    "raw": "81748982e7742bc89cb9bc0842237456d52a1c9ee89ac9aa0618",
+    "qb64": "5CAJAIF0iYLndCvInLm8CEIjdFbVKhye6JrJqgYY",
+    "qb2": "e420090081748982e7742bc89cb9bc0842237456d52a1c9ee89ac9aa0618"
   },
   {
     "code": "6C",
     "name": "X25519_Cipher_L2",
     "type": "matter",
-    "raw": "dfbf948d",
-    "qb64": "6CACAADfv5SN",
-    "qb2": "e820020000dfbf948d"
+    "raw": "21f3133f93fe0c0ef802",
+    "qb64": "6CAEAAAh8xM_k_4MDvgC",
+    "qb2": "e82004000021f3133f93fe0c0ef802"
   },
   {
     "code": "7AAE",
     "name": "X25519_Cipher_QB2_Big_L0",
     "type": "matter",
-    "raw": "cca24e65f2d14fd9b1517b976a212f",
-    "qb64": "7AAEAAAFzKJOZfLRT9mxUXuXaiEv",
-    "qb2": "ec0004000005cca24e65f2d14fd9b1517b976a212f"
+    "raw": "39b030",
+    "qb64": "7AAEAAABObAw",
+    "qb2": "ec000400000139b030"
   },
   {
     "code": "8AAE",
     "name": "X25519_Cipher_QB2_Big_L1",
     "type": "matter",
-    "raw": "0e15bc2afc3bbc75fb32a9469166c6317a",
-    "qb64": "8AAEAAAGAA4VvCr8O7x1-zKpRpFmxjF6",
-    "qb2": "f00004000006000e15bc2afc3bbc75fb32a9469166c6317a"
+    "raw": "9b8f4cb4e33f838fe49825ae9382f693c0",
+    "qb64": "8AAEAAAGAJuPTLTjP4OP5JglrpOC9pPA",
+    "qb2": "f00004000006009b8f4cb4e33f838fe49825ae9382f693c0"
   },
   {
     "code": "9AAE",
     "name": "X25519_Cipher_QB2_Big_L2",
     "type": "matter",
-    "raw": "ed99b1a37f0deb78a703ef55b65efde4d268c919b8ed1759a209bb47",
-    "qb64": "9AAEAAAKAADtmbGjfw3reKcD71W2Xv3k0mjJGbjtF1miCbtH",
-    "qb2": "f4000400000a0000ed99b1a37f0deb78a703ef55b65efde4d268c919b8ed1759a209bb47"
+    "raw": "39d51a02e11ad6",
+    "qb64": "9AAEAAADAAA51RoC4RrW",
+    "qb2": "f40004000003000039d51a02e11ad6"
   },
   {
     "code": "4E",
     "name": "X25519_Cipher_QB2_L0",
     "type": "matter",
-    "raw": "3b78fc",
-    "qb64": "4EABO3j8",
-    "qb2": "e040013b78fc"
+    "raw": "c95ca3fa94d5397e4c15f0515586acb4c344",
+    "qb64": "4EAGyVyj-pTVOX5MFfBRVYastMNE",
+    "qb2": "e04006c95ca3fa94d5397e4c15f0515586acb4c344"
   },
   {
     "code": "5E",
     "name": "X25519_Cipher_QB2_L1",
     "type": "matter",
-    "raw": "a2f684b0f709554bd915cf0d84e9435af184a6531ae81d",
-    "qb64": "5EAIAKL2hLD3CVVL2RXPDYTpQ1rxhKZTGugd",
-    "qb2": "e4400800a2f684b0f709554bd915cf0d84e9435af184a6531ae81d"
+    "raw": "d72178e5d1d5352e1434523450914f78ad",
+    "qb64": "5EAGANcheOXR1TUuFDRSNFCRT3it",
+    "qb2": "e4400600d72178e5d1d5352e1434523450914f78ad"
   },
   {
     "code": "6E",
     "name": "X25519_Cipher_QB2_L2",
     "type": "matter",
-    "raw": "be950c55a45f4c0e99c2daf0d490c9f8c952145c6520bda138",
-    "qb64": "6EAJAAC-lQxVpF9MDpnC2vDUkMn4yVIUXGUgvaE4",
-    "qb2": "e840090000be950c55a45f4c0e99c2daf0d490c9f8c952145c6520bda138"
+    "raw": "2351b25b098a4701a11f",
+    "qb64": "6EAEAAAjUbJbCYpHAaEf",
+    "qb2": "e8400400002351b25b098a4701a11f"
   },
   {
     "code": "7AAD",
     "name": "X25519_Cipher_QB64_Big_L0",
     "type": "matter",
-    "raw": "fa4519bd68ab616f90de0965",
-    "qb64": "7AADAAAE-kUZvWirYW-Q3gll",
-    "qb2": "ec0003000004fa4519bd68ab616f90de0965"
+    "raw": "b4f4d4f7f766d699253d499bf6bef3",
+    "qb64": "7AADAAAFtPTU9_dm1pklPUmb9r7z",
+    "qb2": "ec0003000005b4f4d4f7f766d699253d499bf6bef3"
   },
   {
     "code": "8AAD",
     "name": "X25519_Cipher_QB64_Big_L1",
     "type": "matter",
-    "raw": "801976a0c5",
-    "qb64": "8AADAAACAIAZdqDF",
-    "qb2": "f0000300000200801976a0c5"
+    "raw": "95585bbb8e5ec0b9ef7596d3e7d520275b",
+    "qb64": "8AADAAAGAJVYW7uOXsC573WW0-fVICdb",
+    "qb2": "f000030000060095585bbb8e5ec0b9ef7596d3e7d520275b"
   },
   {
     "code": "9AAD",
     "name": "X25519_Cipher_QB64_Big_L2",
     "type": "matter",
-    "raw": "da926b470bc215",
-    "qb64": "9AADAAADAADakmtHC8IV",
-    "qb2": "f400030000030000da926b470bc215"
+    "raw": "7193366884d704401a01cfcab1d74b1d09dc26d95959c44f8b",
+    "qb64": "9AADAAAJAABxkzZohNcEQBoBz8qx10sdCdwm2VlZxE-L",
+    "qb2": "f4000300000900007193366884d704401a01cfcab1d74b1d09dc26d95959c44f8b"
   },
   {
     "code": "4D",
     "name": "X25519_Cipher_QB64_L0",
     "type": "matter",
-    "raw": "8779ae25126258b39d1a35a65a5fb6",
-    "qb64": "4DAFh3muJRJiWLOdGjWmWl-2",
-    "qb2": "e030058779ae25126258b39d1a35a65a5fb6"
+    "raw": "a661cb57b5b4478e7b307baab621a43403210857c7acb88d",
+    "qb64": "4DAIpmHLV7W0R457MHuqtiGkNAMhCFfHrLiN",
+    "qb2": "e03008a661cb57b5b4478e7b307baab621a43403210857c7acb88d"
   },
   {
     "code": "5D",
     "name": "X25519_Cipher_QB64_L1",
     "type": "matter",
-    "raw": "e0b5a193ec",
-    "qb64": "5DACAOC1oZPs",
-    "qb2": "e4300200e0b5a193ec"
+    "raw": "445fe95f670ffe299681f48cc586b30d33e748e3",
+    "qb64": "5DAHAERf6V9nD_4ploH0jMWGsw0z50jj",
+    "qb2": "e4300700445fe95f670ffe299681f48cc586b30d33e748e3"
   },
   {
     "code": "6D",
     "name": "X25519_Cipher_QB64_L2",
     "type": "matter",
-    "raw": "ac2c8be81148ad48a7e9209f5e",
-    "qb64": "6DAFAACsLIvoEUitSKfpIJ9e",
-    "qb2": "e830050000ac2c8be81148ad48a7e9209f5e"
+    "raw": "5dc379b5750614f838fa",
+    "qb64": "6DAEAABdw3m1dQYU-Dj6",
+    "qb2": "e8300400005dc379b5750614f838fa"
   },
   {
     "code": "1AAH",
     "name": "X25519_Cipher_Salt",
     "type": "matter",
-    "raw": "a9cba125f88e48388fca117d2dae73b307eabd5b912f57600c3a079d19bb08d72034b478435027b084c6c710eb9e7df97a12e4956acd69498a189ad4d85d93962ed5066e629bb721",
-    "qb64": "1AAHqcuhJfiOSDiPyhF9La5zswfqvVuRL1dgDDoHnRm7CNcgNLR4Q1AnsITGxxDrnn35ehLklWrNaUmKGJrU2F2Tli7VBm5im7ch",
-    "qb2": "d40007a9cba125f88e48388fca117d2dae73b307eabd5b912f57600c3a079d19bb08d72034b478435027b084c6c710eb9e7df97a12e4956acd69498a189ad4d85d93962ed5066e629bb721"
+    "raw": "f1f710f7953b122edc341072230b84a82f2a7caba1b5433ab3a4177a0aaeffb56282880c6c732d5e529057152547242c57b2b85a0f1ab33b820949e030c9eeae6f2f568e15bd5d20",
+    "qb64": "1AAH8fcQ95U7Ei7cNBByIwuEqC8qfKuhtUM6s6QXegqu_7VigogMbHMtXlKQVxUlRyQsV7K4Wg8aszuCCUngMMnurm8vVo4VvV0g",
+    "qb2": "d40007f1f710f7953b122edc341072230b84a82f2a7caba1b5433ab3a4177a0aaeffb56282880c6c732d5e529057152547242c57b2b85a0f1ab33b820949e030c9eeae6f2f568e15bd5d20"
   },
   {
     "code": "P",
     "name": "X25519_Cipher_Seed",
     "type": "matter",
-    "raw": "a9d8d04d8b193aa83cdd499595e3743f9111aa3971337efcfe44863758c8fd6c22ee531da4aa8907cc23775597f6c251f03fcbd6b57a1230598f2f30f5f59ba9261e5305f189024ba4d5da89ade4867e1cb3b1ed496631bb28d59455",
-    "qb64": "PKnY0E2LGTqoPN1JlZXjdD-REao5cTN-_P5EhjdYyP1sIu5THaSqiQfMI3dVl_bCUfA_y9a1ehIwWY8vMPX1m6kmHlMF8YkCS6TV2omt5IZ-HLOx7UlmMbso1ZRV",
-    "qb2": "3ca9d8d04d8b193aa83cdd499595e3743f9111aa3971337efcfe44863758c8fd6c22ee531da4aa8907cc23775597f6c251f03fcbd6b57a1230598f2f30f5f59ba9261e5305f189024ba4d5da89ade4867e1cb3b1ed496631bb28d59455"
+    "raw": "951b8dd1c7dfd2dcb70f9f2788e314ed9af3edc18f45af11ef38c6e179f0249e8e9028913c469b5dab55814af0e984955aa1ec5eb9c8b6ea9ac226683ce26f99e427be3259df90a266f18cfcf1a63444a9e20c8bd2d5303a6aaed3b5",
+    "qb64": "PJUbjdHH39Lctw-fJ4jjFO2a8-3Bj0WvEe84xuF58CSejpAokTxGm12rVYFK8OmElVqh7F65yLbqmsImaDzib5nkJ74yWd-QombxjPzxpjREqeIMi9LVMDpqrtO1",
+    "qb2": "3c951b8dd1c7dfd2dcb70f9f2788e314ed9af3edc18f45af11ef38c6e179f0249e8e9028913c469b5dab55814af0e984955aa1ec5eb9c8b6ea9ac226683ce26f99e427be3259df90a266f18cfcf1a63444a9e20c8bd2d5303a6aaed3b5"
   },
   {
     "code": "O",
     "name": "X25519_Private",
     "type": "matter",
-    "raw": "7b5135aa0f81a30cec57c76a1b6381e3486768b7dfc357d82cee6933793590f6",
-    "qb64": "OHtRNaoPgaMM7FfHahtjgeNIZ2i338NX2CzuaTN5NZD2",
-    "qb2": "387b5135aa0f81a30cec57c76a1b6381e3486768b7dfc357d82cee6933793590f6"
+    "raw": "2823c051920e85c754cab7d535503d39441f388d335f37601181e8788c4d1386",
+    "qb64": "OCgjwFGSDoXHVMq31TVQPTlEHziNM183YBGB6HiMTROG",
+    "qb2": "382823c051920e85c754cab7d535503d39441f388d335f37601181e8788c4d1386"
   },
   {
     "code": "L",
     "name": "X448",
     "type": "matter",
-    "raw": "a06f83fdbabe23aaaadd3637f8ed1fea4f0e9d673ca2e970c36710c7dd6e20b38330c264ffe2f7479ea67ea5210e2d0c86a23359f697d145",
-    "qb64": "LKBvg_26viOqqt02N_jtH-pPDp1nPKLpcMNnEMfdbiCzgzDCZP_i90eepn6lIQ4tDIaiM1n2l9FF",
-    "qb2": "2ca06f83fdbabe23aaaadd3637f8ed1fea4f0e9d673ca2e970c36710c7dd6e20b38330c264ffe2f7479ea67ea5210e2d0c86a23359f697d145"
+    "raw": "f8f3feb3daf8e3fc9fcd9edb0e8a91c56a5276575a03bc6d8d4236c643624a8f4aef6c092b165c50f3abfa9727e4cd5d71a8ad0dafb80606",
+    "qb64": "LPjz_rPa-OP8n82e2w6KkcVqUnZXWgO8bY1CNsZDYkqPSu9sCSsWXFDzq_qXJ-TNXXGorQ2vuAYG",
+    "qb2": "2cf8f3feb3daf8e3fc9fcd9edb0e8a91c56a5276575a03bc6d8d4236c643624a8f4aef6c092b165c50f3abfa9727e4cd5d71a8ad0dafb80606"
   },
   {
     "code": "1AAM",
@@ -603,169 +603,185 @@
     "code": "2D",
     "name": "ECDSA_256k1_Big_Crt_Sig",
     "type": "indexer",
-    "index": 8,
-    "raw": "4544e5799f723650d4d509871dbbb103839c1c423666b18b6c3e7d69c6cbb4e2b592b81828dc2ac365f6b8b08d3b43069412c520ad1cfed4e237c9239d374f77",
-    "qb64": "2DAIAABFROV5n3I2UNTVCYcdu7EDg5wcQjZmsYtsPn1pxsu04rWSuBgo3CrDZfa4sI07QwaUEsUgrRz-1OI3ySOdN093",
-    "qb2": "d8300800004544e5799f723650d4d509871dbbb103839c1c423666b18b6c3e7d69c6cbb4e2b592b81828dc2ac365f6b8b08d3b43069412c520ad1cfed4e237c9239d374f77"
+    "index": 1823,
+    "ondex": null,
+    "raw": "ed38f12d6560448a2672cf3be2ea8de61f7ae28eb4c307d1af22fd7b75f930c6e6596eb0fb3f1e056229bc8e0769e924e7907627d6f44691a7cc967ac1fab398",
+    "qb64": "2DcfAADtOPEtZWBEiiZyzzvi6o3mH3rijrTDB9GvIv17dfkwxuZZbrD7Px4FYim8jgdp6STnkHYn1vRGkafMlnrB-rOY",
+    "qb2": "d8371f0000ed38f12d6560448a2672cf3be2ea8de61f7ae28eb4c307d1af22fd7b75f930c6e6596eb0fb3f1e056229bc8e0769e924e7907627d6f44691a7cc967ac1fab398"
   },
   {
     "code": "2C",
     "name": "ECDSA_256k1_Big_Sig",
     "type": "indexer",
-    "index": 7,
-    "raw": "6e6025938bfcffd44444406f240d294d12e696e1425f613c97d61be84d3c9ef1afb27b2b987974ad4896e8624e606964715550055e3e7ea85a81385d5f4bf075",
-    "qb64": "2CAHAHBuYCWTi_z_1EREQG8kDSlNEuaW4UJfYTyX1hvoTTye8a-yeyuYeXStSJboYk5gaWRxVVAFXj5-qFqBOF1fS_B1",
-    "qb2": "d8200700706e6025938bfcffd44444406f240d294d12e696e1425f613c97d61be84d3c9ef1afb27b2b987974ad4896e8624e606964715550055e3e7ea85a81385d5f4bf075"
+    "index": 973,
+    "ondex": 3255,
+    "raw": "089ac7aad2fbc71ff0514feb0fbe250f9937a2e25f662d20f1bbbd008c256c53b330fcc2b530958dcb14f45792b7bdd696887f0c08c752cffb5810538c07f7a3",
+    "qb64": "2CPNy3AImseq0vvHH_BRT-sPviUPmTei4l9mLSDxu70AjCVsU7Mw_MK1MJWNyxT0V5K3vdaWiH8MCMdSz_tYEFOMB_ej",
+    "qb2": "d823cdcb70089ac7aad2fbc71ff0514feb0fbe250f9937a2e25f662d20f1bbbd008c256c53b330fcc2b530958dcb14f45792b7bdd696887f0c08c752cffb5810538c07f7a3"
   },
   {
     "code": "D",
     "name": "ECDSA_256k1_Crt_Sig",
     "type": "indexer",
-    "index": 4,
-    "raw": "f082fb0b291607dca8c7b5571280bbab64f297bacf7e216717023688490f660b64d6862d459aef290087ffc870c4ffb1e52b90630e29a3118b1c52ca1776ede5",
-    "qb64": "DEDwgvsLKRYH3KjHtVcSgLurZPKXus9-IWcXAjaISQ9mC2TWhi1Fmu8pAIf_yHDE_7HlK5BjDimjEYscUsoXdu3l",
-    "qb2": "0c40f082fb0b291607dca8c7b5571280bbab64f297bacf7e216717023688490f660b64d6862d459aef290087ffc870c4ffb1e52b90630e29a3118b1c52ca1776ede5"
+    "index": 23,
+    "ondex": null,
+    "raw": "ebeb73cff30899924d56522e1841c714eef523edd781ac6f1f9c4c2aba4dfdaf5e6f44457126ac869f9a4b226fb2cdd4ddbfeb88b83c042b4e3ce93445786d67",
+    "qb64": "DXDr63PP8wiZkk1WUi4YQccU7vUj7deBrG8fnEwquk39r15vREVxJqyGn5pLIm-yzdTdv-uIuDwEK0486TRFeG1n",
+    "qb2": "0d70ebeb73cff30899924d56522e1841c714eef523edd781ac6f1f9c4c2aba4dfdaf5e6f44457126ac869f9a4b226fb2cdd4ddbfeb88b83c042b4e3ce93445786d67"
   },
   {
     "code": "C",
     "name": "ECDSA_256k1_Sig",
     "type": "indexer",
-    "index": 3,
-    "raw": "10d0d1c429be45e65cc8032671d10d500f9eb9be147e41c033001956e36c815c0a5ef1ec1b3139f3aea84deb77ba1a9f52f840f93d0df437a5780adcd351286c",
-    "qb64": "CDAQ0NHEKb5F5lzIAyZx0Q1QD565vhR-QcAzABlW42yBXApe8ewbMTnzrqhN63e6Gp9S-ED5PQ30N6V4CtzTUShs",
-    "qb2": "083010d0d1c429be45e65cc8032671d10d500f9eb9be147e41c033001956e36c815c0a5ef1ec1b3139f3aea84deb77ba1a9f52f840f93d0df437a5780adcd351286c"
+    "index": 23,
+    "ondex": null,
+    "raw": "1b24e2bbee5e5817f239addd9e641e5e99293bffbdb208b52a9746d996d8815a7134c8d48d2d23769cf836d31babb65779730f8983cdf2b0cf40f586c9a9cddf",
+    "qb64": "CXAbJOK77l5YF_I5rd2eZB5emSk7_72yCLUql0bZltiBWnE0yNSNLSN2nPg20xurtld5cw-Jg83ysM9A9YbJqc3f",
+    "qb2": "09701b24e2bbee5e5817f239addd9e641e5e99293bffbdb208b52a9746d996d8815a7134c8d48d2d23769cf836d31babb65779730f8983cdf2b0cf40f586c9a9cddf"
   },
   {
     "code": "2F",
     "name": "ECDSA_256r1_Big_Crt_Sig",
     "type": "indexer",
-    "index": 5,
-    "raw": "bc685d933fec5c25c99b3fef1e0fbde6241974275006bfb39d40d96fd7b91b0cfd5d0a955662e3314d3245da3a7a02739224151756861ee2589d7265f2c7ca56",
-    "qb64": "2FAFAAC8aF2TP-xcJcmbP-8eD73mJBl0J1AGv7OdQNlv17kbDP1dCpVWYuMxTTJF2jp6AnOSJBUXVoYe4lidcmXyx8pW",
-    "qb2": "d850050000bc685d933fec5c25c99b3fef1e0fbde6241974275006bfb39d40d96fd7b91b0cfd5d0a955662e3314d3245da3a7a02739224151756861ee2589d7265f2c7ca56"
+    "index": 1239,
+    "ondex": null,
+    "raw": "39b4c1f2b756d8b6daf4d593f2b0b02e0411a9bbf11d155702849135d0790710da2c4a5128dcc0446ee292cbdc059872341ee4b66d98a5a05f528e07b9d40a48",
+    "qb64": "2FTXAAA5tMHyt1bYttr01ZPysLAuBBGpu_EdFVcChJE10HkHENosSlEo3MBEbuKSy9wFmHI0HuS2bZiloF9Sjge51ApI",
+    "qb2": "d854d7000039b4c1f2b756d8b6daf4d593f2b0b02e0411a9bbf11d155702849135d0790710da2c4a5128dcc0446ee292cbdc059872341ee4b66d98a5a05f528e07b9d40a48"
   },
   {
     "code": "2E",
     "name": "ECDSA_256r1_Big_Sig",
     "type": "indexer",
-    "index": 5,
-    "raw": "f98d0836c4ea006aa2cb8403f6cf64df0d515bff53d0f058a626d0e8aa3c57d00efaded11cea7fc92e60db078cf3f7fd6c414ecb3fa42c38749e651ad2a404f1",
-    "qb64": "2EAFAFD5jQg2xOoAaqLLhAP2z2TfDVFb_1PQ8FimJtDoqjxX0A763tEc6n_JLmDbB4zz9_1sQU7LP6QsOHSeZRrSpATx",
-    "qb2": "d840050050f98d0836c4ea006aa2cb8403f6cf64df0d515bff53d0f058a626d0e8aa3c57d00efaded11cea7fc92e60db078cf3f7fd6c414ecb3fa42c38749e651ad2a404f1"
+    "index": 1018,
+    "ondex": 2495,
+    "raw": "0e24d66d690a173e69d6c551f965f1759736813269d27e923607b9a053bfe4e4d624dd06a3da506c2eecc0a3dc2b04a24df366b9afe033436382efcb9d15f1f2",
+    "qb64": "2EP6m_AOJNZtaQoXPmnWxVH5ZfF1lzaBMmnSfpI2B7mgU7_k5NYk3Qaj2lBsLuzAo9wrBKJN82a5r-AzQ2OC78udFfHy",
+    "qb2": "d843fa9bf00e24d66d690a173e69d6c551f965f1759736813269d27e923607b9a053bfe4e4d624dd06a3da506c2eecc0a3dc2b04a24df366b9afe033436382efcb9d15f1f2"
   },
   {
     "code": "F",
     "name": "ECDSA_256r1_Crt_Sig",
     "type": "indexer",
-    "index": 4,
-    "raw": "35dd2211204b01353f8968bdedda723dd3c065e229eba804260a48999c3fc8894d00dcb941c8b160c3a1f6ef3a686fb44c53dd23aff76ef20f8e204c5f6284f4",
-    "qb64": "FEA13SIRIEsBNT-JaL3t2nI908Bl4inrqAQmCkiZnD_IiU0A3LlByLFgw6H27zpob7RMU90jr_du8g-OIExfYoT0",
-    "qb2": "144035dd2211204b01353f8968bdedda723dd3c065e229eba804260a48999c3fc8894d00dcb941c8b160c3a1f6ef3a686fb44c53dd23aff76ef20f8e204c5f6284f4"
+    "index": 63,
+    "ondex": null,
+    "raw": "ff24bc4478bcb62f4d7ddab9fdd50b39269733dda168e07fa52a3bd7cd7651f0a6722c113ffca0f78151ca081a29be3073ac0b7b0e0bf5b4cafe7f017c49b2a2",
+    "qb64": "F_D_JLxEeLy2L0192rn91Qs5Jpcz3aFo4H-lKjvXzXZR8KZyLBE__KD3gVHKCBopvjBzrAt7Dgv1tMr-fwF8SbKi",
+    "qb2": "17f0ff24bc4478bcb62f4d7ddab9fdd50b39269733dda168e07fa52a3bd7cd7651f0a6722c113ffca0f78151ca081a29be3073ac0b7b0e0bf5b4cafe7f017c49b2a2"
   },
   {
     "code": "E",
     "name": "ECDSA_256r1_Sig",
     "type": "indexer",
-    "index": 8,
-    "raw": "874a13ad41bec4950ad4bb96b106a29c509373602761132db8d295580ed041042d8ddde95b95be18cb2c63975ef76d73310ac79928917ca922801d12bbc317dd",
-    "qb64": "EICHShOtQb7ElQrUu5axBqKcUJNzYCdhEy240pVYDtBBBC2N3elblb4Yyyxjl173bXMxCseZKJF8qSKAHRK7wxfd",
-    "qb2": "1080874a13ad41bec4950ad4bb96b106a29c509373602761132db8d295580ed041042d8ddde95b95be18cb2c63975ef76d73310ac79928917ca922801d12bbc317dd"
+    "index": 54,
+    "ondex": null,
+    "raw": "a59d897dd2eab688c4ea7dd568e1f4c81b9be36a91dfce03f77a23b0abd7d187a30634723ca539e3d8b72b432235563e2f3b25cf809cddae4a79577a7bdae4b7",
+    "qb64": "E2ClnYl90uq2iMTqfdVo4fTIG5vjapHfzgP3eiOwq9fRh6MGNHI8pTnj2LcrQyI1Vj4vOyXPgJzdrkp5V3p72uS3",
+    "qb2": "1360a59d897dd2eab688c4ea7dd568e1f4c81b9be36a91dfce03f77a23b0abd7d187a30634723ca539e3d8b72b432235563e2f3b25cf809cddae4a79577a7bdae4b7"
   },
   {
     "code": "2B",
     "name": "Ed25519_Big_Crt_Sig",
     "type": "indexer",
-    "index": 6,
-    "raw": "eaedb1699e9998541f61740ff2e5cd32d6a5debae2a98260d2c629e41e3062b63e071de5dafb15edfcf956eceee70f178105b26b1b0473070a8df1481b940f3d",
-    "qb64": "2BAGAADq7bFpnpmYVB9hdA_y5c0y1qXeuuKpgmDSxinkHjBitj4HHeXa-xXt_PlW7O7nDxeBBbJrGwRzBwqN8UgblA89",
-    "qb2": "d810060000eaedb1699e9998541f61740ff2e5cd32d6a5debae2a98260d2c629e41e3062b63e071de5dafb15edfcf956eceee70f178105b26b1b0473070a8df1481b940f3d"
+    "index": 3250,
+    "ondex": null,
+    "raw": "b2fe30d15e33bfef8d3713cc8a4bc3abeef2d1758879fa4d676fcbf4b13dd092a1d35dcb9325de16af51206755cfe3ecbb981cca852d2446848cabf8b3310688",
+    "qb64": "2ByyAACy_jDRXjO_7403E8yKS8Or7vLRdYh5-k1nb8v0sT3QkqHTXcuTJd4Wr1EgZ1XP4-y7mBzKhS0kRoSMq_izMQaI",
+    "qb2": "d81cb20000b2fe30d15e33bfef8d3713cc8a4bc3abeef2d1758879fa4d676fcbf4b13dd092a1d35dcb9325de16af51206755cfe3ecbb981cca852d2446848cabf8b3310688"
   },
   {
     "code": "2A",
     "name": "Ed25519_Big_Sig",
     "type": "indexer",
-    "index": 6,
-    "raw": "952e7613836f3a1607bafc6f29748caeab309491a65acaf94f6b10e25c6617e3a74d3906d4dd39557bd5a0296de260422b7fb08bf9a3119e62795780a8dac2f1",
-    "qb64": "2AAGAGCVLnYTg286Fge6_G8pdIyuqzCUkaZayvlPaxDiXGYX46dNOQbU3TlVe9WgKW3iYEIrf7CL-aMRnmJ5V4Co2sLx",
-    "qb2": "d800060060952e7613836f3a1607bafc6f29748caeab309491a65acaf94f6b10e25c6617e3a74d3906d4dd39557bd5a0296de260422b7fb08bf9a3119e62795780a8dac2f1"
+    "index": 811,
+    "ondex": 3206,
+    "raw": "d2ab073894c1599e3cd4efd865cba220326cda9a8fd2f143bfac22f70c4834f4c8399812d7369adc2f3f5f170a5de3e2bad2e692db7ec7c1855940fb5d1deeaf",
+    "qb64": "2AMryGDSqwc4lMFZnjzU79hly6IgMmzamo_S8UO_rCL3DEg09Mg5mBLXNprcLz9fFwpd4-K60uaS237HwYVZQPtdHe6v",
+    "qb2": "d8032bc860d2ab073894c1599e3cd4efd865cba220326cda9a8fd2f143bfac22f70c4834f4c8399812d7369adc2f3f5f170a5de3e2bad2e692db7ec7c1855940fb5d1deeaf"
   },
   {
     "code": "B",
     "name": "Ed25519_Crt_Sig",
     "type": "indexer",
-    "index": 4,
-    "raw": "14878f7588a5a1d2a166ff24ebd6d5dbc05af2773576ca88413c4ae99310e8a2771c872c688fdaa52abd818e81be65cc4fb446ae5bc235783fa5f099af0bf9e5",
-    "qb64": "BEAUh491iKWh0qFm_yTr1tXbwFrydzV2yohBPErpkxDooncchyxoj9qlKr2BjoG-ZcxPtEauW8I1eD-l8JmvC_nl",
-    "qb2": "044014878f7588a5a1d2a166ff24ebd6d5dbc05af2773576ca88413c4ae99310e8a2771c872c688fdaa52abd818e81be65cc4fb446ae5bc235783fa5f099af0bf9e5"
+    "index": 28,
+    "ondex": null,
+    "raw": "aabe78e96d2c60f6a3bce95712e03d63a5eab88b1bcf01b901d0eb6a16e5cf196830e7c96dba7e4656a8a36017463779a07d3e13ec9308487816434b98b087c0",
+    "qb64": "BcCqvnjpbSxg9qO86VcS4D1jpeq4ixvPAbkB0OtqFuXPGWgw58ltun5GVqijYBdGN3mgfT4T7JMISHgWQ0uYsIfA",
+    "qb2": "05c0aabe78e96d2c60f6a3bce95712e03d63a5eab88b1bcf01b901d0eb6a16e5cf196830e7c96dba7e4656a8a36017463779a07d3e13ec9308487816434b98b087c0"
   },
   {
     "code": "A",
     "name": "Ed25519_Sig",
     "type": "indexer",
-    "index": 7,
-    "raw": "f6785b195d6a4c47e4d2479cfec8ec1dda44340d27793b748fca255c2662710b7c81d23048ef75718f2053177d571e5adcaf79985b4350a3b5bd9e304fcefeaf",
-    "qb64": "AHD2eFsZXWpMR-TSR5z-yOwd2kQ0DSd5O3SPyiVcJmJxC3yB0jBI73VxjyBTF31XHlrcr3mYW0NQo7W9njBPzv6v",
-    "qb2": "0070f6785b195d6a4c47e4d2479cfec8ec1dda44340d27793b748fca255c2662710b7c81d23048ef75718f2053177d571e5adcaf79985b4350a3b5bd9e304fcefeaf"
+    "index": 59,
+    "ondex": null,
+    "raw": "692f83469fa32ab52747b404b6e6815728329b664e7f5f8d3f009c042c19c245988dcfffd8b54a2c60d1d53a21166dd316dedeb6b05b865917da0022a2fb62c7",
+    "qb64": "A7BpL4NGn6MqtSdHtAS25oFXKDKbZk5_X40_AJwELBnCRZiNz__YtUosYNHVOiEWbdMW3t62sFuGWRfaACKi-2LH",
+    "qb2": "03b0692f83469fa32ab52747b404b6e6815728329b664e7f5f8d3f009c042c19c245988dcfffd8b54a2c60d1d53a21166dd316dedeb6b05b865917da0022a2fb62c7"
   },
   {
     "code": "3B",
     "name": "Ed448_Big_Crt_Sig",
     "type": "indexer",
-    "index": 9,
-    "raw": "2ef68eb489a95d317c622ffb6445115ad09e6fdedebaee88da8eb2866501759a9440ab4fe129ce961448c5cc7f4b0554739e50bcfaa53c08eebfab43c59b7c9699d9afaade18a8dcd6d630a4bd75793acc5549d547b3ffc95320923978ff74803ee5a30f4abfcedf262c085bf48cbcec8e6c",
-    "qb64": "3BAAJAAALvaOtImpXTF8Yi_7ZEURWtCeb97euu6I2o6yhmUBdZqUQKtP4SnOlhRIxcx_SwVUc55QvPqlPAjuv6tDxZt8lpnZr6reGKjc1tYwpL11eTrMVUnVR7P_yVMgkjl4_3SAPuWjD0q_zt8mLAhb9Iy87I5s",
-    "qb2": "dc10002400002ef68eb489a95d317c622ffb6445115ad09e6fdedebaee88da8eb2866501759a9440ab4fe129ce961448c5cc7f4b0554739e50bcfaa53c08eebfab43c59b7c9699d9afaade18a8dcd6d630a4bd75793acc5549d547b3ffc95320923978ff74803ee5a30f4abfcedf262c085bf48cbcec8e6c"
+    "index": 172052,
+    "ondex": null,
+    "raw": "c03798d3590a03ab62ace8a0d394f749b60b1c91a4ed8e600407bcf7fa0924f0f7e5fa50f265aed8259b09b459e4f9db6559c42744d376e8453b359f554bbcb8b915780021fa94606558c3af30b1f76afe858a1b3f21f64b679dcdf84ca0973250f869c37807f59df664ba7331e307379208",
+    "qb64": "3BqAUAAAwDeY01kKA6tirOig05T3SbYLHJGk7Y5gBAe89_oJJPD35fpQ8mWu2CWbCbRZ5PnbZVnEJ0TTduhFOzWfVUu8uLkVeAAh-pRgZVjDrzCx92r-hYobPyH2S2edzfhMoJcyUPhpw3gH9Z32ZLpzMeMHN5II",
+    "qb2": "dc1a80500000c03798d3590a03ab62ace8a0d394f749b60b1c91a4ed8e600407bcf7fa0924f0f7e5fa50f265aed8259b09b459e4f9db6559c42744d376e8453b359f554bbcb8b915780021fa94606558c3af30b1f76afe858a1b3f21f64b679dcdf84ca0973250f869c37807f59df664ba7331e307379208"
   },
   {
     "code": "3A",
     "name": "Ed448_Big_Sig",
     "type": "indexer",
-    "index": 8,
-    "raw": "dd8a60ebd5ac298d7fcea5b115f4167eb6a72148978276acb161a420aac76dc60f22a99d51ed909534114fc35474b7bc2c1876c1cf6cfc30a102b8da3aaeff98df148ddf8ede32bf4ccc96df3e56c78d2c5945117f72625c5558b7d56c0517ff3a1a9e9352618624286bccab00dd080417ff",
-    "qb64": "3AAAIAAI3Ypg69WsKY1_zqWxFfQWfranIUiXgnassWGkIKrHbcYPIqmdUe2QlTQRT8NUdLe8LBh2wc9s_DChArjaOq7_mN8Ujd-O3jK_TMyW3z5Wx40sWUURf3JiXFVYt9VsBRf_Ohqek1JhhiQoa8yrAN0IBBf_",
-    "qb2": "dc0000200008dd8a60ebd5ac298d7fcea5b115f4167eb6a72148978276acb161a420aac76dc60f22a99d51ed909534114fc35474b7bc2c1876c1cf6cfc30a102b8da3aaeff98df148ddf8ede32bf4ccc96df3e56c78d2c5945117f72625c5558b7d56c0517ff3a1a9e9352618624286bccab00dd080417ff"
+    "index": 229495,
+    "ondex": 229297,
+    "raw": "3976567ffa85a84e311d16de15b5d18e069c18e1857b60d3c832723617f68428223113e43b482c6f93fc7b40dc501582475b5d6420d0ecd7a4e5b1d5c3e20e5edf2e9787adac70c7070a7be39ff6dac8e09456cdca8bb534227d859d6125a31ab0ab5bfe7dd83644f5086716080d4dab04ba",
+    "qb64": "3A4B33-xOXZWf_qFqE4xHRbeFbXRjgacGOGFe2DTyDJyNhf2hCgiMRPkO0gsb5P8e0DcUBWCR1tdZCDQ7Nek5bHVw-IOXt8ul4etrHDHBwp745_22sjglFbNyou1NCJ9hZ1hJaMasKtb_n3YNkT1CGcWCA1NqwS6",
+    "qb2": "dc0e01df7fb13976567ffa85a84e311d16de15b5d18e069c18e1857b60d3c832723617f68428223113e43b482c6f93fc7b40dc501582475b5d6420d0ecd7a4e5b1d5c3e20e5edf2e9787adac70c7070a7be39ff6dac8e09456cdca8bb534227d859d6125a31ab0ab5bfe7dd83644f5086716080d4dab04ba"
   },
   {
     "code": "0B",
     "name": "Ed448_Crt_Sig",
     "type": "indexer",
-    "index": 7,
-    "raw": "f6c5b77e0c5e0d2d59de9cf7342a8d624728d93c8a935ed300fb3a43921ab0a4877978fd343f62b67b84187fb01af1e7f0d61dedea68ddc1a89bf2a9c9ef787175dd505ff87c737f037ac1404f60474d77146a035e8ab17380b3fca4514a0a0ef6009444609c01c8cd72657a6e5e8b79a428",
-    "qb64": "0BHA9sW3fgxeDS1Z3pz3NCqNYkco2TyKk17TAPs6Q5IasKSHeXj9ND9itnuEGH-wGvHn8NYd7epo3cGom_Kpye94cXXdUF_4fHN_A3rBQE9gR013FGoDXoqxc4Cz_KRRSgoO9gCURGCcAcjNcmV6bl6LeaQo",
-    "qb2": "d011c0f6c5b77e0c5e0d2d59de9cf7342a8d624728d93c8a935ed300fb3a43921ab0a4877978fd343f62b67b84187fb01af1e7f0d61dedea68ddc1a89bf2a9c9ef787175dd505ff87c737f037ac1404f60474d77146a035e8ab17380b3fca4514a0a0ef6009444609c01c8cd72657a6e5e8b79a428"
+    "index": 6,
+    "ondex": null,
+    "raw": "1cbee7d7f68f899c12315da4705ef9f62280e4189281108d77ef0ba63b6824ce2cbd46906b14b637b87ebc2c25125b5a6151cce5b646dc98e176a89f9bf7e5a93699076d82e42d461d9683600e6e52d92e46a98c32ffc548f5a6d458ee68a7791326f5447cae940638241e03c042fa66a54c",
+    "qb64": "0BGAHL7n1_aPiZwSMV2kcF759iKA5BiSgRCNd-8LpjtoJM4svUaQaxS2N7h-vCwlEltaYVHM5bZG3Jjhdqifm_flqTaZB22C5C1GHZaDYA5uUtkuRqmMMv_FSPWm1FjuaKd5Eyb1RHyulAY4JB4DwEL6ZqVM",
+    "qb2": "d011801cbee7d7f68f899c12315da4705ef9f62280e4189281108d77ef0ba63b6824ce2cbd46906b14b637b87ebc2c25125b5a6151cce5b646dc98e176a89f9bf7e5a93699076d82e42d461d9683600e6e52d92e46a98c32ffc548f5a6d458ee68a7791326f5447cae940638241e03c042fa66a54c"
   },
   {
     "code": "0A",
     "name": "Ed448_Sig",
     "type": "indexer",
-    "index": 7,
-    "raw": "f77eb43025a3d11a059558cac67d9bee861a0cc7d4727b02a942c88cec04556e021a53c6ffdb4eaeba1d5dde92d9a9d3d82d3653156d68f6d56ed1ed561da314bd879f80f95a6f3e52347b5c503aa5a79f1f125a4e0261d62c62fa7883cf7a79af02ab51c0a5684e5753f42b2236c8a9a0ac",
-    "qb64": "0AHH9360MCWj0RoFlVjKxn2b7oYaDMfUcnsCqULIjOwEVW4CGlPG_9tOrrodXd6S2anT2C02UxVtaPbVbtHtVh2jFL2Hn4D5Wm8-UjR7XFA6paefHxJaTgJh1ixi-niDz3p5rwKrUcClaE5XU_QrIjbIqaCs",
-    "qb2": "d001c7f77eb43025a3d11a059558cac67d9bee861a0cc7d4727b02a942c88cec04556e021a53c6ffdb4eaeba1d5dde92d9a9d3d82d3653156d68f6d56ed1ed561da314bd879f80f95a6f3e52347b5c503aa5a79f1f125a4e0261d62c62fa7883cf7a79af02ab51c0a5684e5753f42b2236c8a9a0ac"
+    "index": 1,
+    "ondex": 6,
+    "raw": "725a9e785519623f989b2d913dc9924ee28fc0640a115fc2a7650ec6ae6146ae15208bb0fa42ebbc115c6093f171b593362ffef1ba060051301ed8ac5e57caf9a723f7bcfb5e31b3c630d16b5e5f062921ab27d1cd89481e3776349c019308d6db6f19e4e653b396a68d197619a030952cca",
+    "qb64": "0ABGclqeeFUZYj-Ymy2RPcmSTuKPwGQKEV_Cp2UOxq5hRq4VIIuw-kLrvBFcYJPxcbWTNi_-8boGAFEwHtisXlfK-acj97z7XjGzxjDRa15fBikhqyfRzYlIHjd2NJwBkwjW228Z5OZTs5amjRl2GaAwlSzK",
+    "qb2": "d00046725a9e785519623f989b2d913dc9924ee28fc0640a115fc2a7650ec6ae6146ae15208bb0fa42ebbc115c6093f171b593362ffef1ba060051301ed8ac5e57caf9a723f7bcfb5e31b3c630d16b5e5f062921ab27d1cd89481e3776349c019308d6db6f19e4e653b396a68d197619a030952cca"
   },
   {
     "code": "-V",
     "name": "AttachmentGroup",
     "type": "counter_10",
-    "count": 3,
-    "qb64": "-VAD",
-    "qb2": "f95003"
+    "count": 8,
+    "qb64": "-VAI",
+    "qb2": "f95008"
   },
   {
     "code": "-0V",
     "name": "BigAttachmentGroup",
     "type": "counter_10",
-    "count": 4,
-    "qb64": "-0VAAAAE",
-    "qb2": "fb4540000004"
+    "count": 3,
+    "qb64": "-0VAAAAD",
+    "qb2": "fb4540000003"
   },
   {
     "code": "-0L",
     "name": "BigPathedMaterialGroup",
     "type": "counter_10",
-    "count": 1,
-    "qb64": "-0LAAAAB",
-    "qb2": "fb42c0000001"
+    "count": 6,
+    "qb64": "-0LAAAAG",
+    "qb2": "fb42c0000006"
   },
   {
     "code": "-A",
@@ -779,153 +795,153 @@
     "code": "-Z",
     "name": "ESSRPayloadGroup",
     "type": "counter_10",
-    "count": 9,
-    "qb64": "-ZAJ",
-    "qb2": "f99009"
+    "count": 2,
+    "qb64": "-ZAC",
+    "qb2": "f99002"
   },
   {
     "code": "-E",
     "name": "FirstSeenReplayCouples",
     "type": "counter_10",
-    "count": 9,
-    "qb64": "-EAJ",
-    "qb2": "f84009"
+    "count": 3,
+    "qb64": "-EAD",
+    "qb2": "f84003"
   },
   {
     "code": "--AAA",
     "name": "KERIACDCGenusVersion",
     "type": "counter_10",
-    "count": 5,
-    "qb64": "--AAAAAF",
-    "qb2": "fbe000000005"
+    "count": 0,
+    "qb64": "--AAAAAA",
+    "qb2": "fbe000000000"
   },
   {
     "code": "-C",
     "name": "NonTransReceiptCouples",
     "type": "counter_10",
-    "count": 1,
-    "qb64": "-CAB",
-    "qb2": "f82001"
+    "count": 10,
+    "qb64": "-CAK",
+    "qb2": "f8200a"
   },
   {
     "code": "-L",
     "name": "PathedMaterialGroup",
     "type": "counter_10",
-    "count": 0,
-    "qb64": "-LAA",
-    "qb2": "f8b000"
+    "count": 1,
+    "qb64": "-LAB",
+    "qb2": "f8b001"
   },
   {
     "code": "-K",
     "name": "RootSadPathSigGroups",
     "type": "counter_10",
-    "count": 7,
-    "qb64": "-KAH",
-    "qb2": "f8a007"
+    "count": 0,
+    "qb64": "-KAA",
+    "qb2": "f8a000"
   },
   {
     "code": "-J",
     "name": "SadPathSigGroups",
     "type": "counter_10",
-    "count": 7,
-    "qb64": "-JAH",
-    "qb2": "f89007"
+    "count": 1,
+    "qb64": "-JAB",
+    "qb2": "f89001"
   },
   {
     "code": "-G",
     "name": "SealSourceCouples",
     "type": "counter_10",
-    "count": 1,
-    "qb64": "-GAB",
-    "qb2": "f86001"
+    "count": 9,
+    "qb64": "-GAJ",
+    "qb2": "f86009"
   },
   {
     "code": "-I",
     "name": "SealSourceTriples",
     "type": "counter_10",
-    "count": 0,
-    "qb64": "-IAA",
-    "qb2": "f88000"
+    "count": 3,
+    "qb64": "-IAD",
+    "qb2": "f88003"
   },
   {
     "code": "-F",
     "name": "TransIdxSigGroups",
     "type": "counter_10",
-    "count": 9,
-    "qb64": "-FAJ",
-    "qb2": "f85009"
+    "count": 1,
+    "qb64": "-FAB",
+    "qb2": "f85001"
   },
   {
     "code": "-H",
     "name": "TransLastIdxSigGroups",
     "type": "counter_10",
-    "count": 0,
-    "qb64": "-HAA",
-    "qb2": "f87000"
+    "count": 1,
+    "qb64": "-HAB",
+    "qb2": "f87001"
   },
   {
     "code": "-D",
     "name": "TransReceiptQuadruples",
     "type": "counter_10",
-    "count": 7,
-    "qb64": "-DAH",
-    "qb2": "f83007"
+    "count": 2,
+    "qb64": "-DAC",
+    "qb2": "f83002"
   },
   {
     "code": "-B",
     "name": "WitnessIdxSigs",
     "type": "counter_10",
-    "count": 6,
-    "qb64": "-BAG",
-    "qb2": "f81006"
+    "count": 7,
+    "qb64": "-BAH",
+    "qb2": "f81007"
   },
   {
     "code": "-C",
     "name": "AttachmentGroup",
     "type": "counter_20",
-    "count": 5,
-    "qb64": "-CAF",
-    "qb2": "f82005"
+    "count": 0,
+    "qb64": "-CAA",
+    "qb2": "f82000"
   },
   {
     "code": "-X",
     "name": "BackerRegistrarSealCouples",
     "type": "counter_20",
-    "count": 3,
-    "qb64": "-XAD",
-    "qb2": "f97003"
+    "count": 7,
+    "qb64": "-XAH",
+    "qb2": "f97007"
   },
   {
     "code": "-0C",
     "name": "BigAttachmentGroup",
     "type": "counter_20",
-    "count": 6,
-    "qb64": "-0CAAAAG",
-    "qb2": "fb4080000006"
+    "count": 1,
+    "qb64": "-0CAAAAB",
+    "qb2": "fb4080000001"
   },
   {
     "code": "-0X",
     "name": "BigBackerRegistrarSealCouples",
     "type": "counter_20",
-    "count": 4,
-    "qb64": "-0XAAAAE",
-    "qb2": "fb45c0000004"
+    "count": 7,
+    "qb64": "-0XAAAAH",
+    "qb2": "fb45c0000007"
   },
   {
     "code": "-0J",
     "name": "BigControllerIdxSigs",
     "type": "counter_20",
-    "count": 5,
-    "qb64": "-0JAAAAF",
-    "qb2": "fb4240000005"
+    "count": 6,
+    "qb64": "-0JAAAAG",
+    "qb2": "fb4240000006"
   },
   {
     "code": "-0D",
     "name": "BigDatagramSegmentGroup",
     "type": "counter_20",
-    "count": 4,
-    "qb64": "-0DAAAAE",
-    "qb2": "fb40c0000004"
+    "count": 1,
+    "qb64": "-0DAAAAB",
+    "qb2": "fb40c0000001"
   },
   {
     "code": "-0V",
@@ -939,121 +955,121 @@
     "code": "-0Z",
     "name": "BigESSRPayloadGroup",
     "type": "counter_20",
-    "count": 1,
-    "qb64": "-0ZAAAAB",
-    "qb2": "fb4640000001"
+    "count": 10,
+    "qb64": "-0ZAAAAK",
+    "qb2": "fb464000000a"
   },
   {
     "code": "-0E",
     "name": "BigESSRWrapperGroup",
     "type": "counter_20",
-    "count": 8,
-    "qb64": "-0EAAAAI",
-    "qb2": "fb4100000008"
+    "count": 2,
+    "qb64": "-0EAAAAC",
+    "qb2": "fb4100000002"
   },
   {
     "code": "-0N",
     "name": "BigFirstSeenReplayCouples",
     "type": "counter_20",
-    "count": 8,
-    "qb64": "-0NAAAAI",
-    "qb2": "fb4340000008"
+    "count": 0,
+    "qb64": "-0NAAAAA",
+    "qb2": "fb4340000000"
   },
   {
     "code": "-0F",
     "name": "BigFixedMessageBodyGroup",
     "type": "counter_20",
-    "count": 4,
-    "qb64": "-0FAAAAE",
-    "qb2": "fb4140000004"
+    "count": 8,
+    "qb64": "-0FAAAAI",
+    "qb2": "fb4140000008"
   },
   {
     "code": "-0A",
     "name": "BigGenericGroup",
     "type": "counter_20",
-    "count": 10,
-    "qb64": "-0AAAAAK",
-    "qb2": "fb400000000a"
+    "count": 7,
+    "qb64": "-0AAAAAH",
+    "qb2": "fb4000000007"
   },
   {
     "code": "-0I",
     "name": "BigGenericListGroup",
     "type": "counter_20",
-    "count": 10,
-    "qb64": "-0IAAAAK",
-    "qb2": "fb420000000a"
+    "count": 0,
+    "qb64": "-0IAAAAA",
+    "qb2": "fb4200000000"
   },
   {
     "code": "-0H",
     "name": "BigGenericMapGroup",
     "type": "counter_20",
-    "count": 8,
-    "qb64": "-0HAAAAI",
-    "qb2": "fb41c0000008"
+    "count": 0,
+    "qb64": "-0HAAAAA",
+    "qb2": "fb41c0000000"
   },
   {
     "code": "-0G",
     "name": "BigMapMessageBodyGroup",
     "type": "counter_20",
-    "count": 10,
-    "qb64": "-0GAAAAK",
-    "qb2": "fb418000000a"
+    "count": 9,
+    "qb64": "-0GAAAAJ",
+    "qb2": "fb4180000009"
   },
   {
     "code": "-0W",
     "name": "BigMerkleRootSealSingles",
     "type": "counter_20",
-    "count": 8,
-    "qb64": "-0WAAAAI",
-    "qb2": "fb4580000008"
+    "count": 9,
+    "qb64": "-0WAAAAJ",
+    "qb2": "fb4580000009"
   },
   {
     "code": "-0B",
     "name": "BigMessageGroup",
     "type": "counter_20",
-    "count": 8,
-    "qb64": "-0BAAAAI",
-    "qb2": "fb4040000008"
+    "count": 0,
+    "qb64": "-0BAAAAA",
+    "qb2": "fb4040000000"
   },
   {
     "code": "-0L",
     "name": "BigNonTransReceiptCouples",
     "type": "counter_20",
-    "count": 6,
-    "qb64": "-0LAAAAG",
-    "qb2": "fb42c0000006"
+    "count": 10,
+    "qb64": "-0LAAAAK",
+    "qb2": "fb42c000000a"
   },
   {
     "code": "-0S",
     "name": "BigPathedMaterialGroup",
     "type": "counter_20",
-    "count": 5,
-    "qb64": "-0SAAAAF",
-    "qb2": "fb4480000005"
+    "count": 3,
+    "qb64": "-0SAAAAD",
+    "qb2": "fb4480000003"
   },
   {
     "code": "-0U",
     "name": "BigRootSadPathSigGroups",
     "type": "counter_20",
-    "count": 7,
-    "qb64": "-0UAAAAH",
-    "qb2": "fb4500000007"
+    "count": 4,
+    "qb64": "-0UAAAAE",
+    "qb2": "fb4500000004"
   },
   {
     "code": "-0T",
     "name": "BigSadPathSigGroups",
     "type": "counter_20",
-    "count": 10,
-    "qb64": "-0TAAAAK",
-    "qb2": "fb44c000000a"
+    "count": 5,
+    "qb64": "-0TAAAAF",
+    "qb2": "fb44c0000005"
   },
   {
     "code": "-0Q",
     "name": "BigSealSourceCouples",
     "type": "counter_20",
-    "count": 5,
-    "qb64": "-0QAAAAF",
-    "qb2": "fb4400000005"
+    "count": 7,
+    "qb64": "-0QAAAAH",
+    "qb2": "fb4400000007"
   },
   {
     "code": "-0Y",
@@ -1067,73 +1083,73 @@
     "code": "-0R",
     "name": "BigSealSourceTriples",
     "type": "counter_20",
-    "count": 4,
-    "qb64": "-0RAAAAE",
-    "qb2": "fb4440000004"
+    "count": 5,
+    "qb64": "-0RAAAAF",
+    "qb2": "fb4440000005"
   },
   {
     "code": "-0O",
     "name": "BigTransIdxSigGroups",
     "type": "counter_20",
-    "count": 0,
-    "qb64": "-0OAAAAA",
-    "qb2": "fb4380000000"
+    "count": 5,
+    "qb64": "-0OAAAAF",
+    "qb2": "fb4380000005"
   },
   {
     "code": "-0P",
     "name": "BigTransLastIdxSigGroups",
     "type": "counter_20",
-    "count": 9,
-    "qb64": "-0PAAAAJ",
-    "qb2": "fb43c0000009"
+    "count": 5,
+    "qb64": "-0PAAAAF",
+    "qb2": "fb43c0000005"
   },
   {
     "code": "-0M",
     "name": "BigTransReceiptQuadruples",
     "type": "counter_20",
-    "count": 5,
-    "qb64": "-0MAAAAF",
-    "qb2": "fb4300000005"
+    "count": 3,
+    "qb64": "-0MAAAAD",
+    "qb2": "fb4300000003"
   },
   {
     "code": "-0K",
     "name": "BigWitnessIdxSigs",
     "type": "counter_20",
-    "count": 8,
-    "qb64": "-0KAAAAI",
-    "qb2": "fb4280000008"
+    "count": 7,
+    "qb64": "-0KAAAAH",
+    "qb2": "fb4280000007"
   },
   {
     "code": "-J",
     "name": "ControllerIdxSigs",
     "type": "counter_20",
-    "count": 10,
-    "qb64": "-JAK",
-    "qb2": "f8900a"
+    "count": 7,
+    "qb64": "-JAH",
+    "qb2": "f89007"
   },
   {
     "code": "-D",
     "name": "DatagramSegmentGroup",
     "type": "counter_20",
-    "count": 2,
-    "qb64": "-DAC",
-    "qb2": "f83002"
+    "count": 6,
+    "qb64": "-DAG",
+    "qb2": "f83006"
   },
   {
     "code": "-V",
     "name": "DigestSealSingles",
     "type": "counter_20",
-    "count": 9,
-    "qb64": "-VAJ",
-    "qb2": "f95009"
+    "count": 0,
+    "qb64": "-VAA",
+    "qb2": "f95000"
   },
   {
     "code": "-Z",
     "name": "ESSRPayloadGroup",
     "type": "counter_20",
-    "count": 1,
-    "qb64": "-ZAB",
-    "qb2": "f99001"
+    "count": 8,
+    "qb64": "-ZAI",
+    "qb2": "f99008"
   },
   {
     "code": "-E",
@@ -1147,145 +1163,145 @@
     "code": "-N",
     "name": "FirstSeenReplayCouples",
     "type": "counter_20",
-    "count": 8,
-    "qb64": "-NAI",
-    "qb2": "f8d008"
+    "count": 10,
+    "qb64": "-NAK",
+    "qb2": "f8d00a"
   },
   {
     "code": "-F",
     "name": "FixedMessageBodyGroup",
     "type": "counter_20",
-    "count": 3,
-    "qb64": "-FAD",
-    "qb2": "f85003"
+    "count": 2,
+    "qb64": "-FAC",
+    "qb2": "f85002"
   },
   {
     "code": "-A",
     "name": "GenericGroup",
     "type": "counter_20",
-    "count": 2,
-    "qb64": "-AAC",
-    "qb2": "f80002"
+    "count": 1,
+    "qb64": "-AAB",
+    "qb2": "f80001"
   },
   {
     "code": "-I",
     "name": "GenericListGroup",
     "type": "counter_20",
-    "count": 8,
-    "qb64": "-IAI",
-    "qb2": "f88008"
+    "count": 0,
+    "qb64": "-IAA",
+    "qb2": "f88000"
   },
   {
     "code": "-H",
     "name": "GenericMapGroup",
     "type": "counter_20",
-    "count": 5,
-    "qb64": "-HAF",
-    "qb2": "f87005"
+    "count": 7,
+    "qb64": "-HAH",
+    "qb2": "f87007"
   },
   {
     "code": "--AAA",
     "name": "KERIACDCGenusVersion",
     "type": "counter_20",
-    "count": 10,
-    "qb64": "--AAAAAK",
-    "qb2": "fbe00000000a"
+    "count": 6,
+    "qb64": "--AAAAAG",
+    "qb2": "fbe000000006"
   },
   {
     "code": "-G",
     "name": "MapMessageBodyGroup",
     "type": "counter_20",
-    "count": 5,
-    "qb64": "-GAF",
-    "qb2": "f86005"
+    "count": 8,
+    "qb64": "-GAI",
+    "qb2": "f86008"
   },
   {
     "code": "-W",
     "name": "MerkleRootSealSingles",
     "type": "counter_20",
-    "count": 10,
-    "qb64": "-WAK",
-    "qb2": "f9600a"
+    "count": 0,
+    "qb64": "-WAA",
+    "qb2": "f96000"
   },
   {
     "code": "-B",
     "name": "MessageGroup",
     "type": "counter_20",
-    "count": 1,
-    "qb64": "-BAB",
-    "qb2": "f81001"
+    "count": 4,
+    "qb64": "-BAE",
+    "qb2": "f81004"
   },
   {
     "code": "-L",
     "name": "NonTransReceiptCouples",
     "type": "counter_20",
-    "count": 8,
-    "qb64": "-LAI",
-    "qb2": "f8b008"
+    "count": 5,
+    "qb64": "-LAF",
+    "qb2": "f8b005"
   },
   {
     "code": "-S",
     "name": "PathedMaterialGroup",
     "type": "counter_20",
-    "count": 10,
-    "qb64": "-SAK",
-    "qb2": "f9200a"
+    "count": 9,
+    "qb64": "-SAJ",
+    "qb2": "f92009"
   },
   {
     "code": "-U",
     "name": "RootSadPathSigGroups",
     "type": "counter_20",
-    "count": 2,
-    "qb64": "-UAC",
-    "qb2": "f94002"
+    "count": 9,
+    "qb64": "-UAJ",
+    "qb2": "f94009"
   },
   {
     "code": "-T",
     "name": "SadPathSigGroups",
     "type": "counter_20",
-    "count": 7,
-    "qb64": "-TAH",
-    "qb2": "f93007"
+    "count": 6,
+    "qb64": "-TAG",
+    "qb2": "f93006"
   },
   {
     "code": "-Q",
     "name": "SealSourceCouples",
     "type": "counter_20",
-    "count": 10,
-    "qb64": "-QAK",
-    "qb2": "f9000a"
+    "count": 8,
+    "qb64": "-QAI",
+    "qb2": "f90008"
   },
   {
     "code": "-Y",
     "name": "SealSourceLastSingles",
     "type": "counter_20",
-    "count": 0,
-    "qb64": "-YAA",
-    "qb2": "f98000"
+    "count": 2,
+    "qb64": "-YAC",
+    "qb2": "f98002"
   },
   {
     "code": "-R",
     "name": "SealSourceTriples",
     "type": "counter_20",
-    "count": 8,
-    "qb64": "-RAI",
-    "qb2": "f91008"
+    "count": 0,
+    "qb64": "-RAA",
+    "qb2": "f91000"
   },
   {
     "code": "-O",
     "name": "TransIdxSigGroups",
     "type": "counter_20",
-    "count": 4,
-    "qb64": "-OAE",
-    "qb2": "f8e004"
+    "count": 7,
+    "qb64": "-OAH",
+    "qb2": "f8e007"
   },
   {
     "code": "-P",
     "name": "TransLastIdxSigGroups",
     "type": "counter_20",
-    "count": 1,
-    "qb64": "-PAB",
-    "qb2": "f8f001"
+    "count": 4,
+    "qb64": "-PAE",
+    "qb2": "f8f004"
   },
   {
     "code": "-M",

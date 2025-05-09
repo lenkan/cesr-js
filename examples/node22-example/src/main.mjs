@@ -1,5 +1,5 @@
 // @ts-check
-import { parse } from "../cesr/package/dist/main.js";
+import { parse } from "../cesr/package/dist/__main__.js";
 
 const url = new URL("/lenkan/cesr-js/refs/heads/main/fixtures/geda.cesr", "https://raw.githubusercontent.com");
 const response = await fetch(url);

@@ -1,7 +1,7 @@
 #!/usr/bin/env python
 from random import randbytes, randint
 from keri.core.coring import MtrDex, Matter, Versionage, Vrsn_1_0, Vrsn_2_0
-from keri.core.indexing import IdrDex, Indexer
+from keri.core.indexing import IdrDex, Indexer, IdxCrtSigDex, IdxBthSigDex
 from keri.core.counting import CtrDex_1_0, CtrDex_2_0, Counter
 
 from json import dumps
@@ -54,16 +54,20 @@ for key in dir(IdrDex):
 
         raw = randbytes(raw_size)
 
-        index = randint(0, 10)
+        soft_size = sizes.ss or 0
+        other_size = sizes.os or 0
+        index = randint(0, (64** (soft_size - other_size)) - 1)
+        ondex = randint(0, (64** other_size) - 1) if code in IdxBthSigDex and other_size > 0 else None
 
-        indexer = Indexer(code=code, raw=raw, index=index)
+        indexer = Indexer(code=code, raw=raw, index=index, ondex=ondex)
 
         cases.append(
             {
                 "code": code,
                 "name": key,
                 "type": "indexer",
-                "index": index,
+                "index": indexer.index,
+                "ondex": indexer.ondex,
                 "raw": indexer.raw.hex(),
                 "qb64": indexer.qb64,
                 "qb2": indexer.qb2.hex(),

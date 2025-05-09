@@ -1,5 +1,7 @@
+import { CounterV1, CounterV2 } from "./counter.ts";
 import type { DataObject } from "./data-type.ts";
 import { parse, type ParserInput } from "./parser.ts";
+import { Message } from "./version.ts";
 
 /**
  * Parses JSON messages with CESR attachments from an incoming stream of bytes.
@@ -7,31 +9,27 @@ import { parse, type ParserInput } from "./parser.ts";
  * @param input Incoming stream of bytes
  * @returns An async iterable of messages with attachments
  */
-export async function* parseMessages(input: ParserInput): AsyncIterableIterator<Message> {
+export async function* parseMessages(input: ParserInput): AsyncIterableIterator<Envelope> {
   let group: string | null = null;
-  let message: Message | null = null;
+  let message: Envelope | null = null;
 
   for await (const frame of parse(input)) {
-    switch (frame.type) {
-      case "message": {
-        if (message) {
-          yield message;
-        }
-
-        message = { payload: JSON.parse(frame.text), attachments: {} };
-        group = null;
-        break;
+    if (frame instanceof Message) {
+      if (message) {
+        yield message;
       }
-      case "counter_10":
-      case "counter_20":
+
+      message = { payload: JSON.parse(frame.text), attachments: {} };
+      group = null;
+    } else {
+      if (frame instanceof CounterV1 || frame instanceof CounterV2) {
         group = frame.code;
-        break;
-      default: {
+      } else {
         message = message ?? { payload: {}, attachments: {} };
+
         if (group) {
           message.attachments[group] = [...(message.attachments[group] ?? []), frame.text];
         }
-        break;
       }
     }
   }
@@ -41,9 +39,7 @@ export async function* parseMessages(input: ParserInput): AsyncIterableIterator<
   }
 }
 
-export type MessagePayload = DataObject;
-
-export interface Message {
-  payload: MessagePayload;
+export interface Envelope {
+  payload: DataObject;
   attachments: Record<string, string[]>;
 }

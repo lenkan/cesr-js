@@ -1,6 +1,26 @@
 import { type DataObject } from "./data-type.ts";
 import { decodeBase64Int, encodeBase64Int } from "./base64.ts";
 
+export class Message {
+  readonly protocol: string;
+  readonly format: string;
+  readonly major: number;
+  readonly minor: number;
+  readonly size: number;
+  readonly legacy?: boolean;
+  readonly text: string;
+
+  constructor(version: Version, text: string) {
+    this.protocol = version.protocol;
+    this.format = version.format;
+    this.major = version.major;
+    this.minor = version.minor;
+    this.size = version.size;
+    this.legacy = version.legacy;
+    this.text = text;
+  }
+}
+
 export interface Version {
   protocol: string;
   format: string;

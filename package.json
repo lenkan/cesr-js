@@ -15,12 +15,12 @@
     "dev": "tsc -p tsconfig.build.json --watch",
     "test": "node --test --test-reporter=spec --no-warnings --experimental-strip-types",
     "test:example": "./test_examples.sh",
-    "lint": "eslint && prettier --check .",
+    "lint": "eslint && prettier --check . && tsc --noEmit",
     "clean": "node scripts/clean.js",
     "format": "prettier --write ."
   },
   "exports": {
-    ".": "./dist/main.js",
+    ".": "./dist/__main__.js",
     "./__unstable__": "./dist/__unstable__.js"
   },
   "files": [
