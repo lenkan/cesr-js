@@ -1,4 +1,3 @@
-import { CounterV1, CounterV2 } from "./counter.ts";
 import type { DataObject } from "./data-type.ts";
 import { parse, type ParserInput } from "./parser.ts";
 import { Message } from "./version.ts";
@@ -22,7 +21,7 @@ export async function* parseMessages(input: ParserInput): AsyncIterableIterator<
       message = { payload: JSON.parse(frame.text), attachments: {} };
       group = null;
     } else {
-      if (frame instanceof CounterV1 || frame instanceof CounterV2) {
+      if (frame.code.startsWith("-")) {
         group = frame.code;
       } else {
         message = message ?? { payload: {}, attachments: {} };

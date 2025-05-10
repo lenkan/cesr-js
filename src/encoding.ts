@@ -1,5 +1,11 @@
 import { encodeBase64Int, encodeBase64Url } from "./base64.ts";
 import { decodeBase64Int, decodeBase64Url } from "./base64.ts";
+import { IndexCode, IndexTable } from "./codes.ts";
+import { MatterCode, MatterTable } from "./codes.ts";
+import { CountCode_10, CountCode_20, CountTable_10, CountTable_20 } from "./codes.ts";
+import type { Message } from "./version.ts";
+
+export type Frame = Message | Matter | Counter | Indexer;
 
 export interface FrameData {
   code: string;
@@ -7,6 +13,7 @@ export interface FrameData {
   count?: number;
   index?: number;
   ondex?: number;
+  text?: string;
 }
 
 export interface CodeSize {
@@ -140,5 +147,154 @@ export function decodeStream(input: Uint8Array | string, table: CodeTable): Deco
   const rawtext = padding + text.slice(cs, fs);
 
   const raw = decodeBase64Url(rawtext).slice(ps + ls);
-  return { frame: { code: hard, count: soft0, index: soft0, ondex: soft1, raw }, n: fs };
+  return { frame: { code: hard, count: soft0, index: soft0, ondex: soft1, raw, text }, n: fs };
+}
+
+export interface IndexerInit {
+  code: string;
+  raw?: Uint8Array;
+  index?: number;
+  ondex?: number;
+}
+
+export interface Indexer extends IndexerInit {
+  text: string;
+}
+
+export function encodeIndexer(frame: IndexerInit): string {
+  return encode(frame, IndexTable);
+}
+
+export function decodeIndexer(input: Uint8Array | string): Indexer {
+  return decode(input, IndexTable);
+}
+
+export function encodeIndexedSignature(alg: MatterSignature, raw: Uint8Array, index: number): string {
+  switch (alg) {
+    case "ed25519":
+      return encodeIndexer({ code: IndexCode.Ed25519_Sig, raw, index });
+    default:
+      throw new Error(`Unsupported signature algorithm: ${alg}`);
+  }
+}
+
+function padNumber(num: number, length: number) {
+  return num.toString().padStart(length, "0");
+}
+
+export interface MatterInit {
+  code: string;
+  raw: Uint8Array;
+}
+
+export interface Matter extends MatterInit {
+  text: string;
+}
+
+export type MatterDigest = "blake3_256" | "blake3_512";
+export type MatterSignature = "ed25519" | "secp256k1";
+
+export function encodeMatter(raw: MatterInit): string {
+  return encode(raw, MatterTable);
+}
+
+export function encodeDate(date: Date): string {
+  if (date.toString() === "Invalid Date") {
+    throw new Error("Invalid date");
+  }
+
+  // TODO: Better design for date encoding
+  const YYYY = date.getFullYear();
+  const MM = padNumber(date.getUTCMonth() + 1, 2);
+  const dd = padNumber(date.getUTCDate(), 2);
+  const hh = padNumber(date.getUTCHours(), 2);
+  const mm = padNumber(date.getUTCMinutes(), 2);
+  const ss = padNumber(date.getUTCSeconds(), 2);
+  const ms = padNumber(date.getUTCMilliseconds(), 3);
+
+  const raw = decodeBase64Url(`${YYYY}-${MM}-${dd}T${hh}c${mm}c${ss}d${ms}000p00c00`);
+  return encodeMatter({ code: MatterCode.DateTime, raw });
+}
+
+export function encodeString(txt: string): string {
+  const raw = new TextEncoder().encode(txt);
+  const length = raw.byteLength;
+  const leadSize = length % 3;
+
+  switch (leadSize) {
+    case 0:
+      return encodeMatter({ code: MatterCode.StrB64_L0, raw });
+    case 1:
+      return encodeMatter({ code: MatterCode.StrB64_L1, raw });
+    case 2:
+      return encodeMatter({ code: MatterCode.StrB64_L2, raw });
+    default:
+      throw new Error(`Could not determine lead size`);
+  }
+}
+
+export function encodeSignature(alg: MatterSignature, data: Uint8Array): string {
+  switch (alg) {
+    case "ed25519":
+      return encodeMatter({ code: MatterCode.Ed25519_Sig, raw: data });
+    case "secp256k1":
+      return encodeMatter({ code: MatterCode.ECDSA_256k1_Sig, raw: data });
+    default:
+      throw new Error(`Unsupported signature algorithm: ${alg}`);
+  }
+}
+export function encodeDigest(alg: MatterDigest, data: Uint8Array): string {
+  switch (alg) {
+    case "blake3_256":
+      return encodeMatter({ code: MatterCode.Blake3_256, raw: data });
+    case "blake3_512":
+      return encodeMatter({ code: MatterCode.Blake3_512, raw: data });
+    default:
+      throw new Error(`Unsupported digest algorithm: ${alg}`);
+  }
+}
+
+export function decodeMatter(input: Uint8Array | string): Matter {
+  return decode(input, MatterTable);
+}
+
+export interface CounterInit {
+  code: string;
+  count: number;
+}
+
+export interface Counter extends CounterInit {
+  text: string;
+}
+
+export function decodeCounterV1(qb64: string | Uint8Array): Counter {
+  return decode(qb64, CountTable_10);
+}
+
+export function encodeCounterV1(raw: CounterInit): string {
+  return encode(raw, CountTable_10);
+}
+
+export function encodeCounterV2(raw: CounterInit): string {
+  return encode(raw, CountTable_20);
+}
+
+export function encodeAttachmentsV1(count: number) {
+  if (count > 64 ** 2) {
+    return encodeCounterV1({ code: CountCode_10.BigAttachmentGroup, count });
+  }
+
+  return encodeCounterV1({ code: CountCode_10.AttachmentGroup, count });
+}
+
+export function decodeCounterV2(qb64: string | Uint8Array): Counter {
+  return decode(qb64, CountTable_20);
+}
+
+export function encodeAttachmentsV2(count: number) {
+  if (count > 64 ** 2) {
+    return encodeCounterV2({ code: CountCode_20.BigAttachmentGroup, count });
+  }
+
+  return encodeCounterV2({ code: CountCode_20.AttachmentGroup, count });
 }

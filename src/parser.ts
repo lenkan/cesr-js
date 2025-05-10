@@ -1,9 +1,6 @@
 import { decodeVersion, Message } from "./version.ts";
 import { CountCode_10, CountCode_20, CountTable_10, CountTable_20, IndexTable, MatterTable } from "./codes.ts";
-import { Indexer } from "./indexer.ts";
-import { Matter } from "./matter.ts";
-import { CounterV1, CounterV2 } from "./counter.ts";
-import type { Frame } from "./frame.ts";
+import type { Counter, Frame, Indexer, Matter } from "./encoding.ts";
 import { decodeStream } from "./encoding.ts";
 
 function concat(a: Uint8Array, b: Uint8Array) {
@@ -62,10 +59,10 @@ class Parser {
   #readMatter(): Matter | null {
     const result = decodeStream(this.#buffer, MatterTable);
     this.#buffer = this.#buffer.slice(result.n);
-    return result.frame && new Matter(result.frame);
+    return result.frame;
   }
 
-  #readCounter(): CounterV1 | CounterV2 | null {
+  #readCounter(): Counter | null {
     switch (this.#version) {
       case 1:
         return this.#readCounterV1();
@@ -76,7 +73,7 @@ class Parser {
     }
   }
 
-  #readCounterV1(): CounterV1 | null {
+  #readCounterV1(): Counter | null {
     const result = decodeStream(this.#buffer, CountTable_10);
     this.#buffer = this.#buffer.slice(result.n);
 
@@ -103,10 +100,10 @@ class Parser {
         break;
     }
 
-    return new CounterV1(result.frame);
+    return result.frame;
   }
 
-  #readCounterV2(): CounterV2 | null {
+  #readCounterV2(): Counter | null {
     const result = decodeStream(this.#buffer, CountTable_20);
     this.#buffer = this.#buffer.slice(result.n);
 
@@ -123,7 +120,7 @@ class Parser {
       }
     }
 
-    return new CounterV2(result.frame);
+    return result.frame;
   }
 
   #readIndexer(): Indexer | null {
@@ -134,7 +131,7 @@ class Parser {
       return null;
     }
 
-    return new Indexer(result.frame);
+    return result.frame;
   }
 
   #readContextual(): Frame | null {
