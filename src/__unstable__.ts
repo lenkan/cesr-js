@@ -3,3 +3,4 @@ export * from "./version.ts";
 export * from "./codes.ts";
 export * from "./encoding.ts";
 export * from "./base64.ts";
+export * from "./message.ts";
