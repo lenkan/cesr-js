@@ -1,6 +1,5 @@
 import type { DataObject } from "./data-type.ts";
 import { parse, type ParserInput } from "./parser.ts";
-import { Message } from "./version.ts";
 
 /**
  * Parses JSON messages with CESR attachments from an incoming stream of bytes.
@@ -13,7 +12,7 @@ export async function* parseMessages(input: ParserInput): AsyncIterableIterator<
   let message: Envelope | null = null;
 
   for await (const frame of parse(input)) {
-    if (frame instanceof Message) {
+    if ("version" in frame) {
       if (message) {
         yield message;
       }

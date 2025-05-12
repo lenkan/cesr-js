@@ -1,4 +1,5 @@
-import { decodeVersion, Message } from "./version.ts";
+import type { MessageBody } from "./version.ts";
+import { decodeVersion } from "./version.ts";
 import { CountCode_10, CountCode_20, CountTable_10, CountTable_20, IndexTable, MatterTable } from "./codes.ts";
 import type { Counter, Frame, Indexer, Matter } from "./encoding.ts";
 import { decodeStream } from "./encoding.ts";
@@ -171,7 +172,7 @@ class Parser {
     return frame;
   }
 
-  #readJSON(): Frame | null {
+  #readJSON(): MessageBody | null {
     if (this.#buffer.length < 25) {
       return null;
     }
@@ -182,9 +183,11 @@ class Parser {
     }
 
     this.#version = version.major;
-    const frame = this.#readBytes(version.size);
 
-    return new Message(version, new TextDecoder().decode(frame));
+    const frame = this.#readBytes(version.size);
+    const text = new TextDecoder().decode(frame);
+
+    return { version, body: JSON.parse(text), text, raw: frame };
   }
 
   #update(source: Uint8Array | string): void {
