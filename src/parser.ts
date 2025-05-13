@@ -1,8 +1,8 @@
-import type { MessageBody } from "./version.ts";
-import { decodeVersion } from "./version.ts";
+import { decodeVersion } from "./message.ts";
 import { CountCode_10, CountCode_20, CountTable_10, CountTable_20, IndexTable, MatterTable } from "./codes.ts";
 import type { Counter, Frame, Indexer, Matter } from "./encoding.ts";
 import { decodeStream } from "./encoding.ts";
+import type { Message, MessageBody } from "./message.ts";
 
 function concat(a: Uint8Array, b: Uint8Array) {
   if (a.length === 0) {
@@ -45,16 +45,6 @@ class Parser {
 
   get #context(): Context | null {
     return this.#stack[this.#stack.length - 1] ?? null;
-  }
-
-  #peekBytes(size: number): Uint8Array {
-    return this.#buffer.slice(0, size);
-  }
-
-  #readBytes(size: number): Uint8Array {
-    const result = this.#peekBytes(size);
-    this.#buffer = this.#buffer.slice(size);
-    return result;
   }
 
   #readMatter(): Matter | null {
@@ -172,7 +162,7 @@ class Parser {
     return frame;
   }
 
-  #readJSON(): MessageBody | null {
+  #readMessageBody(): MessageBody | null {
     if (this.#buffer.length < 25) {
       return null;
     }
@@ -184,10 +174,10 @@ class Parser {
 
     this.#version = version.major;
 
-    const frame = this.#readBytes(version.size);
-    const text = new TextDecoder().decode(frame);
+    const frame = this.#buffer.slice(0, version.size);
+    this.#buffer = this.#buffer.slice(version.size);
 
-    return { version, body: JSON.parse(text), text, raw: frame };
+    return { protocol: version.protocol, format: version.format, raw: frame };
   }
 
   #update(source: Uint8Array | string): void {
@@ -202,7 +192,7 @@ class Parser {
     const start = this.#buffer[0];
     switch (start) {
       case 0b01111011:
-        return this.#readJSON();
+        return this.#readMessageBody();
       case 0b00101101: {
         return this.#readCounter();
       }
@@ -254,9 +244,6 @@ export function* parseSync(input: Uint8Array | string): IterableIterator<Frame> 
 /**
  * Parses CESR frames from an incoming stream of bytes.
  *
- * Inspect the {@link Frame.type} property to determine the type of frame.
- *
- *
  * @param input Incoming stream of bytes
  * @returns An async iterable of CESR frames
  */
@@ -286,4 +273,38 @@ function resolveInput(input: ParserInput): AsyncIterable<Uint8Array> {
   }
 
   return input;
+}
+
+/**
+ * Parses JSON messages with CESR attachments from an incoming stream of bytes.
+ *
+ * @param input Incoming stream of bytes
+ * @returns An async iterable of messages with attachments
+ */
+export async function* parseMessages(input: ParserInput): AsyncIterableIterator<Message> {
+  let group: string | null = null;
+  let message: Message | null = null;
+
+  for await (const frame of parse(input)) {
+    if ("protocol" in frame && "format" in frame) {
+      if (message) {
+        yield message;
+      }
+
+      message = { body: frame, attachments: {} };
+      group = null;
+    } else {
+      if (frame.code.startsWith("-")) {
+        group = frame.code;
+      } else {
+        if (group && message) {
+          message.attachments[group] = [...(message.attachments[group] ?? []), frame.text];
+        }
+      }
+    }
+  }
+
+  if (message) {
+    yield message;
+  }
 }

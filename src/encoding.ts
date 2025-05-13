@@ -3,7 +3,7 @@ import { decodeBase64Int, decodeBase64Url } from "./base64.ts";
 import { IndexCode, IndexTable } from "./codes.ts";
 import { MatterCode, MatterTable } from "./codes.ts";
 import { CountCode_10, CountCode_20, CountTable_10, CountTable_20 } from "./codes.ts";
-import type { MessageBody } from "./version.ts";
+import type { MessageBody } from "./message.ts";
 
 export type Frame = MessageBody | Matter | Counter | Indexer;
 
