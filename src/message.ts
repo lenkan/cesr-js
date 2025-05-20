@@ -1,4 +1,5 @@
 import type { DataObject } from "./data-type.ts";
+import type { ParserOptions } from "./parser.ts";
 import { parse, type ParserInput } from "./parser.ts";
 import { Message } from "./version.ts";
 
@@ -8,11 +9,11 @@ import { Message } from "./version.ts";
  * @param input Incoming stream of bytes
  * @returns An async iterable of messages with attachments
  */
-export async function* parseMessages(input: ParserInput): AsyncIterableIterator<Envelope> {
+export async function* parseMessages(input: ParserInput, options: ParserOptions = {}): AsyncIterableIterator<Envelope> {
   let group: string | null = null;
   let message: Envelope | null = null;
 
-  for await (const frame of parse(input)) {
+  for await (const frame of parse(input, options)) {
     if (frame instanceof Message) {
       if (message) {
         yield message;

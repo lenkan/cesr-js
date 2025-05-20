@@ -257,8 +257,8 @@ export function* parseSync(input: Uint8Array | string): IterableIterator<Frame> 
  * @param input Incoming stream of bytes
  * @returns An async iterable of CESR frames
  */
-export async function* parse(input: ParserInput): AsyncIterableIterator<Frame> {
-  const parser = new Parser();
+export async function* parse(input: ParserInput, options: ParserOptions): AsyncIterableIterator<Frame> {
+  const parser = new Parser(options);
 
   for await (const chunk of resolveInput(input)) {
     for (const frame of parser.parse(chunk)) {

@@ -115,21 +115,21 @@ describe("Parse JSON", () => {
 describe("Parse CESR 2", async () => {
   test("Parse CESR 2", async () => {
     const input = await readFile("./fixtures/cesr_20.cesr");
-    const result = await collect(parseMessages(input));
+    const result = await collect(parseMessages(input, { version: 2 }));
 
     assert.equal(result.length, 2);
     assert.equal(result[0].payload.t, "icp");
     assert.equal(result[0].payload.v, "KERICAAJSONAAEq.");
     assert.deepEqual(result[0].attachments, {
       [CountCode_20.ControllerIdxSigs]: [
-        "AADp5fDEoh8d0VRY27hpkRdVsTKEkUzrH2csEK6FKgjnrgmb2u4m0YhvJCMC5ZO0Zes_okqKcTSjjqpfiJjoa2AH",
+        "AACME000QcZDeDtgMwJC6b0qhWckJBL-U9Ls9dhYKO9mcaIdffYYO_gi6tFl1xvKMwre886T8ODYLLVrMqlc3TcN",
       ],
     });
     assert.equal(result[1].payload.t, "ixn");
     assert.equal(result[1].payload.v, "KERICAAJSONAADK.");
     assert.deepEqual(result[1].attachments, {
       [CountCode_20.ControllerIdxSigs]: [
-        "AABMz1FSzJ8RWzB1D9zF82cOFA4eLc8UsEOa5Ixiu90_ZizqHVOEoD5ajzxO2nLg7iEkyqdcXDAH4A9SSFPgLJQH",
+        "AADBLfcct7HWPJkVWt09FakB1hNbSTj6D5o9m4yYOMBfUdv7msDsPRSK46ScKQkIO4XAiAkg_xzmvAmsSTkvoLwM",
       ],
     });
   });
