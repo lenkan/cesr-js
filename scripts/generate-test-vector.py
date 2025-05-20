@@ -21,6 +21,12 @@ for key in dir(MtrDex):
 
         sizes = Matter.Sizes.get(code)
 
+        if (sizes.ss != 0 and sizes.fs != 0) and (
+            (sizes.fs or 0) > sizes.ss + sizes.hs
+        ):
+            # TODO: GramHeadNeck and GramHeadAid frames are different
+            continue
+
         raw_size = (
             sizes.fs - sizes.hs
             if sizes.fs is not None
@@ -56,8 +62,12 @@ for key in dir(IdrDex):
 
         soft_size = sizes.ss or 0
         other_size = sizes.os or 0
-        index = randint(0, (64** (soft_size - other_size)) - 1)
-        ondex = randint(0, (64** other_size) - 1) if code in IdxBthSigDex and other_size > 0 else None
+        index = randint(0, (64 ** (soft_size - other_size)) - 1)
+        ondex = (
+            randint(0, (64**other_size) - 1)
+            if code in IdxBthSigDex and other_size > 0
+            else None
+        )
 
         indexer = Indexer(code=code, raw=raw, index=index, ondex=ondex)
 

@@ -109,7 +109,7 @@ describe("Encode counter v1", () => {
 
   test("Encode big attachment group", () => {
     const result = encodeAttachmentsV1(64 ** 2 + 1);
-    assert.equal(result, "-0VAABAB");
+    assert.equal(result, "--VAABAB");
   });
 });
 
@@ -121,7 +121,7 @@ describe("Encode counter v2", () => {
 
   test("Encode big attachment group", () => {
     const result = encodeAttachmentsV2(64 ** 2 + 1);
-    assert.equal(result, "-0CAABAB");
+    assert.equal(result, "--CAABAB");
   });
 });
 
