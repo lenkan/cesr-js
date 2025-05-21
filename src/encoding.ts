@@ -64,17 +64,25 @@ export function encode(frame: FrameData, table: CodeTable): string {
     throw new Error(`Unable to find code table for ${frame.code}`);
   }
 
-  const raw = frame.raw ?? new Uint8Array(0);
-  const leadSize = size.ls ?? 0;
-  const padSize = (3 - ((raw.byteLength + leadSize) % 3)) % 3;
-  const padded = prepadBytes(raw, padSize + leadSize);
+  const ls = size.ls ?? 0;
   const ms = (size.ss ?? 0) - (size.os ?? 0);
   const os = size.os ?? 0;
+
+  const raw = frame.raw ?? new Uint8Array(0);
+
+  const padSize = (3 - ((raw.byteLength + ls) % 3)) % 3;
+  const padded = prepadBytes(raw, padSize + ls);
 
   const soft = ms ? encodeBase64Int(frame.count ?? frame.index ?? padded.byteLength / 3, ms) : "";
   const other = os ? encodeBase64Int(frame.ondex ?? 0, os ?? 0) : "";
 
-  return `${frame.code}${soft}${other}${encodeBase64Url(padded).slice(padSize)}`;
+  const result = `${frame.code}${soft}${other}${encodeBase64Url(padded).slice(padSize)}`;
+
+  if (size.fs > 0 && result.length < size.fs) {
+    throw new Error(`Encoded size ${result.length} does not match expected size ${size.fs}`);
+  }
+
+  return result;
 }
 
 function findHardSize(input: Uint8Array, table: CodeTable): number {

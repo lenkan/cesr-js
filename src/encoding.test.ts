@@ -6,6 +6,7 @@ import {
   decodeGenus,
   decodeIndexer,
   decodeMatter,
+  encode,
   encodeAttachmentsV1,
   encodeAttachmentsV2,
   encodeCounterV1,
@@ -18,6 +19,17 @@ import {
   encodeString,
 } from "./encoding.ts";
 import assert from "node:assert/strict";
+
+describe("encode", () => {
+  test("should throw if raw does not have enough bytes", () => {
+    assert.throws(() => {
+      encode(
+        { code: "0A", raw: new Uint8Array(63) },
+        { hards: { "0A": 2 }, sizes: { "0A": { hs: 2, ss: 0, fs: 88 } } },
+      );
+    }, new Error("Encoded size 86 does not match expected size 88"));
+  });
+});
 
 describe("Matter", () => {
   describe("Encode values", () => {
