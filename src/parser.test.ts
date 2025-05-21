@@ -1,25 +1,61 @@
-import test, { describe } from "node:test";
+import test from "node:test";
 import assert from "node:assert/strict";
-import { CountCode_10, IndexCode } from "./codes.ts";
-import { encodeBase64Int } from "./base64.ts";
+import { CountCode_10, CountCode_20, IndexCode, IndexTable } from "./codes.ts";
 import { parseSync } from "./parser.ts";
+import { encodeCounterV1, encodeCounterV2, encodeGenus, encodeIndexedSignature, encodeIndexer } from "./encoding.ts";
+import { randomBytes } from "node:crypto";
 
-describe("Parse count code", () => {
-  test("Should parse attachments without payload", async () => {
-    const sigs = [
-      "2AABAFC2S_PGpOQpbMNwQVOqP5jCUJ7EgFH2hr21V6uCbBAkK30idHj0K-ReRCe_o5iIP2bGhBK2MPeEt1P81ZLwk2YJ",
-      "2AACAGDeP0o3Ns2ycFFonXIQwGClJimMZ6DHnGfUKJ3O9DzUV5AxVi3Q0oq03fpLyVWRXYCWa72i_o6ftwCVVNnYDN4L",
-      "AAAwpoZNY1cZl_0pxlWiHm2RPD1q2XFiFBAzUGOQWeLlBTWbfFtImbZo3cxVKCP2D5Rl49zlaLRekrONYvme2oAC",
-    ];
+test("Should indexed signatures", async () => {
+  const attachment = [
+    encodeCounterV1({ code: CountCode_10.ControllerIdxSigs, count: 3 }),
+    encodeIndexer({ code: IndexCode.Ed25519_Big_Sig, raw: randomBytes(64), index: 0, ondex: 0 }),
+    encodeIndexer({ code: IndexCode.Ed25519_Big_Sig, raw: randomBytes(64), index: 1, ondex: 0 }),
+    encodeIndexedSignature("ed25519", randomBytes(64), 0),
+  ].join("");
 
-    const attachment = [CountCode_10.ControllerIdxSigs, encodeBase64Int(sigs.length, 2), ...sigs].join("");
+  const result = Array.from(parseSync(attachment, { version: 1 }));
 
-    const result = Array.from(parseSync(attachment));
+  assert.equal(result.length, 4);
+  assert.partialDeepStrictEqual(result[0], { code: CountCode_10.ControllerIdxSigs });
+  assert.partialDeepStrictEqual(result[1], { code: IndexCode.Ed25519_Big_Sig });
+  assert.partialDeepStrictEqual(result[2], { code: IndexCode.Ed25519_Big_Sig });
+  assert.partialDeepStrictEqual(result[3], { code: IndexCode.Ed25519_Sig });
+});
 
-    assert.equal(result.length, 4);
-    assert.partialDeepStrictEqual(result[0], { code: CountCode_10.ControllerIdxSigs });
-    assert.partialDeepStrictEqual(result[1], { code: IndexCode.Ed25519_Big_Sig });
-    assert.partialDeepStrictEqual(result[2], { code: IndexCode.Ed25519_Big_Sig });
-    assert.partialDeepStrictEqual(result[3], { code: IndexCode.Ed25519_Sig });
-  });
+test("Should switch from version 1 to version 2", async () => {
+  const attachment = [
+    encodeCounterV1({ code: CountCode_10.ControllerIdxSigs, count: 1 }),
+    encodeIndexedSignature("ed25519", randomBytes(64), 0),
+    encodeGenus({ major: 2 }),
+    encodeCounterV2({ code: CountCode_20.ControllerIdxSigs, count: IndexTable.sizes[IndexCode.Ed25519_Sig].fs / 4 }),
+    encodeIndexedSignature("ed25519", randomBytes(64), 0),
+  ].join("");
+
+  const result = Array.from(parseSync(attachment, { version: 1 }));
+
+  assert.equal(result.length, 5);
+  assert.partialDeepStrictEqual(result[0], { code: CountCode_10.ControllerIdxSigs });
+  assert.partialDeepStrictEqual(result[1], { code: IndexCode.Ed25519_Sig });
+  assert.partialDeepStrictEqual(result[2], { code: CountCode_10.KERIACDCGenusVersion });
+  assert.partialDeepStrictEqual(result[3], { code: CountCode_20.ControllerIdxSigs });
+  assert.partialDeepStrictEqual(result[4], { code: IndexCode.Ed25519_Sig });
+});
+
+test("Should switch from version 2 to version 1", async () => {
+  const attachment = [
+    encodeCounterV2({ code: CountCode_20.ControllerIdxSigs, count: IndexTable.sizes[IndexCode.Ed25519_Sig].fs / 4 }),
+    encodeIndexedSignature("ed25519", randomBytes(64), 0),
+    encodeGenus({ major: 1, minor: 0 }),
+    encodeCounterV1({ code: CountCode_10.ControllerIdxSigs, count: 1 }),
+    encodeIndexedSignature("ed25519", randomBytes(64), 0),
+  ].join("");
+
+  const result = Array.from(parseSync(attachment, { version: 2 }));
+
+  assert.equal(result.length, 5);
+  assert.partialDeepStrictEqual(result[0], { code: CountCode_20.ControllerIdxSigs });
+  assert.partialDeepStrictEqual(result[1], { code: IndexCode.Ed25519_Sig });
+  assert.partialDeepStrictEqual(result[2], { code: CountCode_10.KERIACDCGenusVersion });
+  assert.partialDeepStrictEqual(result[3], { code: CountCode_10.ControllerIdxSigs });
+  assert.partialDeepStrictEqual(result[4], { code: IndexCode.Ed25519_Sig });
 });

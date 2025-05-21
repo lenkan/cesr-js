@@ -169,6 +169,35 @@ export function decodeIndexer(input: Uint8Array | string): Indexer {
   return decode(input, IndexTable);
 }
 
+export interface GenusInit {
+  major: number;
+  minor?: number;
+}
+
+export interface Genus extends GenusInit {
+  minor: number;
+}
+
+export function encodeGenus(genus: GenusInit): string {
+  if (typeof genus.major !== "number" || genus.major < 0 || genus.major > 63) {
+    throw new Error(`Invalid major version: ${genus.major}`);
+  }
+
+  const minor = genus.minor ?? 0;
+  if (typeof minor !== "number" || minor < 0) {
+    throw new Error(`Invalid minor version: ${minor}`);
+  }
+
+  const qb64 = `${CountCode_10.KERIACDCGenusVersion}${encodeBase64Int(genus.major, 1)}${encodeBase64Int(minor, 2)}`;
+  return qb64;
+}
+
+export function decodeGenus(input: string): Genus {
+  const major = decodeBase64Int(input.slice(5, 6));
+  const minor = decodeBase64Int(input.slice(6, 8));
+  return { major, minor };
+}
+
 export function encodeIndexedSignature(alg: MatterSignature, raw: Uint8Array, index: number): string {
   switch (alg) {
     case "ed25519":

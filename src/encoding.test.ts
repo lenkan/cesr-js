@@ -3,6 +3,7 @@ import vectors from "../fixtures/cesr_test_vectors.json" with { type: "json" };
 import {
   decodeCounterV1,
   decodeCounterV2,
+  decodeGenus,
   decodeIndexer,
   decodeMatter,
   encodeAttachmentsV1,
@@ -10,6 +11,7 @@ import {
   encodeCounterV1,
   encodeCounterV2,
   encodeDate,
+  encodeGenus,
   encodeIndexedSignature,
   encodeIndexer,
   encodeMatter,
@@ -101,7 +103,7 @@ describe("Indexer", () => {
   });
 });
 
-describe("Encode counter v1", () => {
+describe("Counter v1", () => {
   test("Encode attachment group", () => {
     const result = encodeAttachmentsV1(39);
     assert.equal(result, "-VAn");
@@ -111,9 +113,24 @@ describe("Encode counter v1", () => {
     const result = encodeAttachmentsV1(64 ** 2 + 1);
     assert.equal(result, "--VAABAB");
   });
+
+  test("Encode genus", () => {
+    const result = encodeGenus({ major: 3, minor: 1239 });
+    assert.equal(result, "-_AAADTX");
+  });
+
+  test("Encode genus without minor", () => {
+    const result = encodeGenus({ major: 3 });
+    assert.equal(result, "-_AAADAA");
+  });
+
+  test("Decode genus", () => {
+    const result = decodeGenus("-_AAADTX");
+    assert.deepEqual(result, { major: 3, minor: 1239 });
+  });
 });
 
-describe("Encode counter v2", () => {
+describe("Counter v2", () => {
   test("Encode attachment group", () => {
     const result = encodeAttachmentsV2(39);
     assert.equal(result, "-CAn");

@@ -1,7 +1,7 @@
 import { decodeVersion, Message } from "./version.ts";
 import { CountCode_10, CountCode_20, CountTable_10, CountTable_20, IndexTable, MatterTable } from "./codes.ts";
 import type { Counter, Frame, Indexer, Matter } from "./encoding.ts";
-import { decodeStream } from "./encoding.ts";
+import { decodeGenus, decodeStream } from "./encoding.ts";
 
 function concat(a: Uint8Array, b: Uint8Array) {
   if (a.length === 0) {
@@ -98,6 +98,12 @@ class Parser {
       case CountCode_10.TransReceiptQuadruples:
         this.#stack.push({ type: "matter", count: frame.count * 4 });
         break;
+      case CountCode_10.KERIACDCGenusVersion: {
+        const genus = decodeGenus(frame.text);
+        this.#version = genus.major;
+        this.#stack.push({ type: "counter", count: 1 });
+        break;
+      }
     }
 
     return result.frame;
@@ -116,6 +122,12 @@ class Parser {
       case CountCode_20.ControllerIdxSigs:
       case CountCode_20.WitnessIdxSigs: {
         this.#stack.push({ type: "indexer", count: frame.count });
+        break;
+      }
+      case CountCode_10.KERIACDCGenusVersion: {
+        const genus = decodeGenus(frame.text);
+        this.#version = genus.major;
+        this.#stack.push({ type: "counter", count: 1 });
         break;
       }
     }
@@ -231,18 +243,16 @@ class Parser {
 /**
  * Parses CESR frames from an incoming stream of bytes.
  *
- * Inspect the {@link Frame.type} property to determine the type of frame.
- *
- *
  * @param input Incoming stream of bytes
  * @returns An iterable of CESR frames
  */
-export function* parseSync(input: Uint8Array | string): IterableIterator<Frame> {
+export function* parseSync(input: Uint8Array | string, options: ParserOptions = {}): IterableIterator<Frame> {
   if (typeof input === "string") {
     input = new TextEncoder().encode(input);
   }
 
-  const parser = new Parser();
+  const parser = new Parser(options);
+
   for (const frame of parser.parse(input)) {
     yield frame;
   }
@@ -250,9 +260,6 @@ export function* parseSync(input: Uint8Array | string): IterableIterator<Frame> 
 
 /**
  * Parses CESR frames from an incoming stream of bytes.
- *
- * Inspect the {@link Frame.type} property to determine the type of frame.
- *
  *
  * @param input Incoming stream of bytes
  * @returns An async iterable of CESR frames
