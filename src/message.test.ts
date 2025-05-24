@@ -4,9 +4,7 @@ import { describe, test } from "node:test";
 import { parseMessages } from "./message.ts";
 import { readFile } from "node:fs/promises";
 import { CountCode_10, CountCode_20 } from "./codes.ts";
-import { Encoder } from "./encoding.ts";
-
-const encoder = new Encoder();
+import encoding from "./encoding.ts";
 
 async function* chunk(filename: string, size = 100): AsyncIterable<Uint8Array> {
   let index = 0;
@@ -101,14 +99,14 @@ test("Parse GEDA in chunks", async () => {
 
 describe("Parse JSON", () => {
   test("Parse JSON without attachments", async () => {
-    const input = encoder.encodeMessage({ t: "icp" }, { legacy: true });
+    const input = encoding.encodeMessage({ t: "icp" }, { legacy: true });
     const result = await collect(parseMessages(input));
     assert.equal(result.length, 1);
     assert.deepEqual(result[0].payload, { v: "KERI10JSON000023_", t: "icp" });
   });
 
   test("Parse unfinished JSON without full version string", async () => {
-    const input = encoder.encodeMessage({ t: "icp" }).slice(0, 20);
+    const input = encoding.encodeMessage({ t: "icp" }).slice(0, 20);
 
     await assert.rejects(() => collect(parseMessages(input)), new Error("Unexpected end of stream"));
   });
