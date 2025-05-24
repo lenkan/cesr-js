@@ -1,7 +1,7 @@
 import { decodeVersion, Message } from "./version.ts";
 import { CountCode_10, CountCode_20, CountTable_10, CountTable_20, IndexTable, MatterTable } from "./codes.ts";
 import type { CodeTable, Counter, Frame, FrameData } from "./encoding.ts";
-import { decodeGenus, decodeStream } from "./encoding.ts";
+import { Decoder } from "./encoding.ts";
 
 function concat(a: Uint8Array, b: Uint8Array) {
   if (a.length === 0) {
@@ -76,10 +76,12 @@ class Parser {
   #buffer: Uint8Array;
   #stack: GroupContext[] = [];
   #version: number;
+  #decoder: Decoder;
 
   constructor(options: ParserOptions = {}) {
     this.#buffer = new Uint8Array(0);
     this.#version = options.version ?? 1;
+    this.#decoder = new Decoder();
   }
 
   get #context(): GroupContext | null {
@@ -97,7 +99,7 @@ class Parser {
   }
 
   #readFrame(table: CodeTable): Required<FrameData> | null {
-    const result = decodeStream(this.#buffer, table);
+    const result = this.#decoder.decodeStream(this.#buffer, table);
     this.#buffer = this.#buffer.slice(result.n);
     return result.frame;
   }
@@ -121,7 +123,7 @@ class Parser {
     }
 
     if (counter.code === CountCode_10.KERIACDCGenusVersion) {
-      const genus = decodeGenus(counter.text);
+      const genus = this.#decoder.decodeGenus(counter.text);
       this.#version = genus.major;
     } else {
       this.#stack.push({ counter, quadlets: 0, frames: 0 });
