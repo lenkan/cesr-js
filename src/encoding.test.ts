@@ -2,6 +2,7 @@ import test, { describe } from "node:test";
 import vectors from "../fixtures/cesr_test_vectors.json" with { type: "json" };
 import { Decoder, Encoder } from "./encoding.ts";
 import assert from "node:assert/strict";
+import { encodeUtf8 } from "./encoding-utf8.ts";
 
 const encoder = new Encoder();
 const decoder = new Decoder();
@@ -14,6 +15,58 @@ describe("encode", () => {
         { hards: { "0A": 2 }, sizes: { "0A": { hs: 2, ss: 0, fs: 88 } } },
       );
     }, new Error("Encoded size 86 does not match expected size 88"));
+  });
+});
+
+describe("Encode message", () => {
+  test("Should encode legacy version string", () => {
+    const result = encoder.encodeVersionString({ protocol: "ACDC", legacy: true });
+    assert.strictEqual(result, "ACDC10JSON000000_");
+  });
+
+  test("Should encode version string", () => {
+    const result = encoder.encodeVersionString({ protocol: "ACDC" });
+    assert.strictEqual(result, "ACDCBAAJSONAAAA.");
+  });
+
+  test("Should add legacy version to object", () => {
+    const result = encoder.encodeMessage({ a: 1 }, { legacy: true });
+
+    assert.strictEqual(result, '{"v":"KERI10JSON00001f_","a":1}');
+  });
+
+  test("Should add version to object", () => {
+    const result = encoder.encodeMessage({ a: 1 });
+
+    assert.strictEqual(result, '{"v":"KERIBAAJSONAAAe.","a":1}');
+  });
+});
+
+describe("Decode message", () => {
+  test("Should parse legacy keri version", () => {
+    // PPPPvvKKKKllllll_
+    const result = decoder.decodeVersionString(encodeUtf8(JSON.stringify({ v: "KERI10JSON00000a_" })));
+    assert.deepStrictEqual(result, {
+      protocol: "KERI",
+      major: 1,
+      minor: 0,
+      kind: "JSON",
+      size: 10,
+      legacy: true,
+    });
+  });
+
+  test("Should parse keri version", () => {
+    // PPPPVVVKKKKBBBB.
+    const result = decoder.decodeVersionString(encodeUtf8(JSON.stringify({ v: "KERICABJSONAAAB." })));
+    assert.deepStrictEqual(result, {
+      protocol: "KERI",
+      major: 2,
+      minor: 1,
+      kind: "JSON",
+      size: 1,
+      legacy: false,
+    });
   });
 });
 

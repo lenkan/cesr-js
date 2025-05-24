@@ -1,7 +1,34 @@
-import { decodeVersion, Message } from "./version.ts";
 import { CountCode_10, CountCode_20, CountTable_10, CountTable_20, IndexTable, MatterTable } from "./codes.ts";
-import type { CodeTable, Counter, Frame, FrameData } from "./encoding.ts";
+import type { CodeTable, Counter, FrameData, MessageVersion } from "./encoding.ts";
 import { Decoder } from "./encoding.ts";
+import { decodeUtf8, encodeUtf8 } from "./encoding-utf8.ts";
+
+export type Frame =
+  | {
+      type: "matter";
+      code: string;
+      text: string;
+      raw: Uint8Array;
+    }
+  | {
+      type: "counter";
+      code: string;
+      count: number;
+      text: string;
+    }
+  | {
+      type: "indexer";
+      code: string;
+      index: number;
+      ondex: number;
+      raw: Uint8Array;
+      text: string;
+    }
+  | {
+      type: "message";
+      version: MessageVersion;
+      text: string;
+    };
 
 function concat(a: Uint8Array, b: Uint8Array) {
   if (a.length === 0) {
@@ -104,7 +131,39 @@ class Parser {
     return result.frame;
   }
 
-  #readCounter(): Counter | null {
+  #readIndexer(): Frame | null {
+    const frame = this.#readFrame(IndexTable);
+
+    if (!frame) {
+      return null;
+    }
+
+    return {
+      type: "indexer",
+      code: frame.code,
+      index: frame.index,
+      ondex: frame.ondex,
+      raw: frame.raw,
+      text: frame.text,
+    };
+  }
+
+  #readMatter(): Frame | null {
+    const frame = this.#readFrame(MatterTable);
+
+    if (!frame) {
+      return null;
+    }
+
+    return {
+      type: "matter",
+      code: frame.code,
+      text: frame.text,
+      raw: frame.raw,
+    };
+  }
+
+  #readCounter(): Frame | null {
     let counter: Counter | null = null;
 
     switch (this.#version) {
@@ -130,6 +189,7 @@ class Parser {
     }
 
     return {
+      type: "counter",
       code: counter.code,
       count: counter.count,
       text: counter.text,
@@ -161,30 +221,34 @@ class Parser {
     }
   }
 
-  #readJSON(): Message | null {
+  #readJSON(): Frame | null {
     if (this.#buffer.length < 25) {
       return null;
     }
 
-    const version = decodeVersion(this.#buffer.slice(0, 24));
+    const version = this.#decoder.decodeVersionString(this.#buffer.slice(0, 24));
     if (this.#buffer.length < version.size) {
       return null;
     }
 
     const frame = this.#readBytes(version.size);
 
-    return new Message(version, new TextDecoder().decode(frame));
+    return {
+      type: "message",
+      version: version,
+      text: decodeUtf8(frame),
+    };
   }
 
   #update(source: Uint8Array | string): void {
     if (typeof source === "string") {
-      this.#update(new TextEncoder().encode(source));
+      this.#update(encodeUtf8(source));
     } else {
       this.#buffer = concat(this.#buffer, source);
     }
   }
 
-  #read(): Frame | Message | null {
+  #read(): Frame | null {
     const start = this.#buffer[0];
     const context = this.#context;
 
@@ -207,11 +271,11 @@ class Parser {
           case CountCode_10.TransIdxSigGroups:
           case CountCode_10.TransLastIdxSigGroups:
           case CountCode_10.WitnessIdxSigs: {
-            frame = this.#readFrame(IndexTable);
+            frame = this.#readIndexer();
             break;
           }
           default: {
-            frame = this.#readFrame(MatterTable);
+            frame = this.#readMatter();
             break;
           }
         }
@@ -226,11 +290,11 @@ class Parser {
           case CountCode_20.BigTransLastIdxSigGroups:
           case CountCode_20.BigControllerIdxSigs:
           case CountCode_20.ControllerIdxSigs: {
-            frame = this.#readFrame(IndexTable);
+            frame = this.#readIndexer();
             break;
           }
           default: {
-            frame = this.#readFrame(MatterTable);
+            frame = this.#readMatter();
             break;
           }
         }
@@ -251,7 +315,7 @@ class Parser {
     return frame;
   }
 
-  *parse(source: Uint8Array | string): IterableIterator<Frame | Message> {
+  *parse(source: Uint8Array | string): IterableIterator<Frame> {
     this.#update(source);
 
     while (this.#buffer.length > 0) {
@@ -276,9 +340,9 @@ class Parser {
  * @param input Incoming stream of bytes
  * @returns An iterable of CESR frames
  */
-export function* parseSync(input: Uint8Array | string, options: ParserOptions = {}): IterableIterator<Frame | Message> {
+export function* parseSync(input: Uint8Array | string, options: ParserOptions = {}): IterableIterator<Frame> {
   if (typeof input === "string") {
-    input = new TextEncoder().encode(input);
+    input = encodeUtf8(input);
   }
 
   const parser = new Parser(options);
@@ -298,7 +362,7 @@ export function* parseSync(input: Uint8Array | string, options: ParserOptions = 
  * @param input Incoming stream of bytes
  * @returns An async iterable of CESR frames
  */
-export async function* parse(input: ParserInput, options: ParserOptions): AsyncIterableIterator<Frame | Message> {
+export async function* parse(input: ParserInput, options: ParserOptions): AsyncIterableIterator<Frame> {
   const parser = new Parser(options);
 
   for await (const chunk of resolveInput(input)) {
@@ -316,7 +380,7 @@ export type ParserInput = Uint8Array | string | AsyncIterable<Uint8Array>;
 
 function resolveInput(input: ParserInput): AsyncIterable<Uint8Array> {
   if (typeof input === "string") {
-    return ReadableStream.from([new TextEncoder().encode(input)]);
+    return ReadableStream.from([encodeUtf8(input)]);
   }
 
   if (input instanceof Uint8Array) {

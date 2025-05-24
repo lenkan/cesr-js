@@ -1,10 +1,10 @@
-import { encodeBase64Int, encodeBase64Url } from "./base64.ts";
-import { decodeBase64Int, decodeBase64Url } from "./base64.ts";
+import { encodeBase64Int, encodeBase64Url } from "./encoding-base64.ts";
+import { decodeBase64Int, decodeBase64Url } from "./encoding-base64.ts";
 import { IndexCode, IndexTable } from "./codes.ts";
 import { MatterCode, MatterTable } from "./codes.ts";
 import { CountCode_10, CountCode_20, CountTable_10, CountTable_20 } from "./codes.ts";
-
-export type Frame = Matter | Counter | Indexer;
+import type { DataObject } from "./data-type.ts";
+import { decodeUtf8, encodeUtf8 } from "./encoding-utf8.ts";
 
 export interface CounterInit {
   code: string;
@@ -43,6 +43,25 @@ export interface MatterInit {
 export interface Matter extends MatterInit {
   text: string;
 }
+
+export interface MessageVersionInit {
+  protocol?: string;
+  major?: number;
+  minor?: number;
+  size?: number;
+
+  /**
+   * The serialization kind
+   */
+  kind?: string;
+
+  /**
+   * Use the legacy version string format
+   */
+  legacy?: boolean;
+}
+
+export type MessageVersion = Required<MessageVersionInit>;
 
 export type MatterDigest = "blake3_256" | "blake3_512";
 export type MatterSignature = "ed25519" | "secp256k1";
@@ -87,6 +106,12 @@ export interface DecodeStreamResult {
   n: number;
 }
 
+// VERSION = "PPPPVVVKKKKBBBB.";
+// LEGACY_VERSION = "PPPPvvKKKKllllll_";
+const REGEX_VERSION_STRING_PROTOCOL = /^[A-Z]{4}$/;
+const REGEX_VERSION_STRING_KIND = /^[A-Z]{4}$/;
+const REGEX_VERSION_JSON = /^\{"v":"(.*?)".*$/;
+
 function padNumber(num: number, length: number) {
   return num.toString().padStart(length, "0");
 }
@@ -99,6 +124,14 @@ function prepadBytes(raw: Uint8Array, length: number): Uint8Array {
   const padded = new Uint8Array(length + raw.byteLength);
   padded.set(raw, length);
   return padded;
+}
+
+function encodeHexInt(value: number, length: number) {
+  if (value >= 16 ** length) {
+    throw new Error(`value ${value} too big for hex length ${length}`);
+  }
+
+  return value.toString(16).padStart(length, "0");
 }
 
 export class Encoder {
@@ -162,7 +195,7 @@ export class Encoder {
   }
 
   encodeString(txt: string): string {
-    const raw = new TextEncoder().encode(txt);
+    const raw = encodeUtf8(txt);
     const length = raw.byteLength;
     const leadSize = length % 3;
 
@@ -240,12 +273,54 @@ export class Encoder {
   encodeIndexer(frame: IndexerInit): string {
     return this.encode(frame, IndexTable);
   }
+
+  encodeVersionString(init: MessageVersionInit) {
+    const protocol = init.protocol ?? "KERI";
+    const major = init.major ?? 1;
+    const minor = init.minor ?? 0;
+    const format = init.kind ?? "JSON";
+
+    if (format !== "JSON") {
+      throw new Error("Only JSON format is supported for now");
+    }
+
+    if (!REGEX_VERSION_STRING_PROTOCOL.test(protocol)) {
+      throw new Error("Protocol must be 4 characters");
+    }
+
+    if (!REGEX_VERSION_STRING_KIND.test(format)) {
+      throw new Error("Format must be 4 characters");
+    }
+
+    if (init.legacy) {
+      const version = `${encodeHexInt(major, 1)}${encodeHexInt(minor, 1)}`;
+      const size = encodeHexInt(init.size ?? 0, 6);
+      return `${protocol}${version}${format}${size}_`;
+    }
+
+    const version = `${encodeBase64Int(major, 1)}${encodeBase64Int(minor, 2)}`;
+    const size = encodeBase64Int(init.size ?? 0, 4);
+    return `${protocol}${version}${format}${size}.`;
+  }
+
+  encodeMessage<T extends DataObject>(body: T, init: MessageVersionInit = {}): string {
+    const str = encodeUtf8(
+      JSON.stringify({
+        v: this.encodeVersionString(init),
+        ...body,
+      }),
+    );
+
+    return JSON.stringify({
+      v: this.encodeVersionString({ ...init, size: str.byteLength }),
+      ...body,
+    });
+  }
 }
 
 export class Decoder {
   #findHardSize(input: Uint8Array, table: CodeTable): number {
-    const decoder = new TextDecoder();
-    const start = input[0] === 45 ? decoder.decode(input.slice(0, 2)) : decoder.decode(input.slice(0, 1));
+    const start = input[0] === 45 ? decodeUtf8(input.slice(0, 2)) : decodeUtf8(input.slice(0, 1));
     const hs = table.hards[start];
 
     if (hs === undefined) {
@@ -267,10 +342,8 @@ export class Decoder {
 
   decodeStream(input: Uint8Array | string, table: CodeTable): DecodeStreamResult {
     if (typeof input === "string") {
-      input = new TextEncoder().encode(input);
+      input = encodeUtf8(input);
     }
-
-    const decoder = new TextDecoder();
 
     if (input.length < 0) {
       return { frame: null, n: 0 };
@@ -282,7 +355,7 @@ export class Decoder {
       return { frame: null, n: 0 };
     }
 
-    const hard = decoder.decode(input.slice(0, hs));
+    const hard = decodeUtf8(input.slice(0, hs));
     const size = table.sizes[hard];
 
     if (!size) {
@@ -294,7 +367,7 @@ export class Decoder {
       return { frame: null, n: 0 };
     }
 
-    const soft = decodeBase64Int(decoder.decode(input.slice(size.hs, cs)));
+    const soft = decodeBase64Int(decodeUtf8(input.slice(size.hs, cs)));
     const fs = size.fs > 0 ? size.fs : cs + soft * 4;
 
     if (input.length < fs) {
@@ -305,11 +378,11 @@ export class Decoder {
     const ps = (size.hs + size.ss) % 4;
     const ms = size.ss - (size.os ?? 0);
     const os = size.os ?? 0;
-    const soft0 = decodeBase64Int(decoder.decode(input.slice(size.hs, size.hs + ms)));
-    const soft1 = decodeBase64Int(decoder.decode(input.slice(size.hs + ms, size.hs + ms + os)));
+    const soft0 = decodeBase64Int(decodeUtf8(input.slice(size.hs, size.hs + ms)));
+    const soft1 = decodeBase64Int(decodeUtf8(input.slice(size.hs + ms, size.hs + ms + os)));
 
     const padding = "A".repeat(ps);
-    const text = decoder.decode(input.slice(0, fs));
+    const text = decodeUtf8(input.slice(0, fs));
     const rawtext = padding + text.slice(cs, fs);
 
     const raw = decodeBase64Url(rawtext).slice(ps + ls);
@@ -336,5 +409,54 @@ export class Decoder {
 
   decodeCounterV2(qb64: string | Uint8Array): Counter {
     return this.decode(qb64, CountTable_20);
+  }
+
+  decodeVersionString(data: string | Uint8Array): Required<MessageVersionInit> {
+    if (typeof data !== "string") {
+      data = decodeUtf8(data.slice(0, 24));
+    }
+
+    const match = data.match(REGEX_VERSION_JSON);
+    if (!match) {
+      throw new Error(`Unable to extract "v" field from ${data}`);
+    }
+
+    const value = match[1];
+
+    if (value.endsWith(".") && value.length === 16) {
+      const protocol = value.slice(0, 4);
+      const major = decodeBase64Int(value.slice(4, 5));
+      const minor = decodeBase64Int(value.slice(5, 7));
+      const kind = value.slice(7, 11);
+      const size = decodeBase64Int(value.slice(12, 15));
+
+      return {
+        protocol,
+        major,
+        minor,
+        legacy: false,
+        kind,
+        size,
+      };
+    }
+
+    if (value.endsWith("_") && value.length === 17) {
+      const protocol = value.slice(0, 4);
+      const major = parseInt(value.slice(4, 5), 16);
+      const minor = parseInt(value.slice(5, 6), 16);
+      const format = value.slice(6, 10);
+      const size = parseInt(value.slice(10, 16), 16);
+
+      return {
+        protocol,
+        major,
+        minor,
+        kind: format,
+        size,
+        legacy: true,
+      };
+    }
+
+    throw new Error(`Invalid version string ${value}`);
   }
 }

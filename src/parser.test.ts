@@ -4,7 +4,6 @@ import { CountCode_10, CountCode_20, IndexCode, IndexTable } from "./codes.ts";
 import { parseSync } from "./parser.ts";
 import { Encoder } from "./encoding.ts";
 import { randomBytes } from "node:crypto";
-import { versify } from "./version.ts";
 
 const encoder = new Encoder();
 
@@ -107,7 +106,7 @@ test("Should parse JSON after attachment group v1", async () => {
     encoder.encodeCounterV1({ code: CountCode_10.ControllerIdxSigs, count: 2 }),
     encoder.encodeIndexer({ code: IndexCode.Ed25519_Big_Sig, raw: randomBytes(64), index: 0, ondex: 0 }),
     encoder.encodeIndexer({ code: IndexCode.Ed25519_Big_Sig, raw: randomBytes(64), index: 1, ondex: 0 }),
-    JSON.stringify(versify({ message: "foo" })),
+    encoder.encodeMessage({ payload: { message: "foo" }, protocol: "KERI", major: 1 }),
   ].join("");
 
   const result = Array.from(parseSync(attachment, { version: 1 }));
