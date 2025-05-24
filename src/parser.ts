@@ -1,6 +1,6 @@
 import { decodeVersion, Message } from "./version.ts";
 import { CountCode_10, CountCode_20, CountTable_10, CountTable_20, IndexTable, MatterTable } from "./codes.ts";
-import type { Counter, Frame, Indexer, Matter } from "./encoding.ts";
+import type { CodeTable, Counter, Frame, FrameData } from "./encoding.ts";
 import { decodeGenus, decodeStream } from "./encoding.ts";
 
 function concat(a: Uint8Array, b: Uint8Array) {
@@ -18,31 +18,71 @@ function concat(a: Uint8Array, b: Uint8Array) {
   return merged;
 }
 
-interface Context {
-  type: "counter" | "matter" | "indexer";
-  count: number;
+interface GroupContext {
+  counter: Counter;
+
+  /**
+   * How many bytes have been consumed in this group
+   */
+  quadlets: number;
+
+  /**
+   * How many frames have been decoded
+   */
+  frames: number;
+}
+
+function isContextComplete(context: GroupContext, version: number): boolean {
+  switch (version) {
+    case 1:
+      switch (context.counter.code) {
+        case CountCode_10.ControllerIdxSigs:
+        case CountCode_10.WitnessIdxSigs:
+          return context.frames === context.counter.count;
+        case CountCode_10.SealSourceCouples:
+        case CountCode_10.FirstSeenReplayCouples:
+        case CountCode_10.NonTransReceiptCouples:
+          return context.frames === context.counter.count * 2;
+        case CountCode_10.SealSourceTriples:
+          return context.frames === context.counter.count * 3;
+        case CountCode_10.TransReceiptQuadruples:
+          return context.frames === context.counter.count * 4;
+        case CountCode_10.AttachmentGroup:
+        case CountCode_10.BigAttachmentGroup:
+          return context.quadlets === context.counter.count;
+        case CountCode_10.KERIACDCGenusVersion:
+          return true;
+        default:
+          return false;
+      }
+    case 2: {
+      switch (context.counter.code) {
+        case CountCode_20.KERIACDCGenusVersion:
+          return true;
+        default:
+          return context.quadlets === context.counter.count;
+      }
+    }
+    default:
+      throw new Error(`Unknown version: ${version}`);
+  }
 }
 
 export interface ParserOptions {
   version?: number;
-  context?: Context;
 }
 
 class Parser {
   #buffer: Uint8Array;
-  #stack: Context[] = [];
+  #stack: GroupContext[] = [];
   #version: number;
 
   constructor(options: ParserOptions = {}) {
     this.#buffer = new Uint8Array(0);
     this.#version = options.version ?? 1;
-
-    if (options.context) {
-      this.#stack.push(options.context);
-    }
   }
 
-  get #context(): Context | null {
+  get #context(): GroupContext | null {
     return this.#stack[this.#stack.length - 1] ?? null;
   }
 
@@ -56,134 +96,70 @@ class Parser {
     return result;
   }
 
-  #readMatter(): Matter | null {
-    const result = decodeStream(this.#buffer, MatterTable);
+  #readFrame(table: CodeTable): Required<FrameData> | null {
+    const result = decodeStream(this.#buffer, table);
     this.#buffer = this.#buffer.slice(result.n);
     return result.frame;
   }
 
   #readCounter(): Counter | null {
+    let counter: Counter | null = null;
+
     switch (this.#version) {
       case 1:
-        return this.#readCounterV1();
+        counter = this.#readFrame(CountTable_10);
+        break;
       case 2:
-        return this.#readCounterV2();
+        counter = this.#readFrame(CountTable_20);
+        break;
       default:
         throw new Error(`Unsupported protocol ${this.#version}`);
     }
-  }
 
-  #readCounterV1(): Counter | null {
-    const result = decodeStream(this.#buffer, CountTable_10);
-    this.#buffer = this.#buffer.slice(result.n);
-
-    if (!result.frame) {
+    if (!counter) {
       return null;
     }
 
-    const frame = result.frame;
-    switch (frame.code) {
-      case CountCode_10.ControllerIdxSigs:
-      case CountCode_10.WitnessIdxSigs:
-        this.#stack.push({ type: "indexer", count: frame.count });
-        break;
-      case CountCode_10.NonTransReceiptCouples:
-      case CountCode_10.SealSourceCouples:
-      case CountCode_10.FirstSeenReplayCouples:
-        this.#stack.push({ type: "matter", count: frame.count * 2 });
-        break;
-      case CountCode_10.SealSourceTriples:
-        this.#stack.push({ type: "matter", count: frame.count * 3 });
-        break;
-      case CountCode_10.TransReceiptQuadruples:
-        this.#stack.push({ type: "matter", count: frame.count * 4 });
-        break;
-      case CountCode_10.KERIACDCGenusVersion: {
-        const genus = decodeGenus(frame.text);
-        this.#version = genus.major;
-        this.#stack.push({ type: "counter", count: 1 });
-        break;
-      }
+    if (counter.code === CountCode_10.KERIACDCGenusVersion) {
+      const genus = decodeGenus(counter.text);
+      this.#version = genus.major;
+    } else {
+      this.#stack.push({ counter, quadlets: 0, frames: 0 });
     }
 
-    return result.frame;
+    return {
+      code: counter.code,
+      count: counter.count,
+      text: counter.text,
+    };
   }
 
-  #readCounterV2(): Counter | null {
-    const result = decodeStream(this.#buffer, CountTable_20);
-    this.#buffer = this.#buffer.slice(result.n);
-
-    if (!result.frame) {
-      return null;
-    }
-
-    const frame = result.frame;
-    switch (frame.code) {
-      case CountCode_20.ControllerIdxSigs:
-      case CountCode_20.WitnessIdxSigs: {
-        this.#stack.push({ type: "indexer", count: frame.count });
-        break;
-      }
-      case CountCode_10.KERIACDCGenusVersion: {
-        const genus = decodeGenus(frame.text);
-        this.#version = genus.major;
-        this.#stack.push({ type: "counter", count: 1 });
-        break;
-      }
-    }
-
-    return result.frame;
-  }
-
-  #readIndexer(): Indexer | null {
-    const result = decodeStream(this.#buffer, IndexTable);
-    this.#buffer = this.#buffer.slice(result.n);
-
-    if (!result.frame) {
-      return null;
-    }
-
-    return result.frame;
-  }
-
-  #readContextual(): Frame | null {
-    const context = this.#context;
-
+  #popContext(): void {
+    const context = this.#stack.pop();
     if (!context) {
-      throw new Error("No context available");
+      return;
     }
 
-    let frame: Frame | null = null;
-    switch (context.type) {
-      case "counter":
-        frame = this.#readCounter();
-        break;
-      case "matter":
-        frame = this.#readMatter();
-        break;
-      case "indexer":
-        frame = this.#readIndexer();
-        break;
-      default:
-        throw new Error(`Unknown context type ${context.type}`);
+    const outer = this.#context;
+    if (!outer) {
+      return;
     }
 
-    if (!frame) {
-      return null;
-    }
+    if (outer) {
+      outer.frames += context.frames;
+      outer.quadlets += context.quadlets;
 
-    if (context && context.count > 0) {
-      context.count--;
+      // +1 for the group
+      outer.frames += 1;
+      outer.quadlets += context.counter.text.length / 4;
 
-      if (context.count === 0) {
-        this.#stack.pop();
+      if (isContextComplete(outer, this.#version)) {
+        return this.#popContext();
       }
     }
-
-    return frame;
   }
 
-  #readJSON(): Frame | null {
+  #readJSON(): Message | null {
     if (this.#buffer.length < 25) {
       return null;
     }
@@ -193,7 +169,6 @@ class Parser {
       return null;
     }
 
-    this.#version = version.major;
     const frame = this.#readBytes(version.size);
 
     return new Message(version, new TextDecoder().decode(frame));
@@ -207,21 +182,74 @@ class Parser {
     }
   }
 
-  #read(): Frame | null {
+  #read(): Frame | Message | null {
     const start = this.#buffer[0];
+    const context = this.#context;
+
     switch (start) {
       case 0b01111011:
         return this.#readJSON();
-      case 0b00101101: {
+      case 0b00101101:
         return this.#readCounter();
-      }
-      default: {
-        return this.#readContextual();
+    }
+
+    if (!context) {
+      throw new Error(`Unsupported cold start byte: 0b${start.toString(2)}`);
+    }
+
+    let frame: Frame | null = null;
+    switch (this.#version) {
+      case 1:
+        switch (context.counter.code) {
+          case CountCode_10.ControllerIdxSigs:
+          case CountCode_10.TransIdxSigGroups:
+          case CountCode_10.TransLastIdxSigGroups:
+          case CountCode_10.WitnessIdxSigs: {
+            frame = this.#readFrame(IndexTable);
+            break;
+          }
+          default: {
+            frame = this.#readFrame(MatterTable);
+            break;
+          }
+        }
+        break;
+      case 2: {
+        switch (context.counter.code) {
+          case CountCode_20.WitnessIdxSigs:
+          case CountCode_20.BigWitnessIdxSigs:
+          case CountCode_20.TransIdxSigGroups:
+          case CountCode_20.BigTransIdxSigGroups:
+          case CountCode_20.TransLastIdxSigGroups:
+          case CountCode_20.BigTransLastIdxSigGroups:
+          case CountCode_20.BigControllerIdxSigs:
+          case CountCode_20.ControllerIdxSigs: {
+            frame = this.#readFrame(IndexTable);
+            break;
+          }
+          default: {
+            frame = this.#readFrame(MatterTable);
+            break;
+          }
+        }
       }
     }
+
+    if (!frame) {
+      return null;
+    }
+
+    context.quadlets += frame.text.length / 4;
+    context.frames += 1;
+
+    if (isContextComplete(context, this.#version)) {
+      this.#popContext();
+    }
+
+    return frame;
   }
 
-  *parse(source: Uint8Array | string): IterableIterator<Frame> {
+  *parse(source: Uint8Array | string): IterableIterator<Frame | Message> {
     this.#update(source);
 
     while (this.#buffer.length > 0) {
@@ -236,7 +264,7 @@ class Parser {
   }
 
   get finished() {
-    return this.#buffer.length === 0;
+    return this.#buffer.length === 0 && !this.#context;
   }
 }
 
@@ -246,7 +274,7 @@ class Parser {
  * @param input Incoming stream of bytes
  * @returns An iterable of CESR frames
  */
-export function* parseSync(input: Uint8Array | string, options: ParserOptions = {}): IterableIterator<Frame> {
+export function* parseSync(input: Uint8Array | string, options: ParserOptions = {}): IterableIterator<Frame | Message> {
   if (typeof input === "string") {
     input = new TextEncoder().encode(input);
   }
@@ -256,6 +284,10 @@ export function* parseSync(input: Uint8Array | string, options: ParserOptions = 
   for (const frame of parser.parse(input)) {
     yield frame;
   }
+
+  if (!parser.finished) {
+    throw new Error("Unexpected end of stream");
+  }
 }
 
 /**
@@ -264,7 +296,7 @@ export function* parseSync(input: Uint8Array | string, options: ParserOptions = 
  * @param input Incoming stream of bytes
  * @returns An async iterable of CESR frames
  */
-export async function* parse(input: ParserInput, options: ParserOptions): AsyncIterableIterator<Frame> {
+export async function* parse(input: ParserInput, options: ParserOptions): AsyncIterableIterator<Frame | Message> {
   const parser = new Parser(options);
 
   for await (const chunk of resolveInput(input)) {

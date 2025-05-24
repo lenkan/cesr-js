@@ -2,8 +2,16 @@ import test from "node:test";
 import assert from "node:assert/strict";
 import { CountCode_10, CountCode_20, IndexCode, IndexTable } from "./codes.ts";
 import { parseSync } from "./parser.ts";
-import { encodeCounterV1, encodeCounterV2, encodeGenus, encodeIndexedSignature, encodeIndexer } from "./encoding.ts";
+import {
+  encodeAttachmentsV1,
+  encodeCounterV1,
+  encodeCounterV2,
+  encodeGenus,
+  encodeIndexedSignature,
+  encodeIndexer,
+} from "./encoding.ts";
 import { randomBytes } from "node:crypto";
+import { versify } from "./version.ts";
 
 test("Should indexed signatures", async () => {
   const attachment = [
@@ -58,4 +66,65 @@ test("Should switch from version 2 to version 1", async () => {
   assert.partialDeepStrictEqual(result[2], { code: CountCode_10.KERIACDCGenusVersion });
   assert.partialDeepStrictEqual(result[3], { code: CountCode_10.ControllerIdxSigs });
   assert.partialDeepStrictEqual(result[4], { code: IndexCode.Ed25519_Sig });
+});
+
+test("Should parse attachment group v1", async () => {
+  const attachment = [
+    encodeAttachmentsV1(1 + 23 * 2),
+    encodeCounterV1({ code: CountCode_10.ControllerIdxSigs, count: 2 }),
+    encodeIndexer({ code: IndexCode.Ed25519_Big_Sig, raw: randomBytes(64), index: 0, ondex: 0 }),
+    encodeIndexer({ code: IndexCode.Ed25519_Big_Sig, raw: randomBytes(64), index: 1, ondex: 0 }),
+  ].join("");
+
+  const result = Array.from(parseSync(attachment, { version: 1 }));
+  assert.equal(result.length, 4);
+});
+
+test("Should throw if group v1 is incomplete", async () => {
+  const attachment = [
+    encodeCounterV1({ code: CountCode_10.ControllerIdxSigs, count: 3 }),
+    encodeIndexer({ code: IndexCode.Ed25519_Big_Sig, raw: randomBytes(64), index: 0, ondex: 0 }),
+    encodeIndexer({ code: IndexCode.Ed25519_Big_Sig, raw: randomBytes(64), index: 1, ondex: 0 }),
+  ].join("");
+
+  assert.throws(() => Array.from(parseSync(attachment, { version: 1 })), new Error("Unexpected end of stream"));
+});
+
+test("Should throw if group v2 is incomplete", async () => {
+  const attachment = [
+    encodeCounterV2({ code: CountCode_20.ControllerIdxSigs, count: (88 * 3) / 4 }),
+    encodeIndexer({ code: IndexCode.Ed25519_Sig, raw: randomBytes(64), index: 0, ondex: 0 }),
+    encodeIndexer({ code: IndexCode.Ed25519_Sig, raw: randomBytes(64), index: 1, ondex: 0 }),
+  ].join("");
+
+  assert.throws(() => Array.from(parseSync(attachment, { version: 2 })), new Error("Unexpected end of stream"));
+});
+
+test("Should parse JSON after attachment group v1", async () => {
+  const attachment = [
+    encodeAttachmentsV1(1 + 23 * 2),
+    encodeCounterV1({ code: CountCode_10.ControllerIdxSigs, count: 2 }),
+    encodeIndexer({ code: IndexCode.Ed25519_Big_Sig, raw: randomBytes(64), index: 0, ondex: 0 }),
+    encodeIndexer({ code: IndexCode.Ed25519_Big_Sig, raw: randomBytes(64), index: 1, ondex: 0 }),
+    JSON.stringify(versify({ message: "foo" })),
+  ].join("");
+
+  const result = Array.from(parseSync(attachment, { version: 1 }));
+  assert.equal(result.length, 5);
+});
+
+test("Should parse multiple attachment groups", async () => {
+  const attachment = [
+    encodeAttachmentsV1(1 + 23 * 2),
+    encodeCounterV1({ code: CountCode_10.ControllerIdxSigs, count: 2 }),
+    encodeIndexer({ code: IndexCode.Ed25519_Big_Sig, raw: randomBytes(64), index: 0, ondex: 0 }),
+    encodeIndexer({ code: IndexCode.Ed25519_Big_Sig, raw: randomBytes(64), index: 1, ondex: 0 }),
+    encodeAttachmentsV1(1 + 23 * 2),
+    encodeCounterV1({ code: CountCode_10.ControllerIdxSigs, count: 2 }),
+    encodeIndexer({ code: IndexCode.Ed25519_Big_Sig, raw: randomBytes(64), index: 0, ondex: 0 }),
+    encodeIndexer({ code: IndexCode.Ed25519_Big_Sig, raw: randomBytes(64), index: 1, ondex: 0 }),
+  ].join("");
+
+  const result = Array.from(parseSync(attachment, { version: 1 }));
+  assert.equal(result.length, 8);
 });
