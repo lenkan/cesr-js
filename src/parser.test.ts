@@ -1,18 +1,16 @@
 import test from "node:test";
 import assert from "node:assert/strict";
+import { randomBytes } from "node:crypto";
 import { CountCode_10, CountCode_20, IndexCode, IndexTable } from "./codes.ts";
 import { parseSync } from "./parser.ts";
-import { Encoder } from "./encoding.ts";
-import { randomBytes } from "node:crypto";
-
-const encoder = new Encoder();
+import * as encoding from "./encoding.ts";
 
 test("Should indexed signatures", async () => {
   const attachment = [
-    encoder.encodeCounterV1({ code: CountCode_10.ControllerIdxSigs, count: 3 }),
-    encoder.encodeIndexer({ code: IndexCode.Ed25519_Big_Sig, raw: randomBytes(64), index: 0, ondex: 0 }),
-    encoder.encodeIndexer({ code: IndexCode.Ed25519_Big_Sig, raw: randomBytes(64), index: 1, ondex: 0 }),
-    encoder.encodeIndexedSignature("ed25519", randomBytes(64), 0),
+    encoding.encodeCounterV1({ code: CountCode_10.ControllerIdxSigs, count: 3 }),
+    encoding.encodeIndexer({ code: IndexCode.Ed25519_Big_Sig, raw: randomBytes(64), index: 0, ondex: 0 }),
+    encoding.encodeIndexer({ code: IndexCode.Ed25519_Big_Sig, raw: randomBytes(64), index: 1, ondex: 0 }),
+    encoding.encodeIndexedSignature("ed25519", randomBytes(64), 0),
   ].join("");
 
   const result = Array.from(parseSync(attachment, { version: 1 }));
@@ -26,14 +24,14 @@ test("Should indexed signatures", async () => {
 
 test("Should switch from version 1 to version 2", async () => {
   const attachment = [
-    encoder.encodeCounterV1({ code: CountCode_10.ControllerIdxSigs, count: 1 }),
-    encoder.encodeIndexedSignature("ed25519", randomBytes(64), 0),
-    encoder.encodeGenus({ major: 2 }),
-    encoder.encodeCounterV2({
+    encoding.encodeCounterV1({ code: CountCode_10.ControllerIdxSigs, count: 1 }),
+    encoding.encodeIndexedSignature("ed25519", randomBytes(64), 0),
+    encoding.encodeGenus({ major: 2 }),
+    encoding.encodeCounterV2({
       code: CountCode_20.ControllerIdxSigs,
       count: IndexTable.sizes[IndexCode.Ed25519_Sig].fs / 4,
     }),
-    encoder.encodeIndexedSignature("ed25519", randomBytes(64), 0),
+    encoding.encodeIndexedSignature("ed25519", randomBytes(64), 0),
   ].join("");
 
   const result = Array.from(parseSync(attachment, { version: 1 }));
@@ -48,14 +46,14 @@ test("Should switch from version 1 to version 2", async () => {
 
 test("Should switch from version 2 to version 1", async () => {
   const attachment = [
-    encoder.encodeCounterV2({
+    encoding.encodeCounterV2({
       code: CountCode_20.ControllerIdxSigs,
       count: IndexTable.sizes[IndexCode.Ed25519_Sig].fs / 4,
     }),
-    encoder.encodeIndexedSignature("ed25519", randomBytes(64), 0),
-    encoder.encodeGenus({ major: 1, minor: 0 }),
-    encoder.encodeCounterV1({ code: CountCode_10.ControllerIdxSigs, count: 1 }),
-    encoder.encodeIndexedSignature("ed25519", randomBytes(64), 0),
+    encoding.encodeIndexedSignature("ed25519", randomBytes(64), 0),
+    encoding.encodeGenus({ major: 1, minor: 0 }),
+    encoding.encodeCounterV1({ code: CountCode_10.ControllerIdxSigs, count: 1 }),
+    encoding.encodeIndexedSignature("ed25519", randomBytes(64), 0),
   ].join("");
 
   const result = Array.from(parseSync(attachment, { version: 2 }));
@@ -70,10 +68,10 @@ test("Should switch from version 2 to version 1", async () => {
 
 test("Should parse attachment group v1", async () => {
   const attachment = [
-    encoder.encodeAttachmentsV1(1 + 23 * 2),
-    encoder.encodeCounterV1({ code: CountCode_10.ControllerIdxSigs, count: 2 }),
-    encoder.encodeIndexer({ code: IndexCode.Ed25519_Big_Sig, raw: randomBytes(64), index: 0, ondex: 0 }),
-    encoder.encodeIndexer({ code: IndexCode.Ed25519_Big_Sig, raw: randomBytes(64), index: 1, ondex: 0 }),
+    encoding.encodeAttachmentsV1(1 + 23 * 2),
+    encoding.encodeCounterV1({ code: CountCode_10.ControllerIdxSigs, count: 2 }),
+    encoding.encodeIndexer({ code: IndexCode.Ed25519_Big_Sig, raw: randomBytes(64), index: 0, ondex: 0 }),
+    encoding.encodeIndexer({ code: IndexCode.Ed25519_Big_Sig, raw: randomBytes(64), index: 1, ondex: 0 }),
   ].join("");
 
   const result = Array.from(parseSync(attachment, { version: 1 }));
@@ -82,9 +80,9 @@ test("Should parse attachment group v1", async () => {
 
 test("Should throw if group v1 is incomplete", async () => {
   const attachment = [
-    encoder.encodeCounterV1({ code: CountCode_10.ControllerIdxSigs, count: 3 }),
-    encoder.encodeIndexer({ code: IndexCode.Ed25519_Big_Sig, raw: randomBytes(64), index: 0, ondex: 0 }),
-    encoder.encodeIndexer({ code: IndexCode.Ed25519_Big_Sig, raw: randomBytes(64), index: 1, ondex: 0 }),
+    encoding.encodeCounterV1({ code: CountCode_10.ControllerIdxSigs, count: 3 }),
+    encoding.encodeIndexer({ code: IndexCode.Ed25519_Big_Sig, raw: randomBytes(64), index: 0, ondex: 0 }),
+    encoding.encodeIndexer({ code: IndexCode.Ed25519_Big_Sig, raw: randomBytes(64), index: 1, ondex: 0 }),
   ].join("");
 
   assert.throws(() => Array.from(parseSync(attachment, { version: 1 })), new Error("Unexpected end of stream"));
@@ -92,9 +90,9 @@ test("Should throw if group v1 is incomplete", async () => {
 
 test("Should throw if group v2 is incomplete", async () => {
   const attachment = [
-    encoder.encodeCounterV2({ code: CountCode_20.ControllerIdxSigs, count: (88 * 3) / 4 }),
-    encoder.encodeIndexer({ code: IndexCode.Ed25519_Sig, raw: randomBytes(64), index: 0, ondex: 0 }),
-    encoder.encodeIndexer({ code: IndexCode.Ed25519_Sig, raw: randomBytes(64), index: 1, ondex: 0 }),
+    encoding.encodeCounterV2({ code: CountCode_20.ControllerIdxSigs, count: (88 * 3) / 4 }),
+    encoding.encodeIndexer({ code: IndexCode.Ed25519_Sig, raw: randomBytes(64), index: 0, ondex: 0 }),
+    encoding.encodeIndexer({ code: IndexCode.Ed25519_Sig, raw: randomBytes(64), index: 1, ondex: 0 }),
   ].join("");
 
   assert.throws(() => Array.from(parseSync(attachment, { version: 2 })), new Error("Unexpected end of stream"));
@@ -102,11 +100,11 @@ test("Should throw if group v2 is incomplete", async () => {
 
 test("Should parse JSON after attachment group v1", async () => {
   const attachment = [
-    encoder.encodeAttachmentsV1(1 + 23 * 2),
-    encoder.encodeCounterV1({ code: CountCode_10.ControllerIdxSigs, count: 2 }),
-    encoder.encodeIndexer({ code: IndexCode.Ed25519_Big_Sig, raw: randomBytes(64), index: 0, ondex: 0 }),
-    encoder.encodeIndexer({ code: IndexCode.Ed25519_Big_Sig, raw: randomBytes(64), index: 1, ondex: 0 }),
-    encoder.encodeMessage({ payload: { message: "foo" }, protocol: "KERI", major: 1 }),
+    encoding.encodeAttachmentsV1(1 + 23 * 2),
+    encoding.encodeCounterV1({ code: CountCode_10.ControllerIdxSigs, count: 2 }),
+    encoding.encodeIndexer({ code: IndexCode.Ed25519_Big_Sig, raw: randomBytes(64), index: 0, ondex: 0 }),
+    encoding.encodeIndexer({ code: IndexCode.Ed25519_Big_Sig, raw: randomBytes(64), index: 1, ondex: 0 }),
+    encoding.encodeMessage({ payload: { message: "foo" }, protocol: "KERI", major: 1 }),
   ].join("");
 
   const result = Array.from(parseSync(attachment, { version: 1 }));
@@ -115,14 +113,14 @@ test("Should parse JSON after attachment group v1", async () => {
 
 test("Should parse multiple attachment groups", async () => {
   const attachment = [
-    encoder.encodeAttachmentsV1(1 + 23 * 2),
-    encoder.encodeCounterV1({ code: CountCode_10.ControllerIdxSigs, count: 2 }),
-    encoder.encodeIndexer({ code: IndexCode.Ed25519_Big_Sig, raw: randomBytes(64), index: 0, ondex: 0 }),
-    encoder.encodeIndexer({ code: IndexCode.Ed25519_Big_Sig, raw: randomBytes(64), index: 1, ondex: 0 }),
-    encoder.encodeAttachmentsV1(1 + 23 * 2),
-    encoder.encodeCounterV1({ code: CountCode_10.ControllerIdxSigs, count: 2 }),
-    encoder.encodeIndexer({ code: IndexCode.Ed25519_Big_Sig, raw: randomBytes(64), index: 0, ondex: 0 }),
-    encoder.encodeIndexer({ code: IndexCode.Ed25519_Big_Sig, raw: randomBytes(64), index: 1, ondex: 0 }),
+    encoding.encodeAttachmentsV1(1 + 23 * 2),
+    encoding.encodeCounterV1({ code: CountCode_10.ControllerIdxSigs, count: 2 }),
+    encoding.encodeIndexer({ code: IndexCode.Ed25519_Big_Sig, raw: randomBytes(64), index: 0, ondex: 0 }),
+    encoding.encodeIndexer({ code: IndexCode.Ed25519_Big_Sig, raw: randomBytes(64), index: 1, ondex: 0 }),
+    encoding.encodeAttachmentsV1(1 + 23 * 2),
+    encoding.encodeCounterV1({ code: CountCode_10.ControllerIdxSigs, count: 2 }),
+    encoding.encodeIndexer({ code: IndexCode.Ed25519_Big_Sig, raw: randomBytes(64), index: 0, ondex: 0 }),
+    encoding.encodeIndexer({ code: IndexCode.Ed25519_Big_Sig, raw: randomBytes(64), index: 1, ondex: 0 }),
   ].join("");
 
   const result = Array.from(parseSync(attachment, { version: 1 }));

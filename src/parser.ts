@@ -1,7 +1,7 @@
 import { CountCode_10, CountCode_20, CountTable_10, CountTable_20, IndexTable, MatterTable } from "./codes.ts";
 import type { CodeTable, Counter, FrameData, MessageVersion } from "./encoding.ts";
-import { Decoder } from "./encoding.ts";
 import { decodeUtf8, encodeUtf8 } from "./encoding-utf8.ts";
+import encoding from "./encoding.ts";
 
 export type Frame =
   | {
@@ -103,12 +103,10 @@ class Parser {
   #buffer: Uint8Array;
   #stack: GroupContext[] = [];
   #version: number;
-  #decoder: Decoder;
 
   constructor(options: ParserOptions = {}) {
     this.#buffer = new Uint8Array(0);
     this.#version = options.version ?? 1;
-    this.#decoder = new Decoder();
   }
 
   get #context(): GroupContext | null {
@@ -126,7 +124,7 @@ class Parser {
   }
 
   #readFrame(table: CodeTable): Required<FrameData> | null {
-    const result = this.#decoder.decodeStream(this.#buffer, table);
+    const result = encoding.decodeStream(this.#buffer, table);
     this.#buffer = this.#buffer.slice(result.n);
     return result.frame;
   }
@@ -182,7 +180,7 @@ class Parser {
     }
 
     if (counter.code === CountCode_10.KERIACDCGenusVersion) {
-      const genus = this.#decoder.decodeGenus(counter.text);
+      const genus = encoding.decodeGenus(counter.text);
       this.#version = genus.major;
     } else {
       this.#stack.push({ counter, quadlets: 0, frames: 0 });
@@ -226,7 +224,7 @@ class Parser {
       return null;
     }
 
-    const version = this.#decoder.decodeVersionString(this.#buffer.slice(0, 24));
+    const version = encoding.decodeVersionString(this.#buffer.slice(0, 24));
     if (this.#buffer.length < version.size) {
       return null;
     }
