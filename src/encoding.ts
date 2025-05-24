@@ -457,7 +457,7 @@ export function decodeVersionString(data: string | Uint8Array): Required<Message
   throw new Error(`Invalid version string ${value}`);
 }
 
-export default {
+export const encoding = {
   encode,
   encodeIndexedSignature,
   encodeMatter,

@@ -1,6 +1,6 @@
 import test, { describe } from "node:test";
 import vectors from "../fixtures/cesr_test_vectors.json" with { type: "json" };
-import * as encoding from "./encoding.ts";
+import { encoding } from "./encoding.ts";
 import assert from "node:assert/strict";
 import { encodeUtf8 } from "./encoding-utf8.ts";
 

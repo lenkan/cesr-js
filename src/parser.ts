@@ -1,7 +1,7 @@
 import { CountCode_10, CountCode_20, CountTable_10, CountTable_20, IndexTable, MatterTable } from "./codes.ts";
 import type { CodeTable, Counter, FrameData, MessageVersion } from "./encoding.ts";
 import { decodeUtf8, encodeUtf8 } from "./encoding-utf8.ts";
-import encoding from "./encoding.ts";
+import { encoding } from "./encoding.ts";
 
 export type Frame =
   | {

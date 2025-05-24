@@ -4,7 +4,7 @@ import { describe, test } from "node:test";
 import { parseMessages } from "./message.ts";
 import { readFile } from "node:fs/promises";
 import { CountCode_10, CountCode_20 } from "./codes.ts";
-import encoding from "./encoding.ts";
+import { encoding } from "./encoding.ts";
 
 async function* chunk(filename: string, size = 100): AsyncIterable<Uint8Array> {
   let index = 0;
