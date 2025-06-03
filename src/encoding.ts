@@ -37,10 +37,12 @@ export interface Indexer extends IndexerInit {
 
 export interface MatterInit {
   code: string;
+  soft?: string;
   raw: Uint8Array;
 }
 
 export interface Matter extends MatterInit {
+  code: string;
   text: string;
 }
 
@@ -245,7 +247,7 @@ export function encode(frame: FrameData, size: CodeSize): string {
     throw new Error(`Frame code ${frame.code} length ${frame.code.length} does not match expected size ${size.hs}`);
   }
 
-  const ls = size.ls ?? 0;
+  const ls = 0; // size.ls ?? 0;
   const ms = (size.ss ?? 0) - (size.os ?? 0);
   const os = size.os ?? 0;
 
@@ -285,6 +287,22 @@ export function encodeMatter(raw: MatterInit): string {
   return encode(raw, size);
 }
 
+export function encodeMap(data: DataObject): string {
+  const frames: string[] = [];
+
+  for (const [key, value] of Object.entries(data)) {
+    frames.push(encodeTag(key));
+    if (typeof value === "number") {
+      frames.push(encodeDecimal(value));
+    }
+  }
+
+  const result = frames.join("");
+  const header = encodeCounter({ code: CountCode_20.GenericMapGroup, count: Math.floor(result.length / 4) });
+
+  return `${header}${frames.join("")}`;
+}
+
 export function encodeDate(date: Date): string {
   if (date.toString() === "Invalid Date") {
     throw new Error("Invalid date");
@@ -301,6 +319,17 @@ export function encodeDate(date: Date): string {
 
   const raw = decodeBase64Url(`${YYYY}-${MM}-${dd}T${hh}c${mm}c${ss}d${ms}000p00c00`);
   return encodeMatter({ code: MatterCode.DateTime, raw });
+}
+
+export function encodeTag(tag: string): string {
+  switch (tag.length) {
+    case 1:
+      return `${MatterCode.Tag1}${tag.padStart(2, "_")}`;
+    case 2:
+      return `${MatterCode.Tag2}${tag}`;
+    default:
+      throw new Error(`Could not determine tag size`);
+  }
 }
 
 export function encodeString(txt: string): string {
@@ -320,6 +349,27 @@ export function encodeString(txt: string): string {
   }
 }
 
+export function encodeInt(value: number): string {
+  return `${MatterCode.Short}${encodeBase64Int(value, 4)}`;
+}
+
+export function encodeDecimal(value: number): string {
+  const result = value.toString().replace(".", "p");
+
+  const leadSize = (result.length + 1) % 3;
+
+  switch (leadSize) {
+    case 0:
+      return encodeMatter({ code: MatterCode.Decimal_L0, raw: decodeBase64Url(result) });
+    case 1:
+      return encodeMatter({ code: MatterCode.Decimal_L1, raw: decodeBase64Url(result) });
+    case 2:
+      return encodeMatter({ code: MatterCode.Decimal_L2, raw: decodeBase64Url(result) });
+    default:
+      throw new Error(`Could not determine lead size for decimal ${value}`);
+  }
+}
+
 export function encodeSignature(alg: MatterSignature, raw: Uint8Array): string {
   switch (alg) {
     case "ed25519":
@@ -330,6 +380,7 @@ export function encodeSignature(alg: MatterSignature, raw: Uint8Array): string {
       throw new Error(`Unsupported signature algorithm: ${alg}`);
   }
 }
+
 export function encodeDigest(alg: MatterDigest, raw: Uint8Array): string {
   switch (alg) {
     case "blake3_256":
@@ -551,6 +602,7 @@ export function decodeVersionString(input: string | Uint8Array): Required<Messag
 export const encoding = {
   encode,
   encodeIndexedSignature,
+  encodeMap,
   encodeMatter,
   encodeDate,
   encodeString,

@@ -13,7 +13,32 @@ describe("encode", () => {
   });
 });
 
-describe("Encode message", () => {
+describe("Encode CESR Native message", () => {
+  // mad = dict(a=1, b=True, c="hello", d=15.34, e=False, f=None)
+  // qb64 = '-IAQ0J_a6HABAAA10J_b1AAM0J_c0L_hello0J_d6HACAAA15p340J_e1AAL0J_f1AAK'
+  test("should encode an empty message", () => {
+    const result = encoding.encodeMap({});
+    assert.strictEqual(result, "-IAA");
+  });
+
+  test("should encode single decimal field", () => {
+    const result = encoding.encodeMap({
+      a: 1,
+    });
+
+    assert.strictEqual(result, "-IAD0J_a6HABAAA1");
+  });
+
+  test.only("should encode single decimal field with decimal", () => {
+    const result = encoding.encodeMap({
+      a: 1.1,
+    });
+
+    assert.strictEqual(result, "-IAD0J_a5HABA1p1");
+  });
+});
+
+describe("Encode JSON message", () => {
   test("Should encode legacy version string", () => {
     const result = encoding.encodeVersionString({ protocol: "ACDC", legacy: true });
     assert.strictEqual(result, "ACDC10JSON000000_");
