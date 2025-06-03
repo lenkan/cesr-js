@@ -2,7 +2,7 @@ import { encodeBase64Int, encodeBase64Url } from "./encoding-base64.ts";
 import { decodeBase64Int, decodeBase64Url } from "./encoding-base64.ts";
 import { IndexCode, IndexTable } from "./codes.ts";
 import { MatterCode, MatterTable } from "./codes.ts";
-import { CountCode_10, CountCode_20, CountTable_10, CountTable_20 } from "./codes.ts";
+import { CountCode_10, CountCode_20 } from "./codes.ts";
 import type { DataObject } from "./data-type.ts";
 import { decodeUtf8, encodeUtf8 } from "./encoding-utf8.ts";
 
@@ -84,9 +84,9 @@ export interface CodeSize {
   xs?: number;
 }
 
-export interface CodeTable {
-  sizes: Record<string, CodeSize>;
-  hards: Record<string, number>;
+export interface ParsingContext {
+  code: string;
+  version?: number;
 }
 
 /**
@@ -106,11 +106,33 @@ export interface DecodeStreamResult {
   n: number;
 }
 
+interface EncodingScheme {
+  selector: string;
+  type?: string;
+  size: number;
+}
+
 // VERSION = "PPPPVVVKKKKBBBB.";
 // LEGACY_VERSION = "PPPPvvKKKKllllll_";
 const REGEX_VERSION_STRING_PROTOCOL = /^[A-Z]{4}$/;
 const REGEX_VERSION_STRING_KIND = /^[A-Z]{4}$/;
 const REGEX_VERSION_JSON = /^\{"v":"(.*?)".*$/;
+const ALPHABET = "ABCDEFGHIJKLMNOPQRSTUVWXYZabcdefghijklmnopqrstuvwxyz";
+
+const INDEXER_ENCODING_SCHEME: EncodingScheme[] = [
+  { selector: ALPHABET, size: 1 },
+  { selector: "01234", size: 2 },
+];
+
+// TODO: Create a lookup table for encoding schemes to avoid looping through
+const ENCODING_SCHEME: EncodingScheme[] = [
+  { selector: ALPHABET, size: 1 },
+  { selector: "0456", size: 2 },
+  { selector: "123789", size: 4 },
+  { selector: "-", type: ALPHABET, size: 2 },
+  { selector: "-", type: "-", size: 3 },
+  { selector: "-", type: "_", size: 5 },
+];
 
 function padNumber(num: number, length: number) {
   return num.toString().padStart(length, "0");
@@ -134,22 +156,93 @@ function encodeHexInt(value: number, length: number) {
   return value.toString(16).padStart(length, "0");
 }
 
-function findHardSize(input: Uint8Array, table: CodeTable): number {
-  const start = input[0] === 45 ? decodeUtf8(input.slice(0, 2)) : decodeUtf8(input.slice(0, 1));
-  const hs = table.hards[start];
-
-  if (hs === undefined) {
-    throw new Error(`Invalid first character in input (${start})`);
+function isIndexer(context?: ParsingContext): boolean {
+  if (!context || !context.code.startsWith("-")) {
+    return false;
   }
 
-  return hs;
+  if (context.version === 1) {
+    switch (context.code) {
+      case CountCode_10.ControllerIdxSigs:
+      case CountCode_10.TransIdxSigGroups:
+      case CountCode_10.TransLastIdxSigGroups:
+      case CountCode_10.WitnessIdxSigs:
+        return true;
+      default:
+        return false;
+    }
+  }
+
+  switch (context.code) {
+    case CountCode_20.WitnessIdxSigs:
+    case CountCode_20.BigWitnessIdxSigs:
+    case CountCode_20.TransIdxSigGroups:
+    case CountCode_20.BigTransIdxSigGroups:
+    case CountCode_20.TransLastIdxSigGroups:
+    case CountCode_20.BigTransLastIdxSigGroups:
+    case CountCode_20.BigControllerIdxSigs:
+    case CountCode_20.ControllerIdxSigs:
+      return true;
+    default:
+      return false;
+  }
 }
 
-export function encode(frame: FrameData, table: CodeTable): string {
-  const size = table.sizes[frame.code];
+function findHardSize(input: Uint8Array, context?: ParsingContext): number {
+  const selector = decodeUtf8(input.slice(0, 1));
+  const type = decodeUtf8(input.slice(1, 2));
+
+  if (isIndexer(context)) {
+    for (const scheme of INDEXER_ENCODING_SCHEME) {
+      if (scheme.selector.includes(selector)) {
+        return scheme.size;
+      }
+    }
+
+    throw new Error(`Invalid first character in input ${selector}`);
+  }
+
+  for (const scheme of ENCODING_SCHEME) {
+    if (scheme.selector.includes(selector)) {
+      if (!scheme.type || scheme.type.includes(type)) {
+        return scheme.size;
+      }
+    }
+  }
+
+  throw new Error(`Invalid first character in input ${selector}`);
+}
+
+function findCodeSize(hard: string, context?: ParsingContext): CodeSize {
+  let size: CodeSize | null = null;
+
+  if (isIndexer(context)) {
+    size = IndexTable[hard];
+  } else if (hard.startsWith("-")) {
+    // Counter, no need to lookup since they are all determined by selector
+    const selector = hard.charAt(1);
+
+    if (ALPHABET.includes(selector)) {
+      size = { hs: 2, ss: 2, fs: 4 };
+    } else if (selector === "-") {
+      size = { hs: 3, ss: 5, fs: 8 };
+    } else if (selector === "_") {
+      size = { hs: 5, ss: 3, fs: 8 };
+    }
+  } else {
+    size = MatterTable[hard];
+  }
 
   if (!size) {
-    throw new Error(`Unable to find code table for ${frame.code}`);
+    throw new Error(`Unknown code ${hard}`);
+  }
+
+  return size;
+}
+
+export function encode(frame: FrameData, size: CodeSize): string {
+  if (frame.code.length !== size.hs) {
+    throw new Error(`Frame code ${frame.code} length ${frame.code.length} does not match expected size ${size.hs}`);
   }
 
   const ls = size.ls ?? 0;
@@ -183,7 +276,13 @@ export function encodeIndexedSignature(alg: MatterSignature, raw: Uint8Array, in
 }
 
 export function encodeMatter(raw: MatterInit): string {
-  return encode(raw, MatterTable);
+  const size = MatterTable[raw.code];
+
+  if (!size) {
+    throw new Error(`Unknown matter code ${raw.code}`);
+  }
+
+  return encode(raw, size);
 }
 
 export function encodeDate(date: Date): string {
@@ -221,22 +320,22 @@ export function encodeString(txt: string): string {
   }
 }
 
-export function encodeSignature(alg: MatterSignature, data: Uint8Array): string {
+export function encodeSignature(alg: MatterSignature, raw: Uint8Array): string {
   switch (alg) {
     case "ed25519":
-      return encodeMatter({ code: MatterCode.Ed25519_Sig, raw: data });
+      return encodeMatter({ code: MatterCode.Ed25519_Sig, raw });
     case "secp256k1":
-      return encodeMatter({ code: MatterCode.ECDSA_256k1_Sig, raw: data });
+      return encodeMatter({ code: MatterCode.ECDSA_256k1_Sig, raw });
     default:
       throw new Error(`Unsupported signature algorithm: ${alg}`);
   }
 }
-export function encodeDigest(alg: MatterDigest, data: Uint8Array): string {
+export function encodeDigest(alg: MatterDigest, raw: Uint8Array): string {
   switch (alg) {
     case "blake3_256":
-      return encodeMatter({ code: MatterCode.Blake3_256, raw: data });
+      return encodeMatter({ code: MatterCode.Blake3_256, raw });
     case "blake3_512":
-      return encodeMatter({ code: MatterCode.Blake3_512, raw: data });
+      return encodeMatter({ code: MatterCode.Blake3_512, raw });
     default:
       throw new Error(`Unsupported digest algorithm: ${alg}`);
   }
@@ -256,32 +355,34 @@ export function encodeGenus(genus: GenusInit): string {
   return qb64;
 }
 
-export function encodeCounterV1(raw: CounterInit): string {
-  return encode(raw, CountTable_10);
-}
-
-export function encodeCounterV2(raw: CounterInit): string {
-  return encode(raw, CountTable_20);
+export function encodeCounter(raw: CounterInit): string {
+  return encode(raw, findCodeSize(raw.code));
 }
 
 export function encodeAttachmentsV1(count: number) {
   if (count > 64 ** 2) {
-    return encodeCounterV1({ code: CountCode_10.BigAttachmentGroup, count });
+    return encodeCounter({ code: CountCode_10.BigAttachmentGroup, count });
   }
 
-  return encodeCounterV1({ code: CountCode_10.AttachmentGroup, count });
+  return encodeCounter({ code: CountCode_10.AttachmentGroup, count });
 }
 
 export function encodeAttachmentsV2(count: number) {
   if (count > 64 ** 2) {
-    return encodeCounterV2({ code: CountCode_20.BigAttachmentGroup, count });
+    return encodeCounter({ code: CountCode_20.BigAttachmentGroup, count });
   }
 
-  return encodeCounterV2({ code: CountCode_20.AttachmentGroup, count });
+  return encodeCounter({ code: CountCode_20.AttachmentGroup, count });
 }
 
 export function encodeIndexer(frame: IndexerInit): string {
-  return encode(frame, IndexTable);
+  const size = IndexTable[frame.code];
+
+  if (!size) {
+    throw new Error(`Unknown indexer code ${frame.code}`);
+  }
+
+  return encode(frame, size);
 }
 
 export function encodeVersionString(init: MessageVersionInit) {
@@ -327,8 +428,8 @@ export function encodeMessage<T extends DataObject>(body: T, init: MessageVersio
   });
 }
 
-export function decode(input: Uint8Array | string, table: CodeTable): Required<FrameData> {
-  const result = decodeStream(input, table);
+export function decode(input: string | Uint8Array, context?: ParsingContext): Required<FrameData> {
+  const result = decodeStream(input, context);
 
   if (result.frame === null) {
     throw new Error("Not enough data in input");
@@ -337,23 +438,23 @@ export function decode(input: Uint8Array | string, table: CodeTable): Required<F
   return result.frame;
 }
 
-export function decodeStream(input: Uint8Array | string, table: CodeTable): DecodeStreamResult {
+export function decodeStream(input: string | Uint8Array, context?: ParsingContext): DecodeStreamResult {
   if (typeof input === "string") {
     input = encodeUtf8(input);
   }
 
-  if (input.length < 0) {
+  if (input.length < 1) {
     return { frame: null, n: 0 };
   }
 
-  const hs = findHardSize(input, table);
+  const hs = findHardSize(input, context);
 
   if (input.length < hs) {
     return { frame: null, n: 0 };
   }
 
   const hard = decodeUtf8(input.slice(0, hs));
-  const size = table.sizes[hard];
+  const size = findCodeSize(hard, context);
 
   if (!size) {
     throw new Error(`Unknown code ${hard}`);
@@ -364,19 +465,17 @@ export function decodeStream(input: Uint8Array | string, table: CodeTable): Deco
     return { frame: null, n: 0 };
   }
 
-  const soft = decodeBase64Int(decodeUtf8(input.slice(size.hs, cs)));
-  const fs = size.fs > 0 ? size.fs : cs + soft * 4;
-
-  if (input.length < fs) {
-    return { frame: null, n: 0 };
-  }
-
   const ls = size.ls ?? 0;
   const ps = (size.hs + size.ss) % 4;
   const ms = size.ss - (size.os ?? 0);
   const os = size.os ?? 0;
-  const soft0 = decodeBase64Int(decodeUtf8(input.slice(size.hs, size.hs + ms)));
+  const soft0 = decodeBase64Int(decodeUtf8(input.slice(size.hs, cs)));
   const soft1 = decodeBase64Int(decodeUtf8(input.slice(size.hs + ms, size.hs + ms + os)));
+  const fs = size.fs > 0 ? size.fs : cs + soft0 * 4;
+
+  if (input.length < fs) {
+    return { frame: null, n: 0 };
+  }
 
   const padding = "A".repeat(ps);
   const text = decodeUtf8(input.slice(0, fs));
@@ -386,36 +485,28 @@ export function decodeStream(input: Uint8Array | string, table: CodeTable): Deco
   return { frame: { code: hard, count: soft0, index: soft0, ondex: soft1, raw, text }, n: fs };
 }
 
-export function decodeIndexer(input: Uint8Array | string): Indexer {
-  return decode(input, IndexTable);
-}
-
 export function decodeGenus(input: string): Genus {
   const major = decodeBase64Int(input.slice(5, 6));
   const minor = decodeBase64Int(input.slice(6, 8));
   return { major, minor };
 }
 
-export function decodeMatter(input: Uint8Array | string): Matter {
-  return decode(input, MatterTable);
+export function decodeMatter(input: string | Uint8Array): Matter {
+  return decode(input);
 }
 
-export function decodeCounterV1(qb64: string | Uint8Array): Counter {
-  return decode(qb64, CountTable_10);
+export function decodeCounter(input: string | Uint8Array): Counter {
+  return decode(input);
 }
 
-export function decodeCounterV2(qb64: string | Uint8Array): Counter {
-  return decode(qb64, CountTable_20);
-}
-
-export function decodeVersionString(data: string | Uint8Array): Required<MessageVersionInit> {
-  if (typeof data !== "string") {
-    data = decodeUtf8(data.slice(0, 24));
+export function decodeVersionString(input: string | Uint8Array): Required<MessageVersionInit> {
+  if (typeof input !== "string") {
+    input = decodeUtf8(input.slice(0, 24));
   }
 
-  const match = data.match(REGEX_VERSION_JSON);
+  const match = input.match(REGEX_VERSION_JSON);
   if (!match) {
-    throw new Error(`Unable to extract "v" field from ${data}`);
+    throw new Error(`Unable to extract "v" field from ${input}`);
   }
 
   const value = match[1];
@@ -466,8 +557,7 @@ export const encoding = {
   encodeSignature,
   encodeDigest,
   encodeGenus,
-  encodeCounterV1,
-  encodeCounterV2,
+  encodeCounter,
   encodeAttachmentsV1,
   encodeAttachmentsV2,
   encodeIndexer,
@@ -475,10 +565,8 @@ export const encoding = {
   encodeMessage,
   decode,
   decodeStream,
-  decodeIndexer,
   decodeGenus,
   decodeMatter,
-  decodeCounterV1,
-  decodeCounterV2,
+  decodeCounter,
   decodeVersionString,
 };

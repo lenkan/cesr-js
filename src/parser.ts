@@ -1,28 +1,17 @@
-import { CountCode_10, CountCode_20, CountTable_10, CountTable_20, IndexTable, MatterTable } from "./codes.ts";
-import type { CodeTable, Counter, FrameData, MessageVersion } from "./encoding.ts";
+import { CountCode_10 } from "./codes.ts";
+import type { MessageVersion, ParsingContext } from "./encoding.ts";
 import { decodeUtf8, encodeUtf8 } from "./encoding-utf8.ts";
 import { encoding } from "./encoding.ts";
 
 export type Frame =
   | {
-      type: "matter";
+      type: "cesr";
       code: string;
       text: string;
+      count?: number;
+      index?: number;
+      ondex?: number;
       raw: Uint8Array;
-    }
-  | {
-      type: "counter";
-      code: string;
-      count: number;
-      text: string;
-    }
-  | {
-      type: "indexer";
-      code: string;
-      index: number;
-      ondex: number;
-      raw: Uint8Array;
-      text: string;
     }
   | {
       type: "message";
@@ -45,8 +34,16 @@ function concat(a: Uint8Array, b: Uint8Array) {
   return merged;
 }
 
-interface GroupContext {
-  counter: Counter;
+interface GroupContext extends ParsingContext {
+  /**
+   * The version of the CESR encoding
+   */
+  version: number;
+
+  /**
+   * The expected count of the group
+   */
+  count: number;
 
   /**
    * How many bytes have been consumed in this group
@@ -59,40 +56,29 @@ interface GroupContext {
   frames: number;
 }
 
-function isContextComplete(context: GroupContext, version: number): boolean {
-  switch (version) {
-    case 1:
-      switch (context.counter.code) {
-        case CountCode_10.ControllerIdxSigs:
-        case CountCode_10.WitnessIdxSigs:
-          return context.frames === context.counter.count;
-        case CountCode_10.SealSourceCouples:
-        case CountCode_10.FirstSeenReplayCouples:
-        case CountCode_10.NonTransReceiptCouples:
-          return context.frames === context.counter.count * 2;
-        case CountCode_10.SealSourceTriples:
-          return context.frames === context.counter.count * 3;
-        case CountCode_10.TransReceiptQuadruples:
-          return context.frames === context.counter.count * 4;
-        case CountCode_10.AttachmentGroup:
-        case CountCode_10.BigAttachmentGroup:
-          return context.quadlets === context.counter.count;
-        case CountCode_10.KERIACDCGenusVersion:
-          return true;
-        default:
-          return false;
-      }
-    case 2: {
-      switch (context.counter.code) {
-        case CountCode_20.KERIACDCGenusVersion:
-          return true;
-        default:
-          return context.quadlets === context.counter.count;
-      }
+function isContextComplete(context: GroupContext): boolean {
+  if (context.version === 1) {
+    switch (context.code) {
+      case CountCode_10.ControllerIdxSigs:
+      case CountCode_10.WitnessIdxSigs:
+        return context.frames === context.count;
+      case CountCode_10.SealSourceCouples:
+      case CountCode_10.FirstSeenReplayCouples:
+      case CountCode_10.NonTransReceiptCouples:
+        return context.frames === context.count * 2;
+      case CountCode_10.SealSourceTriples:
+        return context.frames === context.count * 3;
+      case CountCode_10.TransReceiptQuadruples:
+        return context.frames === context.count * 4;
+      case CountCode_10.AttachmentGroup:
+      case CountCode_10.BigAttachmentGroup:
+        return context.quadlets === context.count;
+      default:
+        throw new Error(`Unknown code ${context.code}`);
     }
-    default:
-      throw new Error(`Unknown version: ${version}`);
   }
+
+  return context.quadlets === context.count;
 }
 
 export interface ParserOptions {
@@ -109,116 +95,6 @@ class Parser {
     this.#version = options.version ?? 1;
   }
 
-  get #context(): GroupContext | null {
-    return this.#stack[this.#stack.length - 1] ?? null;
-  }
-
-  #peekBytes(size: number): Uint8Array {
-    return this.#buffer.slice(0, size);
-  }
-
-  #readBytes(size: number): Uint8Array {
-    const result = this.#peekBytes(size);
-    this.#buffer = this.#buffer.slice(size);
-    return result;
-  }
-
-  #readFrame(table: CodeTable): Required<FrameData> | null {
-    const result = encoding.decodeStream(this.#buffer, table);
-    this.#buffer = this.#buffer.slice(result.n);
-    return result.frame;
-  }
-
-  #readIndexer(): Frame | null {
-    const frame = this.#readFrame(IndexTable);
-
-    if (!frame) {
-      return null;
-    }
-
-    return {
-      type: "indexer",
-      code: frame.code,
-      index: frame.index,
-      ondex: frame.ondex,
-      raw: frame.raw,
-      text: frame.text,
-    };
-  }
-
-  #readMatter(): Frame | null {
-    const frame = this.#readFrame(MatterTable);
-
-    if (!frame) {
-      return null;
-    }
-
-    return {
-      type: "matter",
-      code: frame.code,
-      text: frame.text,
-      raw: frame.raw,
-    };
-  }
-
-  #readCounter(): Frame | null {
-    let counter: Counter | null = null;
-
-    switch (this.#version) {
-      case 1:
-        counter = this.#readFrame(CountTable_10);
-        break;
-      case 2:
-        counter = this.#readFrame(CountTable_20);
-        break;
-      default:
-        throw new Error(`Unsupported protocol ${this.#version}`);
-    }
-
-    if (!counter) {
-      return null;
-    }
-
-    if (counter.code === CountCode_10.KERIACDCGenusVersion) {
-      const genus = encoding.decodeGenus(counter.text);
-      this.#version = genus.major;
-    } else {
-      this.#stack.push({ counter, quadlets: 0, frames: 0 });
-    }
-
-    return {
-      type: "counter",
-      code: counter.code,
-      count: counter.count,
-      text: counter.text,
-    };
-  }
-
-  #popContext(): void {
-    const context = this.#stack.pop();
-    if (!context) {
-      return;
-    }
-
-    const outer = this.#context;
-    if (!outer) {
-      return;
-    }
-
-    if (outer) {
-      outer.frames += context.frames;
-      outer.quadlets += context.quadlets;
-
-      // +1 for the group
-      outer.frames += 1;
-      outer.quadlets += context.counter.text.length / 4;
-
-      if (isContextComplete(outer, this.#version)) {
-        return this.#popContext();
-      }
-    }
-  }
-
   #readJSON(): Frame | null {
     if (this.#buffer.length < 25) {
       return null;
@@ -229,7 +105,8 @@ class Parser {
       return null;
     }
 
-    const frame = this.#readBytes(version.size);
+    const frame = this.#buffer.slice(0, version.size);
+    this.#buffer = this.#buffer.slice(version.size);
 
     return {
       type: "message",
@@ -238,83 +115,62 @@ class Parser {
     };
   }
 
-  #update(source: Uint8Array | string): void {
-    if (typeof source === "string") {
-      this.#update(encodeUtf8(source));
-    } else {
-      this.#buffer = concat(this.#buffer, source);
-    }
-  }
-
   #read(): Frame | null {
-    const start = this.#buffer[0];
-    const context = this.#context;
+    const start = this.#buffer[0] >> 5;
 
     switch (start) {
-      case 0b01111011:
+      case 0b011:
         return this.#readJSON();
-      case 0b00101101:
-        return this.#readCounter();
     }
 
-    if (!context) {
-      throw new Error(`Unsupported cold start byte: 0b${start.toString(2)}`);
-    }
+    const context = this.#stack[this.#stack.length - 1] ?? undefined;
+    const result = encoding.decodeStream(this.#buffer, context);
+    this.#buffer = this.#buffer.slice(result.n);
 
-    let frame: Frame | null = null;
-    switch (this.#version) {
-      case 1:
-        switch (context.counter.code) {
-          case CountCode_10.ControllerIdxSigs:
-          case CountCode_10.TransIdxSigGroups:
-          case CountCode_10.TransLastIdxSigGroups:
-          case CountCode_10.WitnessIdxSigs: {
-            frame = this.#readIndexer();
-            break;
-          }
-          default: {
-            frame = this.#readMatter();
-            break;
-          }
-        }
-        break;
-      case 2: {
-        switch (context.counter.code) {
-          case CountCode_20.WitnessIdxSigs:
-          case CountCode_20.BigWitnessIdxSigs:
-          case CountCode_20.TransIdxSigGroups:
-          case CountCode_20.BigTransIdxSigGroups:
-          case CountCode_20.TransLastIdxSigGroups:
-          case CountCode_20.BigTransLastIdxSigGroups:
-          case CountCode_20.BigControllerIdxSigs:
-          case CountCode_20.ControllerIdxSigs: {
-            frame = this.#readIndexer();
-            break;
-          }
-          default: {
-            frame = this.#readMatter();
-            break;
-          }
-        }
-      }
-    }
-
-    if (!frame) {
+    if (!result.frame) {
       return null;
     }
 
-    context.quadlets += frame.text.length / 4;
-    context.frames += 1;
-
-    if (isContextComplete(context, this.#version)) {
-      this.#popContext();
+    for (const ctx of this.#stack) {
+      ctx.quadlets += result.n / 4;
+      ctx.frames += 1;
     }
 
-    return frame;
+    while (this.#stack.length > 0) {
+      const ctx = this.#stack[this.#stack.length - 1];
+      if (isContextComplete(ctx)) {
+        this.#stack.pop();
+      } else {
+        break;
+      }
+    }
+
+    if (result.frame.code.startsWith("-")) {
+      if (result.frame.code === CountCode_10.KERIACDCGenusVersion) {
+        const genus = encoding.decodeGenus(result.frame.text);
+        this.#version = genus.major;
+      } else {
+        this.#stack.push({
+          code: result.frame.code,
+          version: this.#version,
+          count: result.frame.count ?? 0,
+          quadlets: 0,
+          frames: 0,
+        });
+      }
+    }
+
+    return {
+      type: "cesr",
+      code: result.frame.code,
+      text: result.frame.text,
+      count: result.frame.count,
+      raw: result.frame.raw,
+    };
   }
 
-  *parse(source: Uint8Array | string): IterableIterator<Frame> {
-    this.#update(source);
+  *parse(source: Uint8Array): IterableIterator<Frame> {
+    this.#buffer = concat(this.#buffer, source);
 
     while (this.#buffer.length > 0) {
       const frame = this.#read();
@@ -328,7 +184,7 @@ class Parser {
   }
 
   get finished() {
-    return this.#buffer.length === 0 && !this.#context;
+    return this.#buffer.length === 0 && this.#stack.length === 0;
   }
 }
 
