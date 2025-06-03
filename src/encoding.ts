@@ -106,12 +106,34 @@ export interface DecodeStreamResult {
   n: number;
 }
 
+interface EncodingScheme {
+  selector: string;
+  size: number;
+}
+
 // VERSION = "PPPPVVVKKKKBBBB.";
 // LEGACY_VERSION = "PPPPvvKKKKllllll_";
 const REGEX_VERSION_STRING_PROTOCOL = /^[A-Z]{4}$/;
 const REGEX_VERSION_STRING_KIND = /^[A-Z]{4}$/;
 const REGEX_VERSION_JSON = /^\{"v":"(.*?)".*$/;
-const ALPHA = new Set("ABCDEFGHIJKLMNOPQRSTUVWXYZabcdefghijklmnopqrstuvwxyz".split(""));
+const ALPHABET = "ABCDEFGHIJKLMNOPQRSTUVWXYZabcdefghijklmnopqrstuvwxyz";
+
+const INDEXER_ENCODING_SCHEME: EncodingScheme[] = [
+  { selector: ALPHABET, size: 1 },
+  { selector: "01234", size: 2 },
+];
+
+const COUNTER_ENCODING_SCHEME: EncodingScheme[] = [
+  { selector: ALPHABET, size: 2 },
+  { selector: "-", size: 3 },
+  { selector: "_", size: 5 },
+];
+
+const MATTER_ENCODING_SCHEME: EncodingScheme[] = [
+  { selector: ALPHABET, size: 1 },
+  { selector: "0456", size: 2 },
+  { selector: "123789", size: 4 },
+];
 
 function padNumber(num: number, length: number) {
   return num.toString().padStart(length, "0");
@@ -171,12 +193,10 @@ function findHardSize(input: Uint8Array, context?: ParsingContext): number {
   const selector = decodeUtf8(input.slice(0, 1));
 
   if (isIndexer(context)) {
-    if (ALPHA.has(selector)) {
-      return 1;
-    }
-
-    if ("01234".includes(selector)) {
-      return 2;
+    for (const scheme of INDEXER_ENCODING_SCHEME) {
+      if (scheme.selector.includes(selector)) {
+        return scheme.size;
+      }
     }
 
     throw new Error(`Invalid first character in input ${selector}`);
@@ -185,34 +205,22 @@ function findHardSize(input: Uint8Array, context?: ParsingContext): number {
   if (selector === "-") {
     const type = decodeUtf8(input.slice(1, 2));
 
-    if (ALPHA.has(type)) {
-      return 2;
-    }
-
-    if (type === "-") {
-      return 3;
-    }
-
-    if (type === "_") {
-      return 5;
+    for (const scheme of COUNTER_ENCODING_SCHEME) {
+      if (scheme.selector.includes(type)) {
+        return scheme.size;
+      }
     }
 
     throw new Error(`Invalid first character in input ${selector}${type}`);
   }
 
-  if (ALPHA.has(selector)) {
-    return 1;
+  for (const scheme of MATTER_ENCODING_SCHEME) {
+    if (scheme.selector.includes(selector)) {
+      return scheme.size;
+    }
   }
 
-  if ("0456".includes(selector)) {
-    return 2;
-  }
-
-  if ("123789".includes(selector)) {
-    return 4;
-  }
-
-  throw new Error("Invalid start");
+  throw new Error(`Invalid first character in input ${selector}`);
 }
 
 function findCodeSize(hard: string, context?: ParsingContext): CodeSize {
@@ -224,7 +232,7 @@ function findCodeSize(hard: string, context?: ParsingContext): CodeSize {
     // Counter, no need to lookup since they are all determined by selector
     const selector = hard.charAt(1);
 
-    if (ALPHA.has(selector)) {
+    if (ALPHABET.includes(selector)) {
       size = { hs: 2, ss: 2, fs: 4 };
     } else if (selector === "-") {
       size = { hs: 3, ss: 5, fs: 8 };
@@ -441,7 +449,7 @@ export function decodeStream(input: string | Uint8Array, context?: ParsingContex
     input = encodeUtf8(input);
   }
 
-  if (input.length < 0) {
+  if (input.length < 1) {
     return { frame: null, n: 0 };
   }
 
