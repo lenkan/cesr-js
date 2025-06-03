@@ -3,14 +3,12 @@ import vectors from "../fixtures/cesr_test_vectors.json" with { type: "json" };
 import { encoding } from "./encoding.ts";
 import assert from "node:assert/strict";
 import { encodeUtf8 } from "./encoding-utf8.ts";
+import { CountCode_20 } from "./codes.ts";
 
 describe("encode", () => {
   test("should throw if raw does not have enough bytes", () => {
     assert.throws(() => {
-      encoding.encode(
-        { code: "0A", raw: new Uint8Array(63) },
-        { hards: { "0A": 2 }, sizes: { "0A": { hs: 2, ss: 0, fs: 88 } } },
-      );
+      encoding.encode({ code: "0A", raw: new Uint8Array(63) }, { hs: 2, ss: 0, fs: 88 });
     }, new Error("Encoded size 86 does not match expected size 88"));
   });
 });
@@ -128,7 +126,7 @@ describe("Indexer", () => {
   describe("Text index vector", () => {
     for (const entry of vectors.filter((v) => v.type === "indexer")) {
       test(`decode qb64 ${entry.type} ${entry.name} - ${entry.qb64.substring(0, 10)}`, () => {
-        const frame = encoding.decodeIndexer(entry.qb64);
+        const frame = encoding.decode(entry.qb64, { code: CountCode_20.ControllerIdxSigs });
         const raw = Uint8Array.from(Buffer.from(entry.raw as string, "hex"));
 
         assert.equal(frame.code, entry.code);
@@ -193,7 +191,7 @@ describe("Counter v2", () => {
 describe("Counter v1 test vector", () => {
   for (const entry of vectors.filter((v) => v.type === "counter_10")) {
     test(`decode qb64 ${entry.type} ${entry.name} - ${entry.qb64.substring(0, 10)}`, () => {
-      const frame = encoding.decodeCounterV1(entry.qb64);
+      const frame = encoding.decodeCounter(entry.qb64);
 
       assert.deepEqual(frame.code, entry.code);
       assert.deepEqual(frame.count, entry.count);
@@ -201,7 +199,7 @@ describe("Counter v1 test vector", () => {
 
     test(`encode qb64 ${entry.type} ${entry.name} - ${entry.qb64.substring(0, 10)}`, () => {
       assert(entry.count !== undefined);
-      const frame = encoding.encodeCounterV1(entry);
+      const frame = encoding.encodeCounter(entry);
 
       assert.deepEqual(frame, entry.qb64);
     });
@@ -211,7 +209,7 @@ describe("Counter v1 test vector", () => {
 describe("Counter v1 test vector", () => {
   for (const entry of vectors.filter((v) => v.type === "counter_20")) {
     test(`decode qb64 ${entry.type} ${entry.name} - ${entry.qb64.substring(0, 10)}`, () => {
-      const frame = encoding.decodeCounterV2(entry.qb64);
+      const frame = encoding.decodeCounter(entry.qb64);
 
       assert.deepEqual(frame.code, entry.code);
       assert.deepEqual(frame.count, entry.count);
@@ -219,7 +217,7 @@ describe("Counter v1 test vector", () => {
 
     test(`encode qb64 ${entry.type} ${entry.name} - ${entry.qb64.substring(0, 10)}`, () => {
       assert(entry.count !== undefined);
-      const frame = encoding.encodeCounterV2(entry);
+      const frame = encoding.encodeCounter(entry);
 
       assert.deepEqual(frame, entry.qb64);
     });
