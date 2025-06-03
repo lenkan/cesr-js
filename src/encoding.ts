@@ -274,7 +274,13 @@ export function encodeIndexedSignature(alg: MatterSignature, raw: Uint8Array, in
 }
 
 export function encodeMatter(raw: MatterInit): string {
-  return encode(raw, findCodeSize(raw.code));
+  const size = MatterTable[raw.code];
+
+  if (!size) {
+    throw new Error(`Unknown matter code ${raw.code}`);
+  }
+
+  return encode(raw, size);
 }
 
 export function encodeDate(date: Date): string {

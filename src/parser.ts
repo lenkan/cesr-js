@@ -115,14 +115,6 @@ class Parser {
     };
   }
 
-  #update(source: Uint8Array | string): void {
-    if (typeof source === "string") {
-      this.#update(encodeUtf8(source));
-    } else {
-      this.#buffer = concat(this.#buffer, source);
-    }
-  }
-
   #read(): Frame | null {
     const start = this.#buffer[0] >> 5;
 
@@ -177,8 +169,8 @@ class Parser {
     };
   }
 
-  *parse(source: Uint8Array | string): IterableIterator<Frame> {
-    this.#update(source);
+  *parse(source: Uint8Array): IterableIterator<Frame> {
+    this.#buffer = concat(this.#buffer, source);
 
     while (this.#buffer.length > 0) {
       const frame = this.#read();
