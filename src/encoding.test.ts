@@ -26,6 +26,7 @@ describe("Encode number", () => {
   test(...t(1.1, "4HABA1p1"));
   test(...t(-1.1, "4HAB-1p1"));
   test(...t(12345678, "4HAC12345678"));
+  test(...t(Number.MAX_SAFE_INTEGER, "4HAE9007199254740991"));
 });
 
 describe("Encode string", () => {
