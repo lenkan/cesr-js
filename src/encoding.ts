@@ -108,6 +108,7 @@ export interface DecodeStreamResult {
 
 interface EncodingScheme {
   selector: string;
+  type?: string;
   size: number;
 }
 
@@ -123,16 +124,14 @@ const INDEXER_ENCODING_SCHEME: EncodingScheme[] = [
   { selector: "01234", size: 2 },
 ];
 
-const COUNTER_ENCODING_SCHEME: EncodingScheme[] = [
-  { selector: ALPHABET, size: 2 },
-  { selector: "-", size: 3 },
-  { selector: "_", size: 5 },
-];
-
-const MATTER_ENCODING_SCHEME: EncodingScheme[] = [
+// TODO: Create a lookup table for encoding schemes to avoid looping through
+const ENCODING_SCHEME: EncodingScheme[] = [
   { selector: ALPHABET, size: 1 },
   { selector: "0456", size: 2 },
   { selector: "123789", size: 4 },
+  { selector: "-", type: ALPHABET, size: 2 },
+  { selector: "-", type: "-", size: 3 },
+  { selector: "-", type: "_", size: 5 },
 ];
 
 function padNumber(num: number, length: number) {
@@ -191,6 +190,7 @@ function isIndexer(context?: ParsingContext): boolean {
 
 function findHardSize(input: Uint8Array, context?: ParsingContext): number {
   const selector = decodeUtf8(input.slice(0, 1));
+  const type = decodeUtf8(input.slice(1, 2));
 
   if (isIndexer(context)) {
     for (const scheme of INDEXER_ENCODING_SCHEME) {
@@ -202,21 +202,11 @@ function findHardSize(input: Uint8Array, context?: ParsingContext): number {
     throw new Error(`Invalid first character in input ${selector}`);
   }
 
-  if (selector === "-") {
-    const type = decodeUtf8(input.slice(1, 2));
-
-    for (const scheme of COUNTER_ENCODING_SCHEME) {
-      if (scheme.selector.includes(type)) {
+  for (const scheme of ENCODING_SCHEME) {
+    if (scheme.selector.includes(selector)) {
+      if (!scheme.type || scheme.type.includes(type)) {
         return scheme.size;
       }
-    }
-
-    throw new Error(`Invalid first character in input ${selector}${type}`);
-  }
-
-  for (const scheme of MATTER_ENCODING_SCHEME) {
-    if (scheme.selector.includes(selector)) {
-      return scheme.size;
     }
   }
 
@@ -251,6 +241,10 @@ function findCodeSize(hard: string, context?: ParsingContext): CodeSize {
 }
 
 export function encode(frame: FrameData, size: CodeSize): string {
+  if (frame.code.length !== size.hs) {
+    throw new Error(`Frame code ${frame.code} length ${frame.code.length} does not match expected size ${size.hs}`);
+  }
+
   const ls = size.ls ?? 0;
   const ms = (size.ss ?? 0) - (size.os ?? 0);
   const os = size.os ?? 0;
