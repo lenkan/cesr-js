@@ -247,7 +247,7 @@ export function encode(frame: FrameData, size: CodeSize): string {
     throw new Error(`Frame code ${frame.code} length ${frame.code.length} does not match expected size ${size.hs}`);
   }
 
-  const ls = 0; // size.ls ?? 0;
+  const ls = size.ls ?? 0;
   const ms = (size.ss ?? 0) - (size.os ?? 0);
   const os = size.os ?? 0;
 
@@ -293,7 +293,7 @@ export function encodeMap(data: DataObject): string {
   for (const [key, value] of Object.entries(data)) {
     frames.push(encodeTag(key));
     if (typeof value === "number") {
-      frames.push(encodeDecimal(value));
+      frames.push(encodeNumber(value));
     }
   }
 
@@ -353,18 +353,20 @@ export function encodeInt(value: number): string {
   return `${MatterCode.Short}${encodeBase64Int(value, 4)}`;
 }
 
-export function encodeDecimal(value: number): string {
+export function encodeNumber(value: number): string {
   const result = value.toString().replace(".", "p");
+  const ts = result.length % 4;
+  const ps = (4 - ts) % 4;
+  const ls = (3 - ts) % 3;
+  const raw = decodeBase64Url("A".repeat(ps) + result).slice(ls);
 
-  const leadSize = (result.length + 1) % 3;
-
-  switch (leadSize) {
+  switch (ls) {
     case 0:
-      return encodeMatter({ code: MatterCode.Decimal_L0, raw: decodeBase64Url(result) });
+      return encodeMatter({ code: MatterCode.Decimal_L0, raw });
     case 1:
-      return encodeMatter({ code: MatterCode.Decimal_L1, raw: decodeBase64Url(result) });
+      return encodeMatter({ code: MatterCode.Decimal_L1, raw });
     case 2:
-      return encodeMatter({ code: MatterCode.Decimal_L2, raw: decodeBase64Url(result) });
+      return encodeMatter({ code: MatterCode.Decimal_L2, raw });
     default:
       throw new Error(`Could not determine lead size for decimal ${value}`);
   }
@@ -606,6 +608,7 @@ export const encoding = {
   encodeMatter,
   encodeDate,
   encodeString,
+  encodeNumber,
   encodeSignature,
   encodeDigest,
   encodeGenus,

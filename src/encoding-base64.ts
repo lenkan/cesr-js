@@ -82,7 +82,7 @@ export function decodeBase64Url(input: string): Uint8Array {
 
   const remainder = input.length % 4;
   const padSize = remainder > 0 ? 4 - remainder : remainder;
-  const str = input.padStart(padSize + input.length, "A");
+  const str = input.padEnd(padSize + input.length, "=");
 
   const result = new Uint8Array(3 * (str.length / 4));
 
@@ -99,5 +99,5 @@ export function decodeBase64Url(input: string): Uint8Array {
     result[j + 2] = chunk & 0xff;
   }
 
-  return result;
+  return result.slice(0, result.length - padSize);
 }

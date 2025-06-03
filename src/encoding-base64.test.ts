@@ -49,10 +49,4 @@ describe("Base 64 url", () => {
     assert.deepEqual(decodeBase64Url("AAAAB"), Uint8Array.from([0, 0, 0]));
     assert.deepEqual(decodeBase64Url("AAAAAA"), Uint8Array.from([0, 0, 0, 0]));
   });
-
-  test.only("Decode base64 url", () => {
-    assert.deepEqual(decodeBase64Url("1p1"), Uint8Array.from([214, 157]));
-    assert.deepEqual(Uint8Array.from(Buffer.from("1p1", "base64url")), Uint8Array.from([214, 157]));
-    assert.deepEqual(Uint8Array.from(Buffer.from("AAA1", "base64url")), Uint8Array.from([214, 157]));
-  });
 });

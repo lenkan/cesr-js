@@ -5,7 +5,7 @@ import assert from "node:assert/strict";
 import { encodeUtf8 } from "./encoding-utf8.ts";
 import { CountCode_20 } from "./codes.ts";
 
-describe("encode", () => {
+describe("Encode", () => {
   test("should throw if raw does not have enough bytes", () => {
     assert.throws(() => {
       encoding.encode({ code: "0A", raw: new Uint8Array(63) }, { hs: 2, ss: 0, fs: 88 });
@@ -13,9 +13,41 @@ describe("encode", () => {
   });
 });
 
+describe("Encode number", () => {
+  function t(value: number, expected: string) {
+    return [`Should encode ${value}`, () => assert.strictEqual(encoding.encodeNumber(value), expected)] as const;
+  }
+
+  test(...t(0, "6HABAAA0"));
+  test(...t(-0, "6HABAAA0"));
+  test(...t(0.1, "4HABA0p1"));
+  test(...t(1, "6HABAAA1"));
+  test(...t(123, "4HABA123"));
+  test(...t(1.1, "4HABA1p1"));
+  test(...t(-1.1, "4HAB-1p1"));
+  test(...t(12345678, "4HAC12345678"));
+});
+
+describe("Encode string", () => {
+  function t(value: string, expected: string) {
+    return [`Should encode ${value}`, () => assert.strictEqual(encoding.encodeString(value), expected)] as const;
+  }
+
+  test(...t("abc", "4AABYWJj"));
+  test(...t("Hello World!", "4AAESGVsbG8gV29ybGQh"));
+  test(...t("Foobar", "4AACRm9vYmFy"));
+  test(...t("Foobars", "5AADABGb29iYXJz"));
+  test(...t("Foobars!", "6AAEAAAEZvb2JhcnMh"));
+});
+
+describe("Encode date", () => {
+  test("cesr date", () => {
+    const result = encoding.encodeDate(new Date(Date.parse("2024-11-23T16:02:27.123Z")));
+    assert.equal(result, "1AAG2024-11-23T16c02c27d123000p00c00");
+  });
+});
+
 describe("Encode CESR Native message", () => {
-  // mad = dict(a=1, b=True, c="hello", d=15.34, e=False, f=None)
-  // qb64 = '-IAQ0J_a6HABAAA10J_b1AAM0J_c0L_hello0J_d6HACAAA15p340J_e1AAL0J_f1AAK'
   test("should encode an empty message", () => {
     const result = encoding.encodeMap({});
     assert.strictEqual(result, "-IAA");
@@ -29,12 +61,21 @@ describe("Encode CESR Native message", () => {
     assert.strictEqual(result, "-IAD0J_a6HABAAA1");
   });
 
-  test.only("should encode single decimal field with decimal", () => {
+  test("should encode multiple decimal fields", () => {
+    const result = encoding.encodeMap({
+      a: 1,
+      b: 1.1,
+    });
+
+    assert.strictEqual(result, ["-IAG", "0J_a", "6HABAAA1", "0J_b", "4HABA1p1"].join(""));
+  });
+
+  test("should encode single decimal field with decimal", () => {
     const result = encoding.encodeMap({
       a: 1.1,
     });
 
-    assert.strictEqual(result, "-IAD0J_a5HABA1p1");
+    assert.strictEqual(result, "-IAD0J_a4HABA1p1");
   });
 });
 
@@ -91,28 +132,6 @@ describe("Decode message", () => {
 });
 
 describe("Matter", () => {
-  describe("Encode values", () => {
-    test("cesr date", () => {
-      const result = encoding.encodeDate(new Date(Date.parse("2024-11-23T16:02:27.123Z")));
-      assert.equal(result, "1AAG2024-11-23T16c02c27d123000p00c00");
-    });
-
-    test("CESR string L0", () => {
-      const result = encoding.encodeString("Foobar");
-      assert.equal(result, "4AACRm9vYmFy");
-    });
-
-    test("CESR string L1", () => {
-      const result = encoding.encodeString("Foobars");
-      assert.equal(result, "5AADABGb29iYXJz");
-    });
-
-    test("CESR string L2", () => {
-      const result = encoding.encodeString("Foobars!");
-      assert.equal(result, "6AAEAAAEZvb2JhcnMh");
-    });
-  });
-
   describe("Test vector", () => {
     for (const entry of vectors.filter((v) => v.type === "matter")) {
       test(`decode qb64 ${entry.type} ${entry.name} - ${entry.qb64.substring(0, 10)}`, () => {
