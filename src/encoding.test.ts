@@ -48,18 +48,25 @@ describe("Encode date", () => {
   });
 });
 
-describe("Encode CESR Native message", () => {
+describe("CESR Native message", () => {
   test("should encode an empty message", () => {
     const result = encoding.encodeMap({});
     assert.strictEqual(result, "-IAA");
   });
 
-  test("should encode single decimal field", () => {
-    const result = encoding.encodeMap({
-      a: 1,
-    });
+  test("should decode an empty message", () => {
+    const result = encoding.decodeMap("-IAA");
+    assert.deepStrictEqual(result, {});
+  });
 
+  test("should encode single decimal field", () => {
+    const result = encoding.encodeMap({ a: 1 });
     assert.strictEqual(result, "-IAD0J_a6HABAAA1");
+  });
+
+  test.skip("should decode single decimal field", () => {
+    const result = encoding.decodeMap("-IAD0J_a6HABAAA1");
+    assert.strictEqual(result, { a: 1 });
   });
 
   test("should encode multiple decimal fields", () => {
@@ -99,7 +106,6 @@ describe("Encode JSON message", () => {
 
   test("Should add version to object", () => {
     const result = encoding.encodeMessage({ a: 1 });
-
     assert.strictEqual(result, '{"v":"KERIBAAJSONAAAe.","a":1}');
   });
 });
