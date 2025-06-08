@@ -544,24 +544,6 @@ export function decodeGenus(input: string): Genus {
   return { major, minor };
 }
 
-// eslint-disable-next-line @typescript-eslint/no-unused-vars
-export function decodeMap(_input: string): DataObject {
-  const result: DataObject = {};
-
-  // const counter = decodeCounter(input.slice(0, 4));
-  // input = input.slice(4);
-  // // input = input.slice(4);
-
-  // while (input.length > 0) {
-  //   const next = decode(input);
-  //   console.log("next", next);
-  //   input = input.slice(next.text.length);
-  //   result[next.code] = next.text;
-  // }
-
-  return result;
-}
-
 export function decodeMatter(input: string | Uint8Array): Matter {
   return decode(input);
 }
@@ -639,7 +621,6 @@ export const encoding = {
   decode,
   decodeStream,
   decodeGenus,
-  decodeMap,
   decodeMatter,
   decodeCounter,
   decodeVersionString,

@@ -54,19 +54,9 @@ describe("CESR Native message", () => {
     assert.strictEqual(result, "-IAA");
   });
 
-  test("should decode an empty message", () => {
-    const result = encoding.decodeMap("-IAA");
-    assert.deepStrictEqual(result, {});
-  });
-
   test("should encode single decimal field", () => {
     const result = encoding.encodeMap({ a: 1 });
     assert.strictEqual(result, "-IAD0J_a6HABAAA1");
-  });
-
-  test.skip("should decode single decimal field", () => {
-    const result = encoding.decodeMap("-IAD0J_a6HABAAA1");
-    assert.strictEqual(result, { a: 1 });
   });
 
   test("should encode multiple decimal fields", () => {
