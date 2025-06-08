@@ -292,8 +292,32 @@ export function encodeMap(data: DataObject): string {
 
   for (const [key, value] of Object.entries(data)) {
     frames.push(encodeTag(key));
-    if (typeof value === "number") {
-      frames.push(encodeNumber(value));
+
+    switch (typeof value) {
+      case "string":
+        frames.push(encodeString(value));
+        break;
+      case "number":
+        frames.push(encodeNumber(value));
+        break;
+      case "object": {
+        if (!Array.isArray(value) && !(value instanceof Date)) {
+          frames.push(encodeMap(value));
+        } else {
+          throw new Error(`Unsupported object type for key ${key}: ${JSON.stringify(value)}`);
+        }
+        break;
+      }
+      case "boolean":
+        frames.push(
+          encodeMatter({
+            code: value ? MatterCode.Yes : MatterCode.No,
+            raw: new Uint8Array(0),
+          }),
+        );
+        break;
+      default:
+        throw new Error(`Unsupported value type ${typeof value} for key ${key}`);
     }
   }
 

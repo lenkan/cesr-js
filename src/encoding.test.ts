@@ -54,9 +54,24 @@ describe("CESR Native message", () => {
     assert.strictEqual(result, "-IAA");
   });
 
-  test("should encode single decimal field", () => {
+  test("should encode single decimal field value", () => {
     const result = encoding.encodeMap({ a: 1 });
     assert.strictEqual(result, "-IAD0J_a6HABAAA1");
+  });
+
+  test("should encode boolean field value", () => {
+    const result = encoding.encodeMap({ a: true, b: false });
+    assert.strictEqual(result, "-IAE0J_a1AAM0J_b1AAL");
+  });
+
+  test("should encode nested field value", () => {
+    const result = encoding.encodeMap({ a: { b: false } });
+    assert.strictEqual(result, "-IAE0J_a-IAC0J_b1AAL");
+  });
+
+  test("should encode string field value", () => {
+    const result = encoding.encodeMap({ a: "foobar" });
+    assert.strictEqual(result, "-IAE0J_a4AACZm9vYmFy");
   });
 
   test("should encode multiple decimal fields", () => {
