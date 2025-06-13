@@ -34,11 +34,18 @@ describe("Encode string", () => {
     return [`Should encode ${value}`, () => assert.strictEqual(encoding.encodeString(value), expected)] as const;
   }
 
-  test(...t("abc", "4AABYWJj"));
-  test(...t("Hello World!", "4AAESGVsbG8gV29ybGQh"));
-  test(...t("Foobar", "4AACRm9vYmFy"));
-  test(...t("Foobars", "5AADABGb29iYXJz"));
-  test(...t("Foobars!", "6AAEAAAEZvb2JhcnMh"));
+  test(...t("abc", "4AABAabc"));
+  test(...t("Foobar", "5AACAAFoobar"));
+  test(...t("Foobars", "4AACAFoobars"));
+
+  // Non base64
+  test(...t("ABC", "4BABQUJD")); // Cannot start with A for base64
+  test(...t("Hello World!", "4BAESGVsbG8gV29ybGQh"));
+  test(...t("Foobars!", "6BAEAAAEZvb2JhcnMh"));
+  test(...t("-a-b-c", "5AACAA-a-b-c"));
+  test(...t("-a-abc", "5AACAA-a-abc"));
+  test(...t("-a-abcdef", "6AADAAA-a-abcdef"));
+  test(...t("-A-ABC-c", "4AAC-A-ABC-c"));
 });
 
 describe("Encode date", () => {
@@ -71,7 +78,7 @@ describe("CESR Native message", () => {
 
   test("should encode string field value", () => {
     const result = encoding.encodeMap({ a: "foobar" });
-    assert.strictEqual(result, "-IAE0J_a4AACZm9vYmFy");
+    assert.strictEqual(result, "-IAE0J_a5AACAAfoobar");
   });
 
   test("should encode multiple decimal fields", () => {

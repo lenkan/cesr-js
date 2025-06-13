@@ -119,6 +119,7 @@ interface EncodingScheme {
 const REGEX_VERSION_STRING_PROTOCOL = /^[A-Z]{4}$/;
 const REGEX_VERSION_STRING_KIND = /^[A-Z]{4}$/;
 const REGEX_VERSION_JSON = /^\{"v":"(.*?)".*$/;
+const REGEX_BASE64_CHARACTER = /^[A-Za-z0-9\-_]+$/;
 const ALPHABET = "ABCDEFGHIJKLMNOPQRSTUVWXYZabcdefghijklmnopqrstuvwxyz";
 
 const INDEXER_ENCODING_SCHEME: EncodingScheme[] = [
@@ -355,17 +356,35 @@ export function encodeTag(tag: string): string {
 }
 
 export function encodeString(txt: string): string {
+  if (REGEX_BASE64_CHARACTER.test(txt) && !txt.startsWith("A")) {
+    const textsize = txt.length % 4;
+    const padsize = (4 - textsize) % 4;
+    const leadsize = (3 - textsize) % 3;
+    const raw = decodeBase64Url("A".repeat(padsize) + txt).slice(leadsize);
+
+    switch (leadsize) {
+      case 0:
+        return encodeMatter({ code: MatterCode.StrB64_L0, raw });
+      case 1:
+        return encodeMatter({ code: MatterCode.StrB64_L1, raw });
+      case 2:
+        return encodeMatter({ code: MatterCode.StrB64_L2, raw });
+      default:
+        throw new Error(`Could not determine lead size`);
+    }
+  }
+
   const raw = encodeUtf8(txt);
   const length = raw.byteLength;
   const leadSize = length % 3;
 
   switch (leadSize) {
     case 0:
-      return encodeMatter({ code: MatterCode.StrB64_L0, raw });
+      return encodeMatter({ code: MatterCode.Bytes_L0, raw });
     case 1:
-      return encodeMatter({ code: MatterCode.StrB64_L1, raw });
+      return encodeMatter({ code: MatterCode.Bytes_L1, raw });
     case 2:
-      return encodeMatter({ code: MatterCode.StrB64_L2, raw });
+      return encodeMatter({ code: MatterCode.Bytes_L2, raw });
     default:
       throw new Error(`Could not determine lead size`);
   }
@@ -376,13 +395,13 @@ export function encodeInt(value: number): string {
 }
 
 export function encodeNumber(value: number): string {
-  const result = value.toString().replace(".", "p");
-  const ts = result.length % 4;
-  const ps = (4 - ts) % 4;
-  const ls = (3 - ts) % 3;
-  const raw = decodeBase64Url("A".repeat(ps) + result).slice(ls);
+  const txt = value.toString().replace(".", "p");
+  const textsize = txt.length % 4;
+  const padsize = (4 - textsize) % 4;
+  const leadsize = (3 - textsize) % 3;
+  const raw = decodeBase64Url("A".repeat(padsize) + txt).slice(leadsize);
 
-  switch (ls) {
+  switch (leadsize) {
     case 0:
       return encodeMatter({ code: MatterCode.Decimal_L0, raw });
     case 1:
