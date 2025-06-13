@@ -70,11 +70,21 @@ function isContextComplete(context: GroupContext): boolean {
         return context.frames === context.count * 3;
       case CountCode_10.TransReceiptQuadruples:
         return context.frames === context.count * 4;
+      case CountCode_10.TransIdxSigGroups:
+        // |pre|snu|dig|group of controller sigs
+        // So, we assume that this group is finished for simplicity, higher level code
+        // needs to verify the signatures anyway
+        return context.frames === context.count * 3;
+      case CountCode_10.TransLastIdxSigGroups:
+        // |pre|group of controller sigs
+        // So, we assume that this group is finished for simplicity, higher level code
+        // needs to verify the signatures anyway
+        return context.frames === context.count;
       case CountCode_10.AttachmentGroup:
       case CountCode_10.BigAttachmentGroup:
         return context.quadlets === context.count;
       default:
-        throw new Error(`Unknown code ${context.code}`);
+        throw new Error(`Cannot determine if group ${context.code} is finished`);
     }
   }
 

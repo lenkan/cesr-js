@@ -134,3 +134,23 @@ describe("Parse CESR 2", async () => {
     });
   });
 });
+
+test("Test oobi with mailbox", { timeout: 100 }, async () => {
+  const result = await collect(parseMessages(createReadStream("./fixtures/mailbox.cesr", {})));
+
+  assert.equal(result.length, 4);
+  assert.equal(result[0].payload.t, "icp");
+  assert.equal(result[1].payload.t, "rpy");
+  assert.equal(result[2].payload.t, "rpy");
+  assert.equal(result[3].payload.t, "rpy");
+
+  assert.deepEqual(result[3].attachments, {
+    // TODO: -A is actually a subgroup of -F, but it is not straighforward to parse in CESR 1.0
+    "-F": [
+      "EL8vpSig7NmSxLJ44QSJozcTVYSqPUHVQWPZtyVmPUO_",
+      "0AAAAAAAAAAAAAAAAAAAAAAA",
+      "EL8vpSig7NmSxLJ44QSJozcTVYSqPUHVQWPZtyVmPUO_",
+    ],
+    "-A": ["AAA9rX7EH8MSl9OIW67yuFoMBgPhrOHrrf0tLyZpOLoD6HbVSr4qM7n0itmwvG3o9YbyZkmXOE7288K8KNsdS3UC"],
+  });
+});

@@ -140,3 +140,18 @@ test("Should parse multiple attachment groups", async () => {
   const result = Array.from(parseSync(attachment, { version: 1 }));
   assert.equal(result.length, 8);
 });
+
+test("Should parse transferable idx sig group", async () => {
+  const attachment = [
+    "-VA0",
+    encoding.encodeCounter({ code: CountCode_10.TransIdxSigGroups, count: 1 }),
+    "EL8vpSig7NmSxLJ44QSJozcTVYSqPUHVQWPZtyVmPUO_",
+    "0AAAAAAAAAAAAAAAAAAAAAAA",
+    "EL8vpSig7NmSxLJ44QSJozcTVYSqPUHVQWPZtyVmPUO_",
+    encoding.encodeCounter({ code: CountCode_10.ControllerIdxSigs, count: 1 }),
+    encoding.encodeIndexedSignature("ed25519", randomBytes(64), 0),
+  ].join("");
+
+  const result = Array.from(parseSync(attachment, { version: 1 }));
+  assert.equal(result.length, 7);
+});

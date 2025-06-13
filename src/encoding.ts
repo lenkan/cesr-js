@@ -166,8 +166,6 @@ function isIndexer(context?: ParsingContext): boolean {
   if (context.version === 1) {
     switch (context.code) {
       case CountCode_10.ControllerIdxSigs:
-      case CountCode_10.TransIdxSigGroups:
-      case CountCode_10.TransLastIdxSigGroups:
       case CountCode_10.WitnessIdxSigs:
         return true;
       default:
