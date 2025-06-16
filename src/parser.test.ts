@@ -16,7 +16,7 @@ async function collect(input: string, options: ParserOptions): Promise<Frame[]> 
   return result;
 }
 
-test("Should indexed signatures", async () => {
+test("Should parse indexed signatures", async () => {
   const attachment = [
     encoding.encodeCounter({ code: CountCode_10.ControllerIdxSigs, count: 3 }),
     encoding.encodeIndexer({ code: IndexCode.Ed25519_Big_Sig, raw: randomBytes(64), index: 0, ondex: 0 }),

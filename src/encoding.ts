@@ -189,7 +189,7 @@ function isIndexer(context?: ParsingContext): boolean {
   }
 }
 
-function findHardSize(input: Uint8Array, context?: ParsingContext): number {
+export function findHardSize(input: Uint8Array, context?: ParsingContext): number {
   const selector = decodeUtf8(input.slice(0, 1));
   const type = decodeUtf8(input.slice(1, 2));
 
@@ -214,7 +214,7 @@ function findHardSize(input: Uint8Array, context?: ParsingContext): number {
   throw new Error(`Invalid first character in input ${selector}`);
 }
 
-function findCodeSize(hard: string, context?: ParsingContext): CodeSize {
+export function findCodeSize(hard: string, context?: ParsingContext): CodeSize {
   let size: CodeSize | null = null;
 
   if (isIndexer(context)) {
@@ -239,6 +239,12 @@ function findCodeSize(hard: string, context?: ParsingContext): CodeSize {
   }
 
   return size;
+}
+
+export function findFullSize(input: Uint8Array, size: CodeSize): number {
+  const soft = decodeBase64Int(decodeUtf8(input.slice(size.hs, size.hs + size.ss)));
+  const fs = size.fs > 0 ? size.fs : size.hs + size.ss + soft * 4;
+  return fs;
 }
 
 export function encode(frame: FrameData, size: CodeSize): string {
@@ -523,60 +529,32 @@ export function encodeMessage<T extends DataObject>(body: T, init: MessageVersio
 }
 
 export function decode(input: string | Uint8Array, context?: ParsingContext): Required<FrameData> {
-  const result = decodeStream(input, context);
-
-  if (result.frame === null) {
-    throw new Error("Not enough data in input");
-  }
-
-  return result.frame;
-}
-
-export function decodeStream(input: string | Uint8Array, context?: ParsingContext): DecodeStreamResult {
   if (typeof input === "string") {
     input = encodeUtf8(input);
   }
 
-  if (input.length < 1) {
-    return { frame: null, n: 0 };
-  }
-
   const hs = findHardSize(input, context);
+  const code = decodeUtf8(input.slice(0, hs));
+  const size = findCodeSize(code, context);
+  const fs = findFullSize(input, size);
 
-  if (input.length < hs) {
-    return { frame: null, n: 0 };
-  }
-
-  const hard = decodeUtf8(input.slice(0, hs));
-  const size = findCodeSize(hard, context);
-
-  if (!size) {
-    throw new Error(`Unknown code ${hard}`);
-  }
-
-  const cs = size.hs + size.ss;
-  if (input.length < cs) {
-    return { frame: null, n: 0 };
+  if (input.length < fs) {
+    throw new Error("Not enough data in input");
   }
 
   const ls = size.ls ?? 0;
+  const cs = size.hs + size.ss;
   const ps = (size.hs + size.ss) % 4;
   const ms = size.ss - (size.os ?? 0);
   const os = size.os ?? 0;
   const soft0 = decodeBase64Int(decodeUtf8(input.slice(size.hs, cs)));
   const soft1 = decodeBase64Int(decodeUtf8(input.slice(size.hs + ms, size.hs + ms + os)));
-  const fs = size.fs > 0 ? size.fs : cs + soft0 * 4;
-
-  if (input.length < fs) {
-    return { frame: null, n: 0 };
-  }
-
   const padding = "A".repeat(ps);
   const text = decodeUtf8(input.slice(0, fs));
   const rawtext = padding + text.slice(cs, fs);
 
   const raw = decodeBase64Url(rawtext).slice(ps + ls);
-  return { frame: { code: hard, count: soft0, index: soft0, ondex: soft1, raw, text }, n: fs };
+  return { code: code, count: soft0, index: soft0, ondex: soft1, raw, text };
 }
 
 export function decodeGenus(input: string): Genus {
@@ -593,12 +571,9 @@ export function decodeCounter(input: string | Uint8Array): Counter {
   return decode(input);
 }
 
-export function decodeVersionString(input: string | Uint8Array): Required<MessageVersionInit> {
-  if (typeof input !== "string") {
-    input = decodeUtf8(input.slice(0, 24));
-  }
-
+export function decodeVersionString(input: string): Required<MessageVersionInit> {
   const match = input.match(REGEX_VERSION_JSON);
+
   if (!match) {
     throw new Error(`Unable to extract "v" field from ${input}`);
   }
@@ -660,7 +635,6 @@ export const encoding = {
   encodeVersionString,
   encodeMessage,
   decode,
-  decodeStream,
   decodeGenus,
   decodeMatter,
   decodeCounter,

@@ -108,7 +108,10 @@ describe("Parse JSON", () => {
   test("Parse unfinished JSON without full version string", async () => {
     const input = encoding.encodeMessage({ t: "icp" }).slice(0, 20);
 
-    await assert.rejects(() => collect(parseMessages(input)), new Error("Unexpected end of stream"));
+    await assert.rejects(
+      () => collect(parseMessages(input)),
+      new Error("Not enough bytes in buffer, expected 25, got 20"),
+    );
   });
 });
 

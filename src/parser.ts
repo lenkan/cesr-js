@@ -1,7 +1,7 @@
 import { CountCode_10 } from "./codes.ts";
 import type { MessageVersion, ParsingContext } from "./encoding.ts";
 import { decodeUtf8, encodeUtf8 } from "./encoding-utf8.ts";
-import { encoding } from "./encoding.ts";
+import { encoding, findCodeSize, findFullSize, findHardSize } from "./encoding.ts";
 
 export type Frame =
   | {
@@ -99,24 +99,41 @@ class Parser {
   #buffer: Uint8Array;
   #stack: GroupContext[] = [];
   #version: number;
+  #reader: ReadableStreamDefaultReader;
 
-  constructor(options: ParserOptions = {}) {
+  constructor(input: ParserInput, options: ParserOptions = {}) {
     this.#buffer = new Uint8Array(0);
     this.#version = options.version ?? 1;
+    this.#reader = resolveInput(input);
   }
 
-  #readJSON(): Frame | null {
-    if (this.#buffer.length < 25) {
-      return null;
+  async #peekBytes(numBytes: number): Promise<Uint8Array> {
+    while (this.#buffer.length < numBytes) {
+      const result = await this.#reader.read();
+
+      if (result.done) {
+        break;
+      }
+
+      this.#buffer = concat(this.#buffer, result.value);
     }
 
-    const version = encoding.decodeVersionString(this.#buffer.slice(0, 24));
-    if (this.#buffer.length < version.size) {
-      return null;
+    if (this.#buffer.length < numBytes) {
+      throw new Error(`Not enough bytes in buffer, expected ${numBytes}, got ${this.#buffer.length}`);
     }
 
-    const frame = this.#buffer.slice(0, version.size);
-    this.#buffer = this.#buffer.slice(version.size);
+    return this.#buffer.slice(0, numBytes);
+  }
+
+  async #readBytes(numBytes: number): Promise<Uint8Array> {
+    const result = await this.#peekBytes(numBytes);
+    this.#buffer = this.#buffer.slice(result.length);
+    return result;
+  }
+
+  async #readJSON(): Promise<Frame> {
+    const version = encoding.decodeVersionString(decodeUtf8(await this.#peekBytes(25)));
+    const frame = await this.#readBytes(version.size);
 
     return {
       type: "message",
@@ -125,24 +142,25 @@ class Parser {
     };
   }
 
-  #read(): Frame | null {
-    const start = this.#buffer[0] >> 5;
+  async #next(): Promise<Frame> {
+    const start = await this.#peekBytes(1);
 
-    switch (start) {
+    switch (start[0] >> 5) {
       case 0b011:
-        return this.#readJSON();
+        return await this.#readJSON();
     }
 
     const context = this.#stack[this.#stack.length - 1] ?? undefined;
-    const result = encoding.decodeStream(this.#buffer, context);
-    this.#buffer = this.#buffer.slice(result.n);
+    const hs = findHardSize(await this.#peekBytes(2), context);
+    const hard = decodeUtf8(await this.#peekBytes(hs));
+    const codeSize = findCodeSize(hard, context);
+    const cs = codeSize.hs + codeSize.ss;
+    const fs = findFullSize(await this.#peekBytes(cs), codeSize);
 
-    if (!result.frame) {
-      return null;
-    }
+    const frame = encoding.decode(await this.#readBytes(fs), context);
 
     for (const ctx of this.#stack) {
-      ctx.quadlets += result.n / 4;
+      ctx.quadlets += fs / 4;
       ctx.frames += 1;
     }
 
@@ -155,15 +173,15 @@ class Parser {
       }
     }
 
-    if (result.frame.code.startsWith("-")) {
-      if (result.frame.code === CountCode_10.KERIACDCGenusVersion) {
-        const genus = encoding.decodeGenus(result.frame.text);
+    if (frame.code.startsWith("-")) {
+      if (frame.code === CountCode_10.KERIACDCGenusVersion) {
+        const genus = encoding.decodeGenus(frame.text);
         this.#version = genus.major;
       } else {
         this.#stack.push({
-          code: result.frame.code,
+          code: frame.code,
           version: this.#version,
-          count: result.frame.count ?? 0,
+          count: frame.count ?? 0,
           quadlets: 0,
           frames: 0,
         });
@@ -172,18 +190,28 @@ class Parser {
 
     return {
       type: "cesr",
-      code: result.frame.code,
-      text: result.frame.text,
-      count: result.frame.count,
-      raw: result.frame.raw,
+      code: frame.code,
+      text: frame.text,
+      count: frame.count,
+      raw: frame.raw,
     };
   }
 
-  *parse(source: Uint8Array): IterableIterator<Frame> {
-    this.#buffer = concat(this.#buffer, source);
+  async *parse(): AsyncIterableIterator<Frame> {
+    while (true) {
+      if (this.#buffer.length === 0) {
+        const result = await this.#reader.read();
 
-    while (this.#buffer.length > 0) {
-      const frame = this.#read();
+        if (result.done) {
+          return;
+        }
+
+        if (result.value) {
+          this.#buffer = concat(this.#buffer, result.value);
+        }
+      }
+
+      const frame = await this.#next();
 
       if (!frame) {
         return null;
@@ -205,12 +233,10 @@ class Parser {
  * @returns An async iterable of CESR frames
  */
 export async function* parse(input: ParserInput, options: ParserOptions): AsyncIterableIterator<Frame> {
-  const parser = new Parser(options);
+  const parser = new Parser(input, options);
 
-  for await (const chunk of resolveInput(input)) {
-    for (const frame of parser.parse(chunk)) {
-      yield frame;
-    }
+  for await (const frame of parser.parse()) {
+    yield frame;
   }
 
   if (!parser.finished) {
@@ -220,14 +246,14 @@ export async function* parse(input: ParserInput, options: ParserOptions): AsyncI
 
 export type ParserInput = Uint8Array | string | AsyncIterable<Uint8Array>;
 
-function resolveInput(input: ParserInput): AsyncIterable<Uint8Array> {
+function resolveInput(input: ParserInput): ReadableStreamDefaultReader<Uint8Array> {
   if (typeof input === "string") {
-    return ReadableStream.from([encodeUtf8(input)]);
+    return ReadableStream.from([encodeUtf8(input)]).getReader();
   }
 
   if (input instanceof Uint8Array) {
-    return ReadableStream.from([input]);
+    return ReadableStream.from([input]).getReader();
   }
 
-  return input;
+  return ReadableStream.from(input).getReader();
 }

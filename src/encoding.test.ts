@@ -2,7 +2,6 @@ import test, { describe } from "node:test";
 import vectors from "../fixtures/cesr_test_vectors.json" with { type: "json" };
 import { encoding } from "./encoding.ts";
 import assert from "node:assert/strict";
-import { encodeUtf8 } from "./encoding-utf8.ts";
 import { CountCode_20 } from "./codes.ts";
 
 describe("Encode", () => {
@@ -125,7 +124,7 @@ describe("Encode JSON message", () => {
 describe("Decode message", () => {
   test("Should parse legacy keri version", () => {
     // PPPPvvKKKKllllll_
-    const result = encoding.decodeVersionString(encodeUtf8(JSON.stringify({ v: "KERI10JSON00000a_" })));
+    const result = encoding.decodeVersionString(JSON.stringify({ v: "KERI10JSON00000a_" }));
     assert.deepStrictEqual(result, {
       protocol: "KERI",
       major: 1,
@@ -138,7 +137,7 @@ describe("Decode message", () => {
 
   test("Should parse keri version", () => {
     // PPPPVVVKKKKBBBB.
-    const result = encoding.decodeVersionString(encodeUtf8(JSON.stringify({ v: "KERICABJSONAAAB." })));
+    const result = encoding.decodeVersionString(JSON.stringify({ v: "KERICABJSONAAAB." }));
     assert.deepStrictEqual(result, {
       protocol: "KERI",
       major: 2,
