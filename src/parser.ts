@@ -1,5 +1,5 @@
 import { CountCode_10 } from "./codes.ts";
-import type { MessageVersion, ParsingContext } from "./encoding.ts";
+import type { CodeSize, MessageVersion, ParsingContext } from "./encoding.ts";
 import { decodeUtf8, encodeUtf8 } from "./encoding-utf8.ts";
 import { encoding, findCodeSize, findFullSize, findHardSize } from "./encoding.ts";
 
@@ -18,6 +18,8 @@ export type Frame =
       version: MessageVersion;
       text: string;
     };
+
+const ALPHABET = "ABCDEFGHIJKLMNOPQRSTUVWXYZabcdefghijklmnopqrstuvwxyz";
 
 function concat(a: Uint8Array, b: Uint8Array) {
   if (a.length === 0) {
@@ -142,58 +144,29 @@ class Parser {
     };
   }
 
-  async #next(): Promise<Frame> {
-    const start = await this.#peekBytes(1);
+  async *#readCounter(start: string): AsyncIterableIterator<Frame> {
+    const selector = start.charAt(1);
+    let size: CodeSize | null = null;
 
-    switch (start[0] >> 5) {
-      case 0b011:
-        return await this.#readJSON();
+    if (ALPHABET.includes(selector)) {
+      size = { hs: 2, ss: 2, fs: 4 };
+    } else if (selector === "-") {
+      size = { hs: 3, ss: 4, fs: 8 };
+    } else if (selector === "_") {
+      size = { hs: 5, ss: 3, fs: 8 };
+    } else {
+      throw new Error(`Invalid first character in input ${start}`);
     }
 
-    const context = this.#stack[this.#stack.length - 1] ?? undefined;
-    const hs = findHardSize(await this.#peekBytes(2), context);
-    const hard = decodeUtf8(await this.#peekBytes(hs));
-    const codeSize = findCodeSize(hard, context);
-    const cs = codeSize.hs + codeSize.ss;
-    const fs = findFullSize(await this.#peekBytes(cs), codeSize);
-
-    const frame = encoding.decode(await this.#readBytes(fs), context);
-
-    for (const ctx of this.#stack) {
-      ctx.quadlets += fs / 4;
-      ctx.frames += 1;
-    }
-
-    while (this.#stack.length > 0) {
-      const ctx = this.#stack[this.#stack.length - 1];
-      if (isContextComplete(ctx)) {
-        this.#stack.pop();
-      } else {
-        break;
-      }
-    }
-
-    if (frame.code.startsWith("-")) {
-      if (frame.code === CountCode_10.KERIACDCGenusVersion) {
-        const genus = encoding.decodeGenus(frame.text);
-        this.#version = genus.major;
-      } else {
-        this.#stack.push({
-          code: frame.code,
-          version: this.#version,
-          count: frame.count ?? 0,
-          quadlets: 0,
-          frames: 0,
-        });
-      }
-    }
-
-    return {
+    const frame = encoding.decode(await this.#readBytes(size.fs), { code: "", version: this.#version });
+    yield {
       type: "cesr",
       code: frame.code,
+      raw: frame.raw,
       text: frame.text,
       count: frame.count,
-      raw: frame.raw,
+      index: frame.index,
+      ondex: frame.ondex,
     };
   }
 
@@ -211,13 +184,63 @@ class Parser {
         }
       }
 
-      const frame = await this.#next();
+      // All frames are at least 4 bytes
+      const start = decodeUtf8(await this.#peekBytes(4));
+      const context = this.#stack[this.#stack.length - 1] ?? undefined;
 
-      if (!frame) {
-        return null;
+      switch (start.charAt(0)) {
+        case "{":
+          yield await this.#readJSON();
+          break;
+        case "-":
+          yield* this.#readCounter();
+          break;
       }
 
-      yield frame;
+      const hs = findHardSize(await this.#peekBytes(2), context);
+      const hard = decodeUtf8(await this.#peekBytes(hs));
+      const codeSize = findCodeSize(hard, context);
+      const cs = codeSize.hs + codeSize.ss;
+      const fs = findFullSize(await this.#peekBytes(cs), codeSize);
+
+      const frame = encoding.decode(await this.#readBytes(fs), context);
+
+      for (const ctx of this.#stack) {
+        ctx.quadlets += fs / 4;
+        ctx.frames += 1;
+      }
+
+      while (this.#stack.length > 0) {
+        const ctx = this.#stack[this.#stack.length - 1];
+        if (isContextComplete(ctx)) {
+          this.#stack.pop();
+        } else {
+          break;
+        }
+      }
+
+      if (frame.code.startsWith("-")) {
+        if (frame.code === CountCode_10.KERIACDCGenusVersion) {
+          const genus = encoding.decodeGenus(frame.text);
+          this.#version = genus.major;
+        } else {
+          this.#stack.push({
+            code: frame.code,
+            version: this.#version,
+            count: frame.count ?? 0,
+            quadlets: 0,
+            frames: 0,
+          });
+        }
+      }
+
+      return {
+        type: "cesr",
+        code: frame.code,
+        text: frame.text,
+        count: frame.count,
+        raw: frame.raw,
+      };
     }
   }
 
