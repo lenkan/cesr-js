@@ -202,28 +202,6 @@ class Parser {
  * Parses CESR frames from an incoming stream of bytes.
  *
  * @param input Incoming stream of bytes
- * @returns An iterable of CESR frames
- */
-export function* parseSync(input: Uint8Array | string, options: ParserOptions = {}): IterableIterator<Frame> {
-  if (typeof input === "string") {
-    input = encodeUtf8(input);
-  }
-
-  const parser = new Parser(options);
-
-  for (const frame of parser.parse(input)) {
-    yield frame;
-  }
-
-  if (!parser.finished) {
-    throw new Error("Unexpected end of stream");
-  }
-}
-
-/**
- * Parses CESR frames from an incoming stream of bytes.
- *
- * @param input Incoming stream of bytes
  * @returns An async iterable of CESR frames
  */
 export async function* parse(input: ParserInput, options: ParserOptions): AsyncIterableIterator<Frame> {

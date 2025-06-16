@@ -2,8 +2,19 @@ import test from "node:test";
 import assert from "node:assert/strict";
 import { randomBytes } from "node:crypto";
 import { CountCode_10, CountCode_20, IndexCode, IndexTable } from "./codes.ts";
-import { parseSync } from "./parser.ts";
+import type { Frame, ParserOptions } from "./parser.ts";
+import { parse } from "./parser.ts";
 import * as encoding from "./encoding.ts";
+
+async function collect(input: string, options: ParserOptions): Promise<Frame[]> {
+  const result: Frame[] = [];
+
+  for await (const item of parse(input, options)) {
+    result.push(item);
+  }
+
+  return result;
+}
 
 test("Should indexed signatures", async () => {
   const attachment = [
@@ -13,7 +24,7 @@ test("Should indexed signatures", async () => {
     encoding.encodeIndexedSignature("ed25519", randomBytes(64), 0),
   ].join("");
 
-  const result = Array.from(parseSync(attachment, { version: 1 }));
+  const result = await collect(attachment, { version: 1 });
 
   assert.equal(result.length, 4);
   assert.partialDeepStrictEqual(result[0], { code: CountCode_10.ControllerIdxSigs });
@@ -31,9 +42,7 @@ test("Should throw if counter is ended early", async () => {
     encoding.encodeIndexedSignature("ed25519", randomBytes(64), 0),
   ].join("");
 
-  assert.throws(() => {
-    Array.from(parseSync(attachment, { version: 1 }));
-  }, new Error(`Invalid first character in input -`));
+  await assert.rejects(() => collect(attachment, { version: 1 }), new Error(`Invalid first character in input -`));
 });
 
 test("Should switch from version 1 to version 2", async () => {
@@ -48,7 +57,7 @@ test("Should switch from version 1 to version 2", async () => {
     encoding.encodeIndexedSignature("ed25519", randomBytes(64), 0),
   ].join("");
 
-  const result = Array.from(parseSync(attachment, { version: 1 }));
+  const result = await collect(attachment, { version: 1 });
 
   assert.equal(result.length, 5);
   assert.partialDeepStrictEqual(result[0], { code: CountCode_10.ControllerIdxSigs });
@@ -70,7 +79,7 @@ test("Should switch from version 2 to version 1", async () => {
     encoding.encodeIndexedSignature("ed25519", randomBytes(64), 0),
   ].join("");
 
-  const result = Array.from(parseSync(attachment, { version: 2 }));
+  const result = await collect(attachment, { version: 2 });
 
   assert.equal(result.length, 5);
   assert.partialDeepStrictEqual(result[0], { code: CountCode_20.ControllerIdxSigs });
@@ -88,7 +97,7 @@ test("Should parse attachment group v1", async () => {
     encoding.encodeIndexer({ code: IndexCode.Ed25519_Big_Sig, raw: randomBytes(64), index: 1, ondex: 0 }),
   ].join("");
 
-  const result = Array.from(parseSync(attachment, { version: 1 }));
+  const result = await collect(attachment, { version: 1 });
   assert.equal(result.length, 4);
 });
 
@@ -99,7 +108,7 @@ test("Should throw if group v1 is incomplete", async () => {
     encoding.encodeIndexer({ code: IndexCode.Ed25519_Big_Sig, raw: randomBytes(64), index: 1, ondex: 0 }),
   ].join("");
 
-  assert.throws(() => Array.from(parseSync(attachment, { version: 1 })), new Error("Unexpected end of stream"));
+  await assert.rejects(() => collect(attachment, { version: 1 }), new Error("Unexpected end of stream"));
 });
 
 test("Should throw if group v2 is incomplete", async () => {
@@ -109,7 +118,7 @@ test("Should throw if group v2 is incomplete", async () => {
     encoding.encodeIndexer({ code: IndexCode.Ed25519_Sig, raw: randomBytes(64), index: 1, ondex: 0 }),
   ].join("");
 
-  assert.throws(() => Array.from(parseSync(attachment, { version: 2 })), new Error("Unexpected end of stream"));
+  await assert.rejects(() => collect(attachment, { version: 2 }), new Error("Unexpected end of stream"));
 });
 
 test("Should parse JSON after attachment group v1", async () => {
@@ -121,7 +130,7 @@ test("Should parse JSON after attachment group v1", async () => {
     encoding.encodeMessage({ payload: { message: "foo" }, protocol: "KERI", major: 1 }),
   ].join("");
 
-  const result = Array.from(parseSync(attachment, { version: 1 }));
+  const result = await collect(attachment, { version: 1 });
   assert.equal(result.length, 5);
 });
 
@@ -137,7 +146,7 @@ test("Should parse multiple attachment groups", async () => {
     encoding.encodeIndexer({ code: IndexCode.Ed25519_Big_Sig, raw: randomBytes(64), index: 1, ondex: 0 }),
   ].join("");
 
-  const result = Array.from(parseSync(attachment, { version: 1 }));
+  const result = await collect(attachment, { version: 1 });
   assert.equal(result.length, 8);
 });
 
@@ -152,6 +161,6 @@ test("Should parse transferable idx sig group", async () => {
     encoding.encodeIndexedSignature("ed25519", randomBytes(64), 0),
   ].join("");
 
-  const result = Array.from(parseSync(attachment, { version: 1 }));
+  const result = await collect(attachment, { version: 1 });
   assert.equal(result.length, 7);
 });
