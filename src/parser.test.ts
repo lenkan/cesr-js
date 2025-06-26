@@ -155,3 +155,24 @@ test("Should parse transferable idx sig group", async () => {
   const result = Array.from(parseSync(attachment, { version: 1 }));
   assert.equal(result.length, 7);
 });
+
+test("Should parse grant message attachments", async () => {
+  const atc = [
+    "-FAB",
+    "EDGJXBwhWweT2nQpMiMPt7F9k1nybWCoiPvFp04acnuu",
+    "0AAAAAAAAAAAAAAAAAAAAAAA",
+    "EDGJXBwhWweT2nQpMiMPt7F9k1nybWCoiPvFp04acnuu",
+    "-AAB",
+    "AAD-xGXzbSca7bl7uCmPLaWyc8azvwH72WX_KqQ2dh5xhlypvDMg_9rN3lnnHDPUHbs-u3OiqjQ88HBRBacK2F0L",
+    // The below pathed material group contains nested pathed material groups
+    "-LCy5AACAA-e-evt-FABEDGJXBwhWweT2nQpMiMPt7F9k1nybWCoiPvFp04acnuu0AAAAAAAAAAAAAAAAAAAAAAAEDGJXBwhWweT2nQpMiMPt7F9k1nybWCoiPvFp04acnuu-AABAAAMo3SODbV95rM0KEEZoNX6_cRf7wUHIzKzCc_QrYD0YY_7AuuPfT3sAvs16W1ZsYso3uTbMLnqJq7q0vsj0ZQI",
+    "-LAg4AACA-e-acdc-IABEL5jmZNF5iYBz6h_M6TKXKlMkItcWcG2xyvqukWxBCbk0AAAAAAAAAAAAAAAAAAAAAAAEE25P4GEhB9qS6LobUKnObrx2-oef1abw9ZcMempuaCL",
+    "-LAW5AACAA-e-iss-VAS-GAB0AAAAAAAAAAAAAAAAAAAAAACEAqxAnXydODkdRnOb0fojJJV_BwU3cqXPIoObes3yi5z",
+    "-LBC5AACAA-e-anc-VA--AABAACg0rErmaSflAfExrWZ14dDypHVpgHnw4vnJ4ivrU8IqGjPPi4rpQ4ZeotH8hZ_4erOMNBaYJGmoudrxW6VaNME",
+    "-BABAACRhin0S6ADj-OVXysCR1HU-hfbiHX4FFXtTDk9QQGiJmKnhU8EYg4o6xkcxBQRwB1mZX08m9LOrzfH4ukuGCAF",
+    "-EAB0AAAAAAAAAAAAAAAAAAAAAAA1AAG2025-06-26T15c50c28d370607p00c00",
+  ].join("");
+
+  const result = Array.from(parseSync(atc, { version: 1 }));
+  assert.equal(result.length, 36);
+});

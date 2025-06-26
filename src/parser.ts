@@ -83,6 +83,9 @@ function isContextComplete(context: GroupContext): boolean {
       case CountCode_10.AttachmentGroup:
       case CountCode_10.BigAttachmentGroup:
         return context.quadlets === context.count;
+      case CountCode_10.PathedMaterialGroup:
+      case CountCode_10.BigPathedMaterialGroup:
+        return context.quadlets === context.count;
       default:
         throw new Error(`Cannot determine if group ${context.code} is finished`);
     }
