@@ -3,7 +3,6 @@ import { decodeBase64Int, decodeBase64Url } from "./encoding-base64.ts";
 import { IndexCode, IndexTable } from "./codes.ts";
 import { MatterCode, MatterTable } from "./codes.ts";
 import { CountCode_10, CountCode_20 } from "./codes.ts";
-import type { DataObject } from "./data-type.ts";
 import { decodeUtf8, encodeUtf8 } from "./encoding-utf8.ts";
 
 export interface CounterInit {
@@ -286,7 +285,7 @@ export function encodeMatter(raw: MatterInit): string {
   return encode(raw, size);
 }
 
-export function encodeMap(data: DataObject): string {
+export function encodeMap(data: Record<string, unknown>): string {
   const frames: string[] = [];
 
   for (const [key, value] of Object.entries(data)) {
@@ -300,8 +299,8 @@ export function encodeMap(data: DataObject): string {
         frames.push(encodeNumber(value));
         break;
       case "object": {
-        if (!Array.isArray(value) && !(value instanceof Date)) {
-          frames.push(encodeMap(value));
+        if (!Array.isArray(value) && value !== null && !(value instanceof Date)) {
+          frames.push(encodeMap({ ...value }));
         } else {
           throw new Error(`Unsupported object type for key ${key}: ${JSON.stringify(value)}`);
         }
@@ -508,7 +507,7 @@ export function encodeVersionString(init: MessageVersionInit) {
   return `${protocol}${version}${format}${size}.`;
 }
 
-export function encodeMessage<T extends DataObject>(body: T, init: MessageVersionInit = {}): string {
+export function encodeMessage<T extends Record<string, unknown>>(body: T, init: MessageVersionInit = {}): string {
   const str = encodeUtf8(
     JSON.stringify({
       v: encodeVersionString(init),

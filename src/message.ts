@@ -1,4 +1,3 @@
-import type { DataObject } from "./data-type.ts";
 import type { ParserOptions } from "./parser.ts";
 import { parse, type ParserInput } from "./parser.ts";
 
@@ -37,6 +36,6 @@ export async function* parseMessages(input: ParserInput, options: ParserOptions 
 }
 
 export interface Envelope {
-  payload: DataObject;
+  payload: Record<string, unknown>;
   attachments: Record<string, string[]>;
 }
