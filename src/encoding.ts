@@ -1,9 +1,13 @@
-import { encodeBase64Int, encodeBase64Url } from "./encoding-base64.ts";
+import { encodeBase64Int } from "./encoding-base64.ts";
 import { decodeBase64Int, decodeBase64Url } from "./encoding-base64.ts";
 import { IndexCode, IndexTable } from "./codes.ts";
 import { MatterCode, MatterTable } from "./codes.ts";
 import { CountCode_10, CountCode_20 } from "./codes.ts";
 import { decodeUtf8, encodeUtf8 } from "./encoding-utf8.ts";
+import { CodeTable } from "./code-table.ts";
+
+const encoder = new CodeTable(MatterTable);
+const indexer = new CodeTable(IndexTable);
 
 export interface CounterInit {
   code: string;
@@ -15,6 +19,7 @@ export interface Counter extends CounterInit {
 }
 
 export interface GenusInit {
+  genus: string;
   major: number;
   minor?: number;
 }
@@ -67,87 +72,15 @@ export type MessageVersion = Required<MessageVersionInit>;
 export type MatterDigest = "blake3_256" | "blake3_512";
 export type MatterSignature = "ed25519" | "secp256k1";
 
-export interface FrameData {
-  code: string;
-  raw?: Uint8Array;
-  count?: number;
-  index?: number;
-  ondex?: number;
-  text?: string;
-}
-
-export interface CodeSize {
-  hs: number;
-  fs: number;
-  ss: number;
-  os?: number;
-  ls?: number;
-  xs?: number;
-}
-
-export interface ParsingContext {
-  code: string;
-  version?: number;
-}
-
-/**
- * The result of decoding a stream. The frame property will
- * be null if there is not enough data to decode a frame.
- *
- * The n property indicates the number of bytes consumed
- */
-export interface DecodeStreamResult {
-  /**
-   * The decoded frame. This will be null if there is not enough data in the input
-   */
-  frame: Required<FrameData> | null;
-  /**
-   * The number of bytes consumed from the input
-   */
-  n: number;
-}
-
-interface EncodingScheme {
-  selector: string;
-  type?: string;
-  size: number;
-}
-
 // VERSION = "PPPPVVVKKKKBBBB.";
 // LEGACY_VERSION = "PPPPvvKKKKllllll_";
 const REGEX_VERSION_STRING_PROTOCOL = /^[A-Z]{4}$/;
 const REGEX_VERSION_STRING_KIND = /^[A-Z]{4}$/;
 const REGEX_VERSION_JSON = /^\{"v":"(.*?)".*$/;
 const REGEX_BASE64_CHARACTER = /^[A-Za-z0-9\-_]+$/;
-const ALPHABET = "ABCDEFGHIJKLMNOPQRSTUVWXYZabcdefghijklmnopqrstuvwxyz";
-
-const INDEXER_ENCODING_SCHEME: EncodingScheme[] = [
-  { selector: ALPHABET, size: 1 },
-  { selector: "01234", size: 2 },
-];
-
-// TODO: Create a lookup table for encoding schemes to avoid looping through
-const ENCODING_SCHEME: EncodingScheme[] = [
-  { selector: ALPHABET, size: 1 },
-  { selector: "0456", size: 2 },
-  { selector: "123789", size: 4 },
-  { selector: "-", type: ALPHABET, size: 2 },
-  { selector: "-", type: "-", size: 3 },
-  { selector: "-", type: "_", size: 5 },
-];
 
 function padNumber(num: number, length: number) {
   return num.toString().padStart(length, "0");
-}
-
-function prepadBytes(raw: Uint8Array, length: number): Uint8Array {
-  if (raw.byteLength === length) {
-    return raw;
-  }
-
-  const padded = new Uint8Array(length + raw.byteLength);
-  padded.set(raw, length);
-  return padded;
 }
 
 function encodeHexInt(value: number, length: number) {
@@ -156,114 +89,6 @@ function encodeHexInt(value: number, length: number) {
   }
 
   return value.toString(16).padStart(length, "0");
-}
-
-function isIndexer(context?: ParsingContext): boolean {
-  if (!context || !context.code.startsWith("-")) {
-    return false;
-  }
-
-  if (context.version === 1) {
-    switch (context.code) {
-      case CountCode_10.ControllerIdxSigs:
-      case CountCode_10.WitnessIdxSigs:
-        return true;
-      default:
-        return false;
-    }
-  }
-
-  switch (context.code) {
-    case CountCode_20.WitnessIdxSigs:
-    case CountCode_20.BigWitnessIdxSigs:
-    case CountCode_20.TransIdxSigGroups:
-    case CountCode_20.BigTransIdxSigGroups:
-    case CountCode_20.TransLastIdxSigGroups:
-    case CountCode_20.BigTransLastIdxSigGroups:
-    case CountCode_20.BigControllerIdxSigs:
-    case CountCode_20.ControllerIdxSigs:
-      return true;
-    default:
-      return false;
-  }
-}
-
-function findHardSize(input: Uint8Array, context?: ParsingContext): number {
-  const selector = decodeUtf8(input.slice(0, 1));
-  const type = decodeUtf8(input.slice(1, 2));
-
-  if (isIndexer(context)) {
-    for (const scheme of INDEXER_ENCODING_SCHEME) {
-      if (scheme.selector.includes(selector)) {
-        return scheme.size;
-      }
-    }
-
-    throw new Error(`Invalid first character in input ${selector}`);
-  }
-
-  for (const scheme of ENCODING_SCHEME) {
-    if (scheme.selector.includes(selector)) {
-      if (!scheme.type || scheme.type.includes(type)) {
-        return scheme.size;
-      }
-    }
-  }
-
-  throw new Error(`Invalid first character in input ${selector}`);
-}
-
-function findCodeSize(hard: string, context?: ParsingContext): CodeSize {
-  let size: CodeSize | null = null;
-
-  if (isIndexer(context)) {
-    size = IndexTable[hard];
-  } else if (hard.startsWith("-")) {
-    // Counter, no need to lookup since they are all determined by selector
-    const selector = hard.charAt(1);
-
-    if (ALPHABET.includes(selector)) {
-      size = { hs: 2, ss: 2, fs: 4 };
-    } else if (selector === "-") {
-      size = { hs: 3, ss: 5, fs: 8 };
-    } else if (selector === "_") {
-      size = { hs: 5, ss: 3, fs: 8 };
-    }
-  } else {
-    size = MatterTable[hard];
-  }
-
-  if (!size) {
-    throw new Error(`Unknown code ${hard}`);
-  }
-
-  return size;
-}
-
-export function encode(frame: FrameData, size: CodeSize): string {
-  if (frame.code.length !== size.hs) {
-    throw new Error(`Frame code ${frame.code} length ${frame.code.length} does not match expected size ${size.hs}`);
-  }
-
-  const ls = size.ls ?? 0;
-  const ms = (size.ss ?? 0) - (size.os ?? 0);
-  const os = size.os ?? 0;
-
-  const raw = frame.raw ?? new Uint8Array(0);
-
-  const padSize = (3 - ((raw.byteLength + ls) % 3)) % 3;
-  const padded = prepadBytes(raw, padSize + ls);
-
-  const soft = ms ? encodeBase64Int(frame.count ?? frame.index ?? padded.byteLength / 3, ms) : "";
-  const other = os ? encodeBase64Int(frame.ondex ?? 0, os ?? 0) : "";
-
-  const result = `${frame.code}${soft}${other}${encodeBase64Url(padded).slice(padSize)}`;
-
-  if (size.fs > 0 && result.length < size.fs) {
-    throw new Error(`Encoded size ${result.length} does not match expected size ${size.fs}`);
-  }
-
-  return result;
 }
 
 export function encodeIndexedSignature(alg: MatterSignature, raw: Uint8Array, index: number): string {
@@ -276,13 +101,7 @@ export function encodeIndexedSignature(alg: MatterSignature, raw: Uint8Array, in
 }
 
 export function encodeMatter(raw: MatterInit): string {
-  const size = MatterTable[raw.code];
-
-  if (!size) {
-    throw new Error(`Unknown matter code ${raw.code}`);
-  }
-
-  return encode(raw, size);
+  return decodeUtf8(encoder.encode(raw, "text"));
 }
 
 export function encodeMap(data: Record<string, unknown>): string {
@@ -449,7 +268,7 @@ export function encodeGenus(genus: GenusInit): string {
 }
 
 export function encodeCounter(raw: CounterInit): string {
-  return encode(raw, findCodeSize(raw.code));
+  return decodeUtf8(encoder.encode(raw, "text"));
 }
 
 export function encodeAttachmentsV1(count: number) {
@@ -469,13 +288,7 @@ export function encodeAttachmentsV2(count: number) {
 }
 
 export function encodeIndexer(frame: IndexerInit): string {
-  const size = IndexTable[frame.code];
-
-  if (!size) {
-    throw new Error(`Unknown indexer code ${frame.code}`);
-  }
-
-  return encode(frame, size);
+  return decodeUtf8(indexer.encode(frame, "text"));
 }
 
 export function encodeVersionString(init: MessageVersionInit) {
@@ -521,75 +334,19 @@ export function encodeMessage<T extends Record<string, unknown>>(body: T, init: 
   });
 }
 
-export function decode(input: string | Uint8Array, context?: ParsingContext): Required<FrameData> {
-  const result = decodeStream(input, context);
-
-  if (result.frame === null) {
-    throw new Error("Not enough data in input");
-  }
-
-  return result.frame;
-}
-
-export function decodeStream(input: string | Uint8Array, context?: ParsingContext): DecodeStreamResult {
-  if (typeof input === "string") {
-    input = encodeUtf8(input);
-  }
-
-  if (input.length < 1) {
-    return { frame: null, n: 0 };
-  }
-
-  const hs = findHardSize(input, context);
-
-  if (input.length < hs) {
-    return { frame: null, n: 0 };
-  }
-
-  const hard = decodeUtf8(input.slice(0, hs));
-  const size = findCodeSize(hard, context);
-
-  if (!size) {
-    throw new Error(`Unknown code ${hard}`);
-  }
-
-  const cs = size.hs + size.ss;
-  if (input.length < cs) {
-    return { frame: null, n: 0 };
-  }
-
-  const ls = size.ls ?? 0;
-  const ps = (size.hs + size.ss) % 4;
-  const ms = size.ss - (size.os ?? 0);
-  const os = size.os ?? 0;
-  const soft0 = decodeBase64Int(decodeUtf8(input.slice(size.hs, cs)));
-  const soft1 = decodeBase64Int(decodeUtf8(input.slice(size.hs + ms, size.hs + ms + os)));
-  const fs = size.fs > 0 ? size.fs : cs + soft0 * 4;
-
-  if (input.length < fs) {
-    return { frame: null, n: 0 };
-  }
-
-  const padding = "A".repeat(ps);
-  const text = decodeUtf8(input.slice(0, fs));
-  const rawtext = padding + text.slice(cs, fs);
-
-  const raw = decodeBase64Url(rawtext).slice(ps + ls);
-  return { frame: { code: hard, count: soft0, index: soft0, ondex: soft1, raw, text }, n: fs };
-}
-
 export function decodeGenus(input: string): Genus {
+  const genus = input.slice(2, 5);
   const major = decodeBase64Int(input.slice(5, 6));
   const minor = decodeBase64Int(input.slice(6, 8));
-  return { major, minor };
+  return { genus, major, minor };
 }
 
 export function decodeMatter(input: string | Uint8Array): Matter {
-  return decode(input);
+  return encoder.decode(input);
 }
 
 export function decodeCounter(input: string | Uint8Array): Counter {
-  return decode(input);
+  return encoder.decode(input);
 }
 
 export function decodeVersionString(input: string | Uint8Array): Required<MessageVersionInit> {
@@ -642,7 +399,6 @@ export function decodeVersionString(input: string | Uint8Array): Required<Messag
 }
 
 export const encoding = {
-  encode,
   encodeIndexedSignature,
   encodeMap,
   encodeMatter,
@@ -658,8 +414,6 @@ export const encoding = {
   encodeIndexer,
   encodeVersionString,
   encodeMessage,
-  decode,
-  decodeStream,
   decodeGenus,
   decodeMatter,
   decodeCounter,

@@ -5,7 +5,7 @@ import { CountCode_10, CountCode_20, IndexCode, IndexTable } from "./codes.ts";
 import { parseSync } from "./parser.ts";
 import * as encoding from "./encoding.ts";
 
-test("Should indexed signatures", async () => {
+test("Should parse indexed signatures", async () => {
   const attachment = [
     encoding.encodeCounter({ code: CountCode_10.ControllerIdxSigs, count: 3 }),
     encoding.encodeIndexer({ code: IndexCode.Ed25519_Big_Sig, raw: randomBytes(64), index: 0, ondex: 0 }),
@@ -33,14 +33,14 @@ test("Should throw if counter is ended early", async () => {
 
   assert.throws(() => {
     Array.from(parseSync(attachment, { version: 1 }));
-  }, new Error(`Invalid first character in input -`));
+  }, new Error(`Unknown code -BAC`));
 });
 
 test("Should switch from version 1 to version 2", async () => {
   const attachment = [
     encoding.encodeCounter({ code: CountCode_10.ControllerIdxSigs, count: 1 }),
     encoding.encodeIndexedSignature("ed25519", randomBytes(64), 0),
-    encoding.encodeGenus({ major: 2 }),
+    encoding.encodeGenus({ genus: "AAA", major: 2 }),
     encoding.encodeCounter({
       code: CountCode_20.ControllerIdxSigs,
       count: IndexTable[IndexCode.Ed25519_Sig].fs / 4,
@@ -65,7 +65,7 @@ test("Should switch from version 2 to version 1", async () => {
       count: IndexTable[IndexCode.Ed25519_Sig].fs / 4,
     }),
     encoding.encodeIndexedSignature("ed25519", randomBytes(64), 0),
-    encoding.encodeGenus({ major: 1, minor: 0 }),
+    encoding.encodeGenus({ genus: "AAA", major: 1, minor: 0 }),
     encoding.encodeCounter({ code: CountCode_10.ControllerIdxSigs, count: 1 }),
     encoding.encodeIndexedSignature("ed25519", randomBytes(64), 0),
   ].join("");

@@ -3,7 +3,6 @@ import assert from "node:assert/strict";
 import { describe, test } from "node:test";
 import { parseMessages } from "./message.ts";
 import { readFile } from "node:fs/promises";
-import { CountCode_10, CountCode_20 } from "./codes.ts";
 import { encoding } from "./encoding.ts";
 
 async function* chunk(filename: string, size = 100): AsyncIterable<Uint8Array> {
@@ -33,28 +32,30 @@ test("Test alice", { timeout: 100 }, async () => {
   assert.equal(result.length, 2);
   assert.equal(result[0].payload.t, "icp");
 
-  assert.deepEqual(result[0].attachments, {
-    [CountCode_10.ControllerIdxSigs]: [
-      "AABNdZWH0GbClYvhaOCeFDVU5ZzfK8fyYV9bRkPy-be92qcPT51PpbAKqleKJ0He9OiwYVQ5sYHUzC7RfUsUQyEE",
-    ],
-    [CountCode_10.WitnessIdxSigs]: [
-      "AAD3BFVo11CTQy2S-5x8gGij_PXBpKDApRtNmoqyITNolRVGNBQKOp0bpgaRqtLGMQBkIejLH4jAf_juj8qGlmIP",
-      "ABACLmNhfNNNYNidckbPK_bN0p7v1uXFWee-rMbMrlAIEsD2B5OacGRN77gqje9t-uJHHCLm8DgErQq9UN88ZtcO",
-    ],
-    [CountCode_10.FirstSeenReplayCouples]: ["0AAAAAAAAAAAAAAAAAAAAAAA", "1AAG2025-02-01T12c03c46d247069p00c00"],
-  });
+  assert.deepEqual(result[0].attachments, [
+    "-VBU",
+    "-AAB",
+    "AABNdZWH0GbClYvhaOCeFDVU5ZzfK8fyYV9bRkPy-be92qcPT51PpbAKqleKJ0He9OiwYVQ5sYHUzC7RfUsUQyEE",
+    "-BAC",
+    "AAD3BFVo11CTQy2S-5x8gGij_PXBpKDApRtNmoqyITNolRVGNBQKOp0bpgaRqtLGMQBkIejLH4jAf_juj8qGlmIP",
+    "ABACLmNhfNNNYNidckbPK_bN0p7v1uXFWee-rMbMrlAIEsD2B5OacGRN77gqje9t-uJHHCLm8DgErQq9UN88ZtcO",
+    "-EAB",
+    "0AAAAAAAAAAAAAAAAAAAAAAA",
+    "1AAG2025-02-01T12c03c46d247069p00c00",
+  ]);
 
   assert.equal(result[1].payload.t, "ixn");
-  assert.deepEqual(result[1].attachments, {
-    [CountCode_10.ControllerIdxSigs]: [
-      "AAAf10ab3SbPCY5g9pkFEITFu64Q-Pu9ErEUot6RM25o68s7x4Y8NxeI2Sq85KCIre_r1RkE4C-QvslgT7LUDF4J",
-    ],
-    [CountCode_10.WitnessIdxSigs]: [
-      "AAB1eHRUTMxehm1_N3mCIuUtVPqFwGoW6LVsGXKthVph8p3szmD4gKdjqJc2S_sG-T9xEQQim_1qGmY439ZcQp0C",
-      "ABDA8ndBBf9iAZNyq2k33TILE7WX-_k1CuhQ_bXoQIiUGvYKRweODHWBgbvhH8oTuKl6li4h818aNkQzAsaGj6UO",
-    ],
-    [CountCode_10.FirstSeenReplayCouples]: ["0AAAAAAAAAAAAAAAAAAAAAAB", "1AAG2025-02-01T12c03c48d444070p00c00"],
-  });
+  assert.deepEqual(result[1].attachments, [
+    "-VBU",
+    "-AAB",
+    "AAAf10ab3SbPCY5g9pkFEITFu64Q-Pu9ErEUot6RM25o68s7x4Y8NxeI2Sq85KCIre_r1RkE4C-QvslgT7LUDF4J",
+    "-BAC",
+    "AAB1eHRUTMxehm1_N3mCIuUtVPqFwGoW6LVsGXKthVph8p3szmD4gKdjqJc2S_sG-T9xEQQim_1qGmY439ZcQp0C",
+    "ABDA8ndBBf9iAZNyq2k33TILE7WX-_k1CuhQ_bXoQIiUGvYKRweODHWBgbvhH8oTuKl6li4h818aNkQzAsaGj6UO",
+    "-EAB",
+    "0AAAAAAAAAAAAAAAAAAAAAAB",
+    "1AAG2025-02-01T12c03c48d444070p00c00",
+  ]);
 });
 
 test("Test witness", { timeout: 100 }, async () => {
@@ -120,18 +121,18 @@ describe("Parse CESR 2", async () => {
     assert.equal(result.length, 2);
     assert.equal(result[0].payload.t, "icp");
     assert.equal(result[0].payload.v, "KERICAAJSONAAEq.");
-    assert.deepEqual(result[0].attachments, {
-      [CountCode_20.ControllerIdxSigs]: [
-        "AACME000QcZDeDtgMwJC6b0qhWckJBL-U9Ls9dhYKO9mcaIdffYYO_gi6tFl1xvKMwre886T8ODYLLVrMqlc3TcN",
-      ],
-    });
+    assert.deepEqual(result[0].attachments, [
+      "-CAX",
+      "-KAW",
+      "AACME000QcZDeDtgMwJC6b0qhWckJBL-U9Ls9dhYKO9mcaIdffYYO_gi6tFl1xvKMwre886T8ODYLLVrMqlc3TcN",
+    ]);
     assert.equal(result[1].payload.t, "ixn");
     assert.equal(result[1].payload.v, "KERICAAJSONAADK.");
-    assert.deepEqual(result[1].attachments, {
-      [CountCode_20.ControllerIdxSigs]: [
-        "AADBLfcct7HWPJkVWt09FakB1hNbSTj6D5o9m4yYOMBfUdv7msDsPRSK46ScKQkIO4XAiAkg_xzmvAmsSTkvoLwM",
-      ],
-    });
+    assert.deepEqual(result[1].attachments, [
+      "-CAX",
+      "-KAW",
+      "AADBLfcct7HWPJkVWt09FakB1hNbSTj6D5o9m4yYOMBfUdv7msDsPRSK46ScKQkIO4XAiAkg_xzmvAmsSTkvoLwM",
+    ]);
   });
 });
 
@@ -144,13 +145,13 @@ test("Test oobi with mailbox", { timeout: 100 }, async () => {
   assert.equal(result[2].payload.t, "rpy");
   assert.equal(result[3].payload.t, "rpy");
 
-  assert.deepEqual(result[3].attachments, {
-    // TODO: -A is actually a subgroup of -F, but it is not straighforward to parse in CESR 1.0
-    "-F": [
-      "EL8vpSig7NmSxLJ44QSJozcTVYSqPUHVQWPZtyVmPUO_",
-      "0AAAAAAAAAAAAAAAAAAAAAAA",
-      "EL8vpSig7NmSxLJ44QSJozcTVYSqPUHVQWPZtyVmPUO_",
-    ],
-    "-A": ["AAA9rX7EH8MSl9OIW67yuFoMBgPhrOHrrf0tLyZpOLoD6HbVSr4qM7n0itmwvG3o9YbyZkmXOE7288K8KNsdS3UC"],
-  });
+  assert.deepEqual(result[3].attachments, [
+    "-VA0",
+    "-FAB",
+    "EL8vpSig7NmSxLJ44QSJozcTVYSqPUHVQWPZtyVmPUO_",
+    "0AAAAAAAAAAAAAAAAAAAAAAA",
+    "EL8vpSig7NmSxLJ44QSJozcTVYSqPUHVQWPZtyVmPUO_",
+    "-AAB",
+    "AAA9rX7EH8MSl9OIW67yuFoMBgPhrOHrrf0tLyZpOLoD6HbVSr4qM7n0itmwvG3o9YbyZkmXOE7288K8KNsdS3UC",
+  ]);
 });

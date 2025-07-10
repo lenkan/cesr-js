@@ -48,6 +48,5 @@ curl https://raw.githubusercontent.com/lenkan/cesr-js/refs/heads/main/fixtures/g
 
 # Features
 
-- [x] Simple parsing of KERI CESR Stream
+- [x] Parsing CESR Stream
 - [ ] API for encoding/decoding primitives
-- [ ] ...
