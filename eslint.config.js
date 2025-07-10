@@ -14,7 +14,7 @@ export default tseslint.config(
   {
     rules: {
       // Rules for --experimental-strip-types to work
-      "@typescript-eslint/consistent-type-imports": "error",
+      "@typescript-eslint/consistent-type-imports": ["error", { fixStyle: "inline-type-imports" }],
       "@typescript-eslint/parameter-properties": "error",
     },
   },

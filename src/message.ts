@@ -7,9 +7,8 @@ import { parse, type ParserInput } from "./parser.ts";
  * @param input Incoming stream of bytes
  * @returns An async iterable of messages with attachments
  */
-export async function* parseMessages(input: ParserInput, options: ParserOptions = {}): AsyncIterableIterator<Envelope> {
-  let group: string | null = null;
-  let message: Envelope | null = null;
+export async function* parseMessages(input: ParserInput, options: ParserOptions = {}): AsyncIterableIterator<Message> {
+  let message: Message | null = null;
 
   for await (const frame of parse(input, options)) {
     if (frame.type === "message") {
@@ -17,16 +16,10 @@ export async function* parseMessages(input: ParserInput, options: ParserOptions 
         yield message;
       }
 
-      message = { payload: JSON.parse(frame.text), attachments: {} };
-      group = null;
-    } else if (frame.code.startsWith("-")) {
-      group = frame.code;
+      message = { payload: JSON.parse(frame.text), attachments: [] };
     } else {
-      message = message ?? { payload: {}, attachments: {} };
-
-      if (group) {
-        message.attachments[group] = [...(message.attachments[group] ?? []), frame.text];
-      }
+      message = message ?? { payload: {}, attachments: [] };
+      message.attachments.push(frame.text);
     }
   }
 
@@ -35,7 +28,7 @@ export async function* parseMessages(input: ParserInput, options: ParserOptions 
   }
 }
 
-export interface Envelope {
+export interface Message {
   payload: Record<string, unknown>;
-  attachments: Record<string, string[]>;
+  attachments: string[];
 }
