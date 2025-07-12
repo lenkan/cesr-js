@@ -5,18 +5,7 @@ from keri.core.counting import CtrDex_1_0, CtrDex_2_0, Counter, Cizage
 from json import dumps
 
 
-def format_hards(hards: dict[str, int]) -> str:
-    result = dict()
-    for key, size in hards.items():
-        if not key.startswith("__"):
-            result[key] = size
-
-    return dumps(result)
-
-
-def format_size(
-    sizes: dict[str, Cizage | Xizage | Sizage]
-) -> str:
+def format_size(sizes: dict[str, Cizage | Xizage | Sizage]) -> str:
     result = dict()
 
     for key, size in sizes.items():
