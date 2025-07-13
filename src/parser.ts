@@ -8,6 +8,7 @@ export interface CesrFrame {
   type: "cesr";
   code: string;
   text: string;
+  raw: Uint8Array;
 }
 
 export interface MessageFrame {
@@ -18,6 +19,7 @@ export interface MessageFrame {
    */
   code: string;
   text: string;
+  raw: Uint8Array;
 }
 
 export type Frame = CesrFrame | MessageFrame;
@@ -231,12 +233,14 @@ class Parser {
           type: "message",
           code: "JSON",
           text: result.frame.text,
+          raw: result.frame.raw,
         };
       } else {
         yield {
           type: "cesr",
           code: result.frame.code,
           text: result.frame.text,
+          raw: result.frame.raw,
         };
       }
     }

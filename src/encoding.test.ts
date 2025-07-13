@@ -2,6 +2,7 @@ import test, { describe } from "node:test";
 import { encoding } from "./encoding.ts";
 import assert from "node:assert/strict";
 import { encodeUtf8 } from "./encoding-utf8.ts";
+import { CountCode_10, CountCode_20 } from "./codes.ts";
 
 describe("Encode", () => {
   test("should throw if raw does not have enough bytes", () => {
@@ -165,26 +166,26 @@ describe("Encode indexer", () => {
 describe("Counter v1", () => {
   test("Encode attachment group", () => {
     const result = encoding.encodeAttachmentsV1(39);
-    assert.equal(result, "-VAn");
+    assert.equal(result, `${CountCode_10.AttachmentGroup}An`);
   });
 
   test("Encode big attachment group", () => {
     const result = encoding.encodeAttachmentsV1(64 ** 2 + 1);
-    assert.equal(result, "--VAABAB");
+    assert.equal(result, `${CountCode_10.BigAttachmentGroup}AABAB`);
   });
 
   test("Encode genus", () => {
     const result = encoding.encodeGenus({ genus: "AAA", major: 3, minor: 1239 });
-    assert.equal(result, "-_AAADTX");
+    assert.equal(result, `${CountCode_20.KERIACDCGenusVersion}DTX`);
   });
 
   test("Encode genus without minor", () => {
     const result = encoding.encodeGenus({ genus: "AAA", major: 3 });
-    assert.equal(result, "-_AAADAA");
+    assert.equal(result, `${CountCode_20.KERIACDCGenusVersion}DAA`);
   });
 
   test("Decode genus", () => {
-    const result = encoding.decodeGenus("-_AAADTX");
+    const result = encoding.decodeGenus(`${CountCode_20.KERIACDCGenusVersion}DTX`);
     assert.deepEqual(result, { genus: "AAA", major: 3, minor: 1239 });
   });
 });
@@ -192,11 +193,11 @@ describe("Counter v1", () => {
 describe("Counter v2", () => {
   test("Encode attachment group", () => {
     const result = encoding.encodeAttachmentsV2(39);
-    assert.equal(result, "-CAn");
+    assert.equal(result, `${CountCode_20.AttachmentGroup}An`);
   });
 
   test("Encode big attachment group", () => {
     const result = encoding.encodeAttachmentsV2(64 ** 2 + 1);
-    assert.equal(result, "--CAABAB");
+    assert.equal(result, `${CountCode_20.BigAttachmentGroup}AABAB`);
   });
 });
