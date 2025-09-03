@@ -62,8 +62,8 @@ function isContextFinished(version: number, context: ParsingContext): boolean {
       case CountCode_10.AttachmentGroup:
       case CountCode_10.BigAttachmentGroup:
         return context.n === context.count;
-      case CountCode_10.PathedMaterialGroup:
-      case CountCode_10.BigPathedMaterialGroup:
+      case CountCode_10.PathedMaterialCouples:
+      case CountCode_10.BigPathedMaterialCouples:
         return context.n === context.count;
       default:
         throw new Error(`Cannot determine if group ${context.code} is finished`);

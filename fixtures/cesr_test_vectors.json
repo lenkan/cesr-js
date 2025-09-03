@@ -900,150 +900,6 @@
     "qb2": "4c4b33f3df239e33825e02e2eaba4f"
   },
   {
-    "code": "9AAG",
-    "name": "HPKEAuth_Cipher_Big_L2",
-    "type": "matter",
-    "raw": "00000000000000000000000000",
-    "soft": "AAAF",
-    "index": null,
-    "ondex": null,
-    "count": null,
-    "qb64": "9AAGAAAFAAAAAAAAAAAAAAAAAAAA",
-    "qb2": "f40006000005000000000000000000000000000000"
-  },
-  {
-    "code": "9AAG",
-    "name": "HPKEAuth_Cipher_Big_L2",
-    "type": "matter",
-    "raw": "dc0e7e6368f670d60c8959a840",
-    "soft": "AAAF",
-    "index": null,
-    "ondex": null,
-    "count": null,
-    "qb64": "9AAGAAAFAADcDn5jaPZw1gyJWahA",
-    "qb2": "f400060000050000dc0e7e6368f670d60c8959a840"
-  },
-  {
-    "code": "7AAG",
-    "name": "HPKEAuth_Cipher_Big_L0",
-    "type": "matter",
-    "raw": "000000000000",
-    "soft": "AAAC",
-    "index": null,
-    "ondex": null,
-    "count": null,
-    "qb64": "7AAGAAACAAAAAAAA",
-    "qb2": "ec0006000002000000000000"
-  },
-  {
-    "code": "7AAG",
-    "name": "HPKEAuth_Cipher_Big_L0",
-    "type": "matter",
-    "raw": "f77e838fd9b0",
-    "soft": "AAAC",
-    "index": null,
-    "ondex": null,
-    "count": null,
-    "qb64": "7AAGAAAC936Dj9mw",
-    "qb2": "ec0006000002f77e838fd9b0"
-  },
-  {
-    "code": "7AAG",
-    "name": "HPKEAuth_Cipher_Big_L0",
-    "type": "matter",
-    "raw": "",
-    "soft": "AAAA",
-    "index": null,
-    "ondex": null,
-    "count": null,
-    "qb64": "7AAGAAAA",
-    "qb2": "ec0006000000"
-  },
-  {
-    "code": "7AAG",
-    "name": "HPKEAuth_Cipher_Big_L0",
-    "type": "matter",
-    "raw": "",
-    "soft": "AAAA",
-    "index": null,
-    "ondex": null,
-    "count": null,
-    "qb64": "7AAGAAAA",
-    "qb2": "ec0006000000"
-  },
-  {
-    "code": "4G",
-    "name": "HPKEAuth_Cipher_L0",
-    "type": "matter",
-    "raw": "000000000000000000000000000000000000",
-    "soft": "AG",
-    "index": null,
-    "ondex": null,
-    "count": null,
-    "qb64": "4GAGAAAAAAAAAAAAAAAAAAAAAAAA",
-    "qb2": "e06006000000000000000000000000000000000000"
-  },
-  {
-    "code": "4G",
-    "name": "HPKEAuth_Cipher_L0",
-    "type": "matter",
-    "raw": "9bd1d7bd042e3e148ea0fe551a2930bdb20b",
-    "soft": "AG",
-    "index": null,
-    "ondex": null,
-    "count": null,
-    "qb64": "4GAGm9HXvQQuPhSOoP5VGikwvbIL",
-    "qb2": "e060069bd1d7bd042e3e148ea0fe551a2930bdb20b"
-  },
-  {
-    "code": "6G",
-    "name": "HPKEAuth_Cipher_L2",
-    "type": "matter",
-    "raw": "00000000000000000000000000000000000000",
-    "soft": "AH",
-    "index": null,
-    "ondex": null,
-    "count": null,
-    "qb64": "6GAHAAAAAAAAAAAAAAAAAAAAAAAAAAAA",
-    "qb2": "e86007000000000000000000000000000000000000000000"
-  },
-  {
-    "code": "6G",
-    "name": "HPKEAuth_Cipher_L2",
-    "type": "matter",
-    "raw": "93f5e747a4b78422a12f793d975a1dc34800f4",
-    "soft": "AH",
-    "index": null,
-    "ondex": null,
-    "count": null,
-    "qb64": "6GAHAACT9edHpLeEIqEveT2XWh3DSAD0",
-    "qb2": "e86007000093f5e747a4b78422a12f793d975a1dc34800f4"
-  },
-  {
-    "code": "6G",
-    "name": "HPKEAuth_Cipher_L2",
-    "type": "matter",
-    "raw": "00000000000000000000000000000000",
-    "soft": "AG",
-    "index": null,
-    "ondex": null,
-    "count": null,
-    "qb64": "6GAGAAAAAAAAAAAAAAAAAAAAAAAA",
-    "qb2": "e86006000000000000000000000000000000000000"
-  },
-  {
-    "code": "6G",
-    "name": "HPKEAuth_Cipher_L2",
-    "type": "matter",
-    "raw": "5b742b5ab2d9319ced5db2494c2b64ac",
-    "soft": "AG",
-    "index": null,
-    "ondex": null,
-    "count": null,
-    "qb64": "6GAGAABbdCtastkxnO1dsklMK2Ss",
-    "qb2": "e8600600005b742b5ab2d9319ced5db2494c2b64ac"
-  },
-  {
     "code": "9AAF",
     "name": "HPKEBase_Cipher_Big_L2",
     "type": "matter",
@@ -1059,133 +915,133 @@
     "code": "9AAF",
     "name": "HPKEBase_Cipher_Big_L2",
     "type": "matter",
-    "raw": "2d701c97aa6b68f27c6956e4a2",
+    "raw": "dc0e7e6368f670d60c8959a840",
     "soft": "AAAF",
     "index": null,
     "ondex": null,
     "count": null,
-    "qb64": "9AAFAAAFAAAtcByXqmto8nxpVuSi",
-    "qb2": "f4000500000500002d701c97aa6b68f27c6956e4a2"
+    "qb64": "9AAFAAAFAADcDn5jaPZw1gyJWahA",
+    "qb2": "f400050000050000dc0e7e6368f670d60c8959a840"
   },
   {
     "code": "7AAF",
     "name": "HPKEBase_Cipher_Big_L0",
     "type": "matter",
-    "raw": "000000000000000000000000000000000000000000",
-    "soft": "AAAH",
+    "raw": "000000000000",
+    "soft": "AAAC",
     "index": null,
     "ondex": null,
     "count": null,
-    "qb64": "7AAFAAAHAAAAAAAAAAAAAAAAAAAAAAAAAAAA",
-    "qb2": "ec0005000007000000000000000000000000000000000000000000"
+    "qb64": "7AAFAAACAAAAAAAA",
+    "qb2": "ec0005000002000000000000"
   },
   {
     "code": "7AAF",
     "name": "HPKEBase_Cipher_Big_L0",
     "type": "matter",
-    "raw": "9450e1216fd432b785a96f4ff718556345c59cbf6a",
-    "soft": "AAAH",
+    "raw": "f77e838fd9b0",
+    "soft": "AAAC",
     "index": null,
     "ondex": null,
     "count": null,
-    "qb64": "7AAFAAAHlFDhIW_UMreFqW9P9xhVY0XFnL9q",
-    "qb2": "ec00050000079450e1216fd432b785a96f4ff718556345c59cbf6a"
+    "qb64": "7AAFAAAC936Dj9mw",
+    "qb2": "ec0005000002f77e838fd9b0"
   },
   {
     "code": "7AAF",
     "name": "HPKEBase_Cipher_Big_L0",
     "type": "matter",
-    "raw": "000000",
-    "soft": "AAAB",
+    "raw": "",
+    "soft": "AAAA",
     "index": null,
     "ondex": null,
     "count": null,
-    "qb64": "7AAFAAABAAAA",
-    "qb2": "ec0005000001000000"
+    "qb64": "7AAFAAAA",
+    "qb2": "ec0005000000"
   },
   {
     "code": "7AAF",
     "name": "HPKEBase_Cipher_Big_L0",
     "type": "matter",
-    "raw": "e46300",
-    "soft": "AAAB",
+    "raw": "",
+    "soft": "AAAA",
     "index": null,
     "ondex": null,
     "count": null,
-    "qb64": "7AAFAAAB5GMA",
-    "qb2": "ec0005000001e46300"
+    "qb64": "7AAFAAAA",
+    "qb2": "ec0005000000"
+  },
+  {
+    "code": "4F",
+    "name": "HPKEBase_Cipher_L0",
+    "type": "matter",
+    "raw": "000000000000000000000000000000000000",
+    "soft": "AG",
+    "index": null,
+    "ondex": null,
+    "count": null,
+    "qb64": "4FAGAAAAAAAAAAAAAAAAAAAAAAAA",
+    "qb2": "e05006000000000000000000000000000000000000"
+  },
+  {
+    "code": "4F",
+    "name": "HPKEBase_Cipher_L0",
+    "type": "matter",
+    "raw": "9bd1d7bd042e3e148ea0fe551a2930bdb20b",
+    "soft": "AG",
+    "index": null,
+    "ondex": null,
+    "count": null,
+    "qb64": "4FAGm9HXvQQuPhSOoP5VGikwvbIL",
+    "qb2": "e050069bd1d7bd042e3e148ea0fe551a2930bdb20b"
   },
   {
     "code": "6F",
     "name": "HPKEBase_Cipher_L2",
     "type": "matter",
-    "raw": "00000000000000000000000000000000000000000000",
-    "soft": "AI",
+    "raw": "00000000000000000000000000000000000000",
+    "soft": "AH",
     "index": null,
     "ondex": null,
     "count": null,
-    "qb64": "6FAIAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAA",
-    "qb2": "e85008000000000000000000000000000000000000000000000000"
+    "qb64": "6FAHAAAAAAAAAAAAAAAAAAAAAAAAAAAA",
+    "qb2": "e85007000000000000000000000000000000000000000000"
   },
   {
     "code": "6F",
     "name": "HPKEBase_Cipher_L2",
     "type": "matter",
-    "raw": "b7323b31af50d6b275599b5504fdfa28515d4a3d1c39",
-    "soft": "AI",
+    "raw": "93f5e747a4b78422a12f793d975a1dc34800f4",
+    "soft": "AH",
     "index": null,
     "ondex": null,
     "count": null,
-    "qb64": "6FAIAAC3Mjsxr1DWsnVZm1UE_fooUV1KPRw5",
-    "qb2": "e850080000b7323b31af50d6b275599b5504fdfa28515d4a3d1c39"
+    "qb64": "6FAHAACT9edHpLeEIqEveT2XWh3DSAD0",
+    "qb2": "e85007000093f5e747a4b78422a12f793d975a1dc34800f4"
   },
   {
-    "code": "5F",
-    "name": "HPKEBase_Cipher_L1",
+    "code": "6F",
+    "name": "HPKEBase_Cipher_L2",
     "type": "matter",
-    "raw": "0000000000000000000000000000000000",
+    "raw": "00000000000000000000000000000000",
     "soft": "AG",
     "index": null,
     "ondex": null,
     "count": null,
-    "qb64": "5FAGAAAAAAAAAAAAAAAAAAAAAAAA",
-    "qb2": "e45006000000000000000000000000000000000000"
+    "qb64": "6FAGAAAAAAAAAAAAAAAAAAAAAAAA",
+    "qb2": "e85006000000000000000000000000000000000000"
   },
   {
-    "code": "5F",
-    "name": "HPKEBase_Cipher_L1",
+    "code": "6F",
+    "name": "HPKEBase_Cipher_L2",
     "type": "matter",
-    "raw": "7114ef60f77ed9b550bf1be003887cac91",
+    "raw": "5b742b5ab2d9319ced5db2494c2b64ac",
     "soft": "AG",
     "index": null,
     "ondex": null,
     "count": null,
-    "qb64": "5FAGAHEU72D3ftm1UL8b4AOIfKyR",
-    "qb2": "e45006007114ef60f77ed9b550bf1be003887cac91"
-  },
-  {
-    "code": "5F",
-    "name": "HPKEBase_Cipher_L1",
-    "type": "matter",
-    "raw": "0000000000000000000000000000",
-    "soft": "AF",
-    "index": null,
-    "ondex": null,
-    "count": null,
-    "qb64": "5FAFAAAAAAAAAAAAAAAAAAAA",
-    "qb2": "e45005000000000000000000000000000000"
-  },
-  {
-    "code": "5F",
-    "name": "HPKEBase_Cipher_L1",
-    "type": "matter",
-    "raw": "585d130889f9fa6617f526dfabb3",
-    "soft": "AF",
-    "index": null,
-    "ondex": null,
-    "count": null,
-    "qb64": "5FAFAFhdEwiJ-fpmF_Um36uz",
-    "qb2": "e4500500585d130889f9fa6617f526dfabb3"
+    "qb64": "6FAGAABbdCtastkxnO1dsklMK2Ss",
+    "qb2": "e8500600005b742b5ab2d9319ced5db2494c2b64ac"
   },
   {
     "code": "V",
@@ -1203,13 +1059,13 @@
     "code": "V",
     "name": "Label1",
     "type": "matter",
-    "raw": "91",
+    "raw": "5b",
     "soft": "",
     "index": null,
     "ondex": null,
     "count": null,
-    "qb64": "VACR",
-    "qb2": "540091"
+    "qb64": "VABb",
+    "qb2": "54005b"
   },
   {
     "code": "W",
@@ -1227,13 +1083,13 @@
     "code": "W",
     "name": "Label2",
     "type": "matter",
-    "raw": "106b",
+    "raw": "1c97",
     "soft": "",
     "index": null,
     "ondex": null,
     "count": null,
-    "qb64": "WBBr",
-    "qb2": "58106b"
+    "qb64": "WByX",
+    "qb2": "581c97"
   },
   {
     "code": "S",
@@ -1251,13 +1107,13 @@
     "code": "S",
     "name": "Large",
     "type": "matter",
-    "raw": "81f6adc561ab85a96b81b5",
+    "raw": "aa6b68f27c6956e44c3da2",
     "soft": "",
     "index": null,
     "ondex": null,
     "count": null,
-    "qb64": "SIH2rcVhq4Wpa4G1",
-    "qb2": "4881f6adc561ab85a96b81b5"
+    "qb64": "SKpraPJ8aVbkTD2i",
+    "qb2": "48aa6b68f27c6956e44c3da2"
   },
   {
     "code": "0H",
@@ -1275,13 +1131,13 @@
     "code": "0H",
     "name": "Long",
     "type": "matter",
-    "raw": "efc0f90b",
+    "raw": "34f590da",
     "soft": "",
     "index": null,
     "ondex": null,
     "count": null,
-    "qb64": "0HDvwPkL",
-    "qb2": "d070efc0f90b"
+    "qb64": "0HA09ZDa",
+    "qb2": "d07034f590da"
   },
   {
     "code": "1AAL",
@@ -1347,13 +1203,13 @@
     "code": "I",
     "name": "SHA2_256",
     "type": "matter",
-    "raw": "c7ac692ae39902726bda5a1000b25c42579096b3b4255e2836f544724c080f87",
+    "raw": "64e4fe9e9450e1216fd432b785a96f4ff718556345c59cbf1c4c176adbf832d4",
     "soft": "",
     "index": null,
     "ondex": null,
     "count": null,
-    "qb64": "IMesaSrjmQJya9paEACyXEJXkJaztCVeKDb1RHJMCA-H",
-    "qb2": "20c7ac692ae39902726bda5a1000b25c42579096b3b4255e2836f544724c080f87"
+    "qb64": "IGTk_p6UUOEhb9Qyt4Wpb0_3GFVjRcWcvxxMF2rb-DLU",
+    "qb2": "2064e4fe9e9450e1216fd432b785a96f4ff718556345c59cbf1c4c176adbf832d4"
   },
   {
     "code": "0G",
@@ -1371,13 +1227,13 @@
     "code": "0G",
     "name": "SHA2_512",
     "type": "matter",
-    "raw": "ffc98be22570bd7cd34c75e8ab3bb88f10439e9a3f7367c14c88040060a445e28f04f6094ff89c7e570f71539a0ce34ff7eb75d6e53f86778c6dc30c10a11dcf",
+    "raw": "85fb9ca61c45aa142fe4630089313698b7323b31af50d6b275599b5504fdfa28515d4a3d46f01c396f9b2ca339ffb8727114ef60f77ed9b550bf1be003887cac",
     "soft": "",
     "index": null,
     "ondex": null,
     "count": null,
-    "qb64": "0GD_yYviJXC9fNNMdeirO7iPEEOemj9zZ8FMiAQAYKRF4o8E9glP-Jx-Vw9xU5oM40_363XW5T-Gd4xtwwwQoR3P",
-    "qb2": "d060ffc98be22570bd7cd34c75e8ab3bb88f10439e9a3f7367c14c88040060a445e28f04f6094ff89c7e570f71539a0ce34ff7eb75d6e53f86778c6dc30c10a11dcf"
+    "qb64": "0GCF-5ymHEWqFC_kYwCJMTaYtzI7Ma9Q1rJ1WZtVBP36KFFdSj1G8Bw5b5ssozn_uHJxFO9g937ZtVC_G-ADiHys",
+    "qb2": "d06085fb9ca61c45aa142fe4630089313698b7323b31af50d6b275599b5504fdfa28515d4a3d46f01c396f9b2ca339ffb8727114ef60f77ed9b550bf1be003887cac"
   },
   {
     "code": "H",
@@ -1395,13 +1251,13 @@
     "code": "H",
     "name": "SHA3_256",
     "type": "matter",
-    "raw": "dfc59dd2e51101e0efa763f9dd6cfacf1a72466a5cda203037906e8c3603daff",
+    "raw": "0a5f729107b3e1dfad89166a585d130889f9fa6617f526df2c1babb305de4591",
     "soft": "",
     "index": null,
     "ondex": null,
     "count": null,
-    "qb64": "HN_FndLlEQHg76dj-d1s-s8ackZqXNogMDeQbow2A9r_",
-    "qb2": "1cdfc59dd2e51101e0efa763f9dd6cfacf1a72466a5cda203037906e8c3603daff"
+    "qb64": "HApfcpEHs-HfrYkWalhdEwiJ-fpmF_Um3ywbq7MF3kWR",
+    "qb2": "1c0a5f729107b3e1dfad89166a585d130889f9fa6617f526df2c1babb305de4591"
   },
   {
     "code": "0F",
@@ -1419,13 +1275,13 @@
     "code": "0F",
     "name": "SHA3_512",
     "type": "matter",
-    "raw": "a5a489f6c51a12a2a4ad83fab1185e159d0463d62deebdb982df69213655a0fc714cc5039477dd660c8c15f3cb28b3ad524de06a2bfcf050f559de00748da936",
+    "raw": "3ae5106b81f6adc561ab85a9746b81b5efc0f90bc7ac692ae39902726bda5a1000b25c42579096b3b4255e2836f544724c080f87ffc98be22570bd7cd34c75e8",
     "soft": "",
     "index": null,
     "ondex": null,
     "count": null,
-    "qb64": "0FClpIn2xRoSoqStg_qxGF4VnQRj1i3uvbmC32khNlWg_HFMxQOUd91mDIwV88sos61STeBqK_zwUPVZ3gB0jak2",
-    "qb2": "d050a5a489f6c51a12a2a4ad83fab1185e159d0463d62deebdb982df69213655a0fc714cc5039477dd660c8c15f3cb28b3ad524de06a2bfcf050f559de00748da936"
+    "qb64": "0FA65RBrgfatxWGrhal0a4G178D5C8esaSrjmQJya9paEACyXEJXkJaztCVeKDb1RHJMCA-H_8mL4iVwvXzTTHXo",
+    "qb2": "d0503ae5106b81f6adc561ab85a9746b81b5efc0f90bc7ac692ae39902726bda5a1000b25c42579096b3b4255e2836f544724c080f87ffc98be22570bd7cd34c75e8"
   },
   {
     "code": "0A",
@@ -1443,13 +1299,13 @@
     "code": "0A",
     "name": "Salt_128",
     "type": "matter",
-    "raw": "7998a8030a8ea2b7e58b37c15b819a00",
+    "raw": "ab3bb88f10439e9a3f7367c14c880400",
     "soft": "",
     "index": null,
     "ondex": null,
     "count": null,
-    "qb64": "0AB5mKgDCo6it-WLN8FbgZoA",
-    "qb2": "d0007998a8030a8ea2b7e58b37c15b819a00"
+    "qb64": "0ACrO7iPEEOemj9zZ8FMiAQA",
+    "qb2": "d000ab3bb88f10439e9a3f7367c14c880400"
   },
   {
     "code": "a",
@@ -1467,13 +1323,13 @@
     "code": "a",
     "name": "Salt_256",
     "type": "matter",
-    "raw": "1b50f1fa93869ed24bbbfeac91ae4187c117b09c156508196afbc130527c701e",
+    "raw": "60a445e28f04f6094ff89c7e570f71539a0ce34ff7eb75d6e53f86778c6dc30c",
     "soft": "",
     "index": null,
     "ondex": null,
     "count": null,
-    "qb64": "aBtQ8fqThp7SS7v-rJGuQYfBF7CcFWUIGWr7wTBSfHAe",
-    "qb2": "681b50f1fa93869ed24bbbfeac91ae4187c117b09c156508196afbc130527c701e"
+    "qb64": "aGCkReKPBPYJT_icflcPcVOaDONP9-t11uU_hneMbcMM",
+    "qb2": "6860a445e28f04f6094ff89c7e570f71539a0ce34ff7eb75d6e53f86778c6dc30c"
   },
   {
     "code": "M",
@@ -1491,157 +1347,157 @@
     "code": "M",
     "name": "Short",
     "type": "matter",
-    "raw": "bd9b",
+    "raw": "1dcf",
     "soft": "",
     "index": null,
     "ondex": null,
     "count": null,
-    "qb64": "ML2b",
-    "qb2": "30bd9b"
+    "qb64": "MB3P",
+    "qb2": "301dcf"
   },
   {
     "code": "7AAA",
     "name": "StrB64_Big_L0",
     "type": "matter",
-    "raw": "000000000000000000",
-    "soft": "AAAD",
+    "raw": "000000000000000000000000000000",
+    "soft": "AAAF",
     "index": null,
     "ondex": null,
     "count": null,
-    "qb64": "7AAAAAADAAAAAAAAAAAA",
-    "qb2": "ec0000000003000000000000000000"
+    "qb64": "7AAAAAAFAAAAAAAAAAAAAAAAAAAA",
+    "qb2": "ec0000000005000000000000000000000000000000"
   },
   {
     "code": "7AAA",
     "name": "StrB64_Big_L0",
     "type": "matter",
-    "raw": "edc6a7df4f236b4d47",
-    "soft": "AAAD",
+    "raw": "5cda203037906e8c3603daffa489f6",
+    "soft": "AAAF",
     "index": null,
     "ondex": null,
     "count": null,
-    "qb64": "7AAAAAAD7can308ja01H",
-    "qb2": "ec0000000003edc6a7df4f236b4d47"
+    "qb64": "7AAAAAAFXNogMDeQbow2A9r_pIn2",
+    "qb2": "ec00000000055cda203037906e8c3603daffa489f6"
   },
   {
     "code": "7AAA",
     "name": "StrB64_Big_L0",
     "type": "matter",
-    "raw": "000000000000",
-    "soft": "AAAC",
+    "raw": "000000",
+    "soft": "AAAB",
     "index": null,
     "ondex": null,
     "count": null,
-    "qb64": "7AAAAAACAAAAAAAA",
-    "qb2": "ec0000000002000000000000"
+    "qb64": "7AAAAAABAAAA",
+    "qb2": "ec0000000001000000"
   },
   {
     "code": "7AAA",
     "name": "StrB64_Big_L0",
     "type": "matter",
-    "raw": "1b71a519c179",
-    "soft": "AAAC",
+    "raw": "0463d6",
+    "soft": "AAAB",
     "index": null,
     "ondex": null,
     "count": null,
-    "qb64": "7AAAAAACG3GlGcF5",
-    "qb2": "ec00000000021b71a519c179"
+    "qb64": "7AAAAAABBGPW",
+    "qb2": "ec00000000010463d6"
   },
   {
     "code": "8AAA",
     "name": "StrB64_Big_L1",
     "type": "matter",
-    "raw": "0000000000000000000000000000",
-    "soft": "AAAF",
+    "raw": "0000000000",
+    "soft": "AAAC",
     "index": null,
     "ondex": null,
     "count": null,
-    "qb64": "8AAAAAAFAAAAAAAAAAAAAAAAAAAA",
-    "qb2": "f00000000005000000000000000000000000000000"
+    "qb64": "8AAAAAACAAAAAAAA",
+    "qb2": "f00000000002000000000000"
   },
   {
     "code": "8AAA",
     "name": "StrB64_Big_L1",
     "type": "matter",
-    "raw": "c9f4aca0bc0dd314b6aa97055346",
-    "soft": "AAAF",
+    "raw": "3655a0fc03",
+    "soft": "AAAC",
     "index": null,
     "ondex": null,
     "count": null,
-    "qb64": "8AAAAAAFAMn0rKC8DdMUtqqXBVNG",
-    "qb2": "f0000000000500c9f4aca0bc0dd314b6aa97055346"
+    "qb64": "8AAAAAACADZVoPwD",
+    "qb2": "f00000000002003655a0fc03"
   },
   {
     "code": "4A",
     "name": "StrB64_L0",
     "type": "matter",
-    "raw": "000000000000000000000000000000000000",
-    "soft": "AG",
+    "raw": "000000000000000000000000000000",
+    "soft": "AF",
     "index": null,
     "ondex": null,
     "count": null,
-    "qb64": "4AAGAAAAAAAAAAAAAAAAAAAAAAAA",
-    "qb2": "e00006000000000000000000000000000000000000"
+    "qb64": "4AAFAAAAAAAAAAAAAAAAAAAA",
+    "qb2": "e00005000000000000000000000000000000"
   },
   {
     "code": "4A",
     "name": "StrB64_L0",
     "type": "matter",
-    "raw": "514dc1cc14e5d6cae2b7a31d271582dca941",
-    "soft": "AG",
+    "raw": "0c8c15f3cb28b3ad524de06afcf050",
+    "soft": "AF",
     "index": null,
     "ondex": null,
     "count": null,
-    "qb64": "4AAGUU3BzBTl1srit6MdJxWC3KlB",
-    "qb2": "e00006514dc1cc14e5d6cae2b7a31d271582dca941"
+    "qb64": "4AAFDIwV88sos61STeBq_PBQ",
+    "qb2": "e000050c8c15f3cb28b3ad524de06afcf050"
+  },
+  {
+    "code": "6A",
+    "name": "StrB64_L2",
+    "type": "matter",
+    "raw": "00",
+    "soft": "AB",
+    "index": null,
+    "ondex": null,
+    "count": null,
+    "qb64": "6AABAAAA",
+    "qb2": "e80001000000"
+  },
+  {
+    "code": "6A",
+    "name": "StrB64_L2",
+    "type": "matter",
+    "raw": "36",
+    "soft": "AB",
+    "index": null,
+    "ondex": null,
+    "count": null,
+    "qb64": "6AABAAA2",
+    "qb2": "e80001000036"
   },
   {
     "code": "4A",
     "name": "StrB64_L0",
     "type": "matter",
-    "raw": "000000000000",
-    "soft": "AC",
+    "raw": "",
+    "soft": "AA",
     "index": null,
     "ondex": null,
     "count": null,
-    "qb64": "4AACAAAAAAAA",
-    "qb2": "e00002000000000000"
+    "qb64": "4AAA",
+    "qb2": "e00000"
   },
   {
     "code": "4A",
     "name": "StrB64_L0",
     "type": "matter",
-    "raw": "812a50a75785",
-    "soft": "AC",
+    "raw": "",
+    "soft": "AA",
     "index": null,
     "ondex": null,
     "count": null,
-    "qb64": "4AACgSpQp1eF",
-    "qb2": "e00002812a50a75785"
-  },
-  {
-    "code": "4A",
-    "name": "StrB64_L0",
-    "type": "matter",
-    "raw": "000000000000000000000000",
-    "soft": "AE",
-    "index": null,
-    "ondex": null,
-    "count": null,
-    "qb64": "4AAEAAAAAAAAAAAAAAAA",
-    "qb2": "e00004000000000000000000000000"
-  },
-  {
-    "code": "4A",
-    "name": "StrB64_L0",
-    "type": "matter",
-    "raw": "40ce771dfd7732df89638927",
-    "soft": "AE",
-    "index": null,
-    "ondex": null,
-    "count": null,
-    "qb64": "4AAEQM53Hf13Mt-JY4kn",
-    "qb2": "e0000440ce771dfd7732df89638927"
+    "qb64": "4AAA",
+    "qb2": "e00000"
   },
   {
     "code": "R",
@@ -1659,13 +1515,13 @@
     "code": "R",
     "name": "Tall",
     "type": "matter",
-    "raw": "9edd4547d9",
+    "raw": "0a8ea2b7c1",
     "soft": "",
     "index": null,
     "ondex": null,
     "count": null,
-    "qb64": "RJ7dRUfZ",
-    "qb2": "449edd4547d9"
+    "qb64": "RAqOorfB",
+    "qb2": "440a8ea2b7c1"
   },
   {
     "code": "U",
@@ -1683,13 +1539,13 @@
     "code": "U",
     "name": "Vast",
     "type": "matter",
-    "raw": "8249c1041504d40a8ee8680afd18ab34ae",
+    "raw": "5b819a001b50f1fa93869ed24bbbfeac87",
     "soft": "",
     "index": null,
     "ondex": null,
     "count": null,
-    "qb64": "UIJJwQQVBNQKjuhoCv0YqzSu",
-    "qb2": "508249c1041504d40a8ee8680afd18ab34ae"
+    "qb64": "UFuBmgAbUPH6k4ae0ku7_qyH",
+    "qb2": "505b819a001b50f1fa93869ed24bbbfeac87"
   },
   {
     "code": "C",
@@ -1707,61 +1563,61 @@
     "code": "C",
     "name": "X25519",
     "type": "matter",
-    "raw": "4db17942d466f08edc0b9150d8fd4df26ac0ec5d6a863df0ae914591b301ece8",
+    "raw": "c117b09c156508196afbc130527c701e0d75bd9b5c4236a61bf8d132edc6a7df",
     "soft": "",
     "index": null,
     "ondex": null,
     "count": null,
-    "qb64": "CE2xeULUZvCO3AuRUNj9TfJqwOxdaoY98K6RRZGzAezo",
-    "qb2": "084db17942d466f08edc0b9150d8fd4df26ac0ec5d6a863df0ae914591b301ece8"
+    "qb64": "CMEXsJwVZQgZavvBMFJ8cB4Ndb2bXEI2phv40TLtxqff",
+    "qb2": "08c117b09c156508196afbc130527c701e0d75bd9b5c4236a61bf8d132edc6a7df"
   },
   {
     "code": "8AAC",
     "name": "X25519_Cipher_Big_L1",
     "type": "matter",
-    "raw": "0000",
-    "soft": "AAAB",
+    "raw": "0000000000000000000000",
+    "soft": "AAAE",
     "index": null,
     "ondex": null,
     "count": null,
-    "qb64": "8AACAAABAAAA",
-    "qb2": "f00002000001000000"
+    "qb64": "8AACAAAEAAAAAAAAAAAAAAAA",
+    "qb2": "f00002000004000000000000000000000000"
   },
   {
     "code": "8AAC",
     "name": "X25519_Cipher_Big_L1",
     "type": "matter",
-    "raw": "abd8",
-    "soft": "AAAB",
+    "raw": "f6f2ac474a2844b0f87ffa",
+    "soft": "AAAE",
     "index": null,
     "ondex": null,
     "count": null,
-    "qb64": "8AACAAABAKvY",
-    "qb2": "f0000200000100abd8"
+    "qb64": "8AACAAAEAPbyrEdKKESw-H_6",
+    "qb2": "f0000200000400f6f2ac474a2844b0f87ffa"
   },
   {
     "code": "7AAC",
     "name": "X25519_Cipher_Big_L0",
     "type": "matter",
-    "raw": "000000000000000000000000000000000000000000",
-    "soft": "AAAH",
+    "raw": "000000000000",
+    "soft": "AAAC",
     "index": null,
     "ondex": null,
     "count": null,
-    "qb64": "7AACAAAHAAAAAAAAAAAAAAAAAAAAAAAAAAAA",
-    "qb2": "ec0002000007000000000000000000000000000000000000000000"
+    "qb64": "7AACAAACAAAAAAAA",
+    "qb2": "ec0002000002000000000000"
   },
   {
     "code": "7AAC",
     "name": "X25519_Cipher_Big_L0",
     "type": "matter",
-    "raw": "87cbc5a7f39c967e26125db6c995e6a4220318e775",
-    "soft": "AAAH",
+    "raw": "1b71a519c179",
+    "soft": "AAAC",
     "index": null,
     "ondex": null,
     "count": null,
-    "qb64": "7AACAAAHh8vFp_Ocln4mEl22yZXmpCIDGOd1",
-    "qb2": "ec000200000787cbc5a7f39c967e26125db6c995e6a4220318e775"
+    "qb64": "7AACAAACG3GlGcF5",
+    "qb2": "ec00020000021b71a519c179"
   },
   {
     "code": "8AAC",
@@ -1779,181 +1635,205 @@
     "code": "8AAC",
     "name": "X25519_Cipher_Big_L1",
     "type": "matter",
-    "raw": "b5d5585f12c614df68b3b589a42d",
+    "raw": "c9f4aca0bc0dd314b6aa97055346",
     "soft": "AAAF",
     "index": null,
     "ondex": null,
     "count": null,
-    "qb64": "8AACAAAFALXVWF8SxhTfaLO1iaQt",
-    "qb2": "f0000200000500b5d5585f12c614df68b3b589a42d"
+    "qb64": "8AACAAAFAMn0rKC8DdMUtqqXBVNG",
+    "qb2": "f0000200000500c9f4aca0bc0dd314b6aa97055346"
   },
   {
     "code": "4C",
     "name": "X25519_Cipher_L0",
+    "type": "matter",
+    "raw": "000000000000000000000000000000000000",
+    "soft": "AG",
+    "index": null,
+    "ondex": null,
+    "count": null,
+    "qb64": "4CAGAAAAAAAAAAAAAAAAAAAAAAAA",
+    "qb2": "e02006000000000000000000000000000000000000"
+  },
+  {
+    "code": "4C",
+    "name": "X25519_Cipher_L0",
+    "type": "matter",
+    "raw": "514dc1cc14e5d6cae2b7a31d271582dca941",
+    "soft": "AG",
+    "index": null,
+    "ondex": null,
+    "count": null,
+    "qb64": "4CAGUU3BzBTl1srit6MdJxWC3KlB",
+    "qb2": "e02006514dc1cc14e5d6cae2b7a31d271582dca941"
+  },
+  {
+    "code": "4C",
+    "name": "X25519_Cipher_L0",
+    "type": "matter",
+    "raw": "000000000000",
+    "soft": "AC",
+    "index": null,
+    "ondex": null,
+    "count": null,
+    "qb64": "4CACAAAAAAAA",
+    "qb2": "e02002000000000000"
+  },
+  {
+    "code": "4C",
+    "name": "X25519_Cipher_L0",
+    "type": "matter",
+    "raw": "812a50a75785",
+    "soft": "AC",
+    "index": null,
+    "ondex": null,
+    "count": null,
+    "qb64": "4CACgSpQp1eF",
+    "qb2": "e02002812a50a75785"
+  },
+  {
+    "code": "4C",
+    "name": "X25519_Cipher_L0",
+    "type": "matter",
+    "raw": "000000000000000000000000",
+    "soft": "AE",
+    "index": null,
+    "ondex": null,
+    "count": null,
+    "qb64": "4CAEAAAAAAAAAAAAAAAA",
+    "qb2": "e02004000000000000000000000000"
+  },
+  {
+    "code": "4C",
+    "name": "X25519_Cipher_L0",
+    "type": "matter",
+    "raw": "40ce771dfd7732df89638927",
+    "soft": "AE",
+    "index": null,
+    "ondex": null,
+    "count": null,
+    "qb64": "4CAEQM53Hf13Mt-JY4kn",
+    "qb2": "e0200440ce771dfd7732df89638927"
+  },
+  {
+    "code": "8AAE",
+    "name": "X25519_Cipher_QB2_Big_L1",
+    "type": "matter",
+    "raw": "0000000000000000000000",
+    "soft": "AAAE",
+    "index": null,
+    "ondex": null,
+    "count": null,
+    "qb64": "8AAEAAAEAAAAAAAAAAAAAAAA",
+    "qb2": "f00004000004000000000000000000000000"
+  },
+  {
+    "code": "8AAE",
+    "name": "X25519_Cipher_QB2_Big_L1",
+    "type": "matter",
+    "raw": "26d9ead98249c10404d40a",
+    "soft": "AAAE",
+    "index": null,
+    "ondex": null,
+    "count": null,
+    "qb64": "8AAEAAAEACbZ6tmCScEEBNQK",
+    "qb2": "f000040000040026d9ead98249c10404d40a"
+  },
+  {
+    "code": "9AAE",
+    "name": "X25519_Cipher_QB2_Big_L2",
+    "type": "matter",
+    "raw": "00",
+    "soft": "AAAB",
+    "index": null,
+    "ondex": null,
+    "count": null,
+    "qb64": "9AAEAAABAAAA",
+    "qb2": "f40004000001000000"
+  },
+  {
+    "code": "9AAE",
+    "name": "X25519_Cipher_QB2_Big_L2",
+    "type": "matter",
+    "raw": "34",
+    "soft": "AAAB",
+    "index": null,
+    "ondex": null,
+    "count": null,
+    "qb64": "9AAEAAABAAA0",
+    "qb2": "f40004000001000034"
+  },
+  {
+    "code": "7AAE",
+    "name": "X25519_Cipher_QB2_Big_L0",
     "type": "matter",
     "raw": "000000000000000000",
-    "soft": "AD",
+    "soft": "AAAD",
     "index": null,
     "ondex": null,
     "count": null,
-    "qb64": "4CADAAAAAAAAAAAA",
-    "qb2": "e02003000000000000000000"
+    "qb64": "7AAEAAADAAAAAAAAAAAA",
+    "qb2": "ec0004000003000000000000000000"
   },
   {
-    "code": "4C",
-    "name": "X25519_Cipher_L0",
+    "code": "7AAE",
+    "name": "X25519_Cipher_QB2_Big_L0",
     "type": "matter",
-    "raw": "aef0256077db4d964a",
-    "soft": "AD",
+    "raw": "d466f08edc0b9150f2",
+    "soft": "AAAD",
     "index": null,
     "ondex": null,
     "count": null,
-    "qb64": "4CADrvAlYHfbTZZK",
-    "qb2": "e02003aef0256077db4d964a"
+    "qb64": "7AAEAAAD1GbwjtwLkVDy",
+    "qb2": "ec0004000003d466f08edc0b9150f2"
   },
   {
-    "code": "6C",
-    "name": "X25519_Cipher_L2",
+    "code": "6E",
+    "name": "X25519_Cipher_QB2_L2",
+    "type": "matter",
+    "raw": "00000000000000000000000000",
+    "soft": "AF",
+    "index": null,
+    "ondex": null,
+    "count": null,
+    "qb64": "6EAFAAAAAAAAAAAAAAAAAAAA",
+    "qb2": "e84005000000000000000000000000000000"
+  },
+  {
+    "code": "6E",
+    "name": "X25519_Cipher_QB2_L2",
+    "type": "matter",
+    "raw": "6a863df0ae914591b301ece8d9",
+    "soft": "AF",
+    "index": null,
+    "ondex": null,
+    "count": null,
+    "qb64": "6EAFAABqhj3wrpFFkbMB7OjZ",
+    "qb2": "e8400500006a863df0ae914591b301ece8d9"
+  },
+  {
+    "code": "6E",
+    "name": "X25519_Cipher_QB2_L2",
     "type": "matter",
     "raw": "00",
     "soft": "AB",
     "index": null,
     "ondex": null,
     "count": null,
-    "qb64": "6CABAAAA",
-    "qb2": "e82001000000"
+    "qb64": "6EABAAAA",
+    "qb2": "e84001000000"
   },
   {
-    "code": "6C",
-    "name": "X25519_Cipher_L2",
+    "code": "6E",
+    "name": "X25519_Cipher_QB2_L2",
     "type": "matter",
-    "raw": "23",
+    "raw": "d8",
     "soft": "AB",
     "index": null,
     "ondex": null,
     "count": null,
-    "qb64": "6CABAAAj",
-    "qb2": "e82001000023"
-  },
-  {
-    "code": "5C",
-    "name": "X25519_Cipher_L1",
-    "type": "matter",
-    "raw": "0000000000",
-    "soft": "AC",
-    "index": null,
-    "ondex": null,
-    "count": null,
-    "qb64": "5CACAAAAAAAA",
-    "qb2": "e42002000000000000"
-  },
-  {
-    "code": "5C",
-    "name": "X25519_Cipher_L1",
-    "type": "matter",
-    "raw": "b3ba784555",
-    "soft": "AC",
-    "index": null,
-    "ondex": null,
-    "count": null,
-    "qb64": "5CACALO6eEVV",
-    "qb2": "e4200200b3ba784555"
-  },
-  {
-    "code": "9AAE",
-    "name": "X25519_Cipher_QB2_Big_L2",
-    "type": "matter",
-    "raw": "00000000000000000000000000",
-    "soft": "AAAF",
-    "index": null,
-    "ondex": null,
-    "count": null,
-    "qb64": "9AAEAAAFAAAAAAAAAAAAAAAAAAAA",
-    "qb2": "f40004000005000000000000000000000000000000"
-  },
-  {
-    "code": "9AAE",
-    "name": "X25519_Cipher_QB2_Big_L2",
-    "type": "matter",
-    "raw": "4dbe24ca6dea005e1c94efb717",
-    "soft": "AAAF",
-    "index": null,
-    "ondex": null,
-    "count": null,
-    "qb64": "9AAEAAAFAABNviTKbeoAXhyU77cX",
-    "qb2": "f4000400000500004dbe24ca6dea005e1c94efb717"
-  },
-  {
-    "code": "7AAE",
-    "name": "X25519_Cipher_QB2_Big_L0",
-    "type": "matter",
-    "raw": "000000000000000000000000",
-    "soft": "AAAE",
-    "index": null,
-    "ondex": null,
-    "count": null,
-    "qb64": "7AAEAAAEAAAAAAAAAAAAAAAA",
-    "qb2": "ec0004000004000000000000000000000000"
-  },
-  {
-    "code": "7AAE",
-    "name": "X25519_Cipher_QB2_Big_L0",
-    "type": "matter",
-    "raw": "fbdd87c7f295db9e4f5f2109",
-    "soft": "AAAE",
-    "index": null,
-    "ondex": null,
-    "count": null,
-    "qb64": "7AAEAAAE-92Hx_KV255PXyEJ",
-    "qb2": "ec0004000004fbdd87c7f295db9e4f5f2109"
-  },
-  {
-    "code": "7AAE",
-    "name": "X25519_Cipher_QB2_Big_L0",
-    "type": "matter",
-    "raw": "",
-    "soft": "AAAA",
-    "index": null,
-    "ondex": null,
-    "count": null,
-    "qb64": "7AAEAAAA",
-    "qb2": "ec0004000000"
-  },
-  {
-    "code": "7AAE",
-    "name": "X25519_Cipher_QB2_Big_L0",
-    "type": "matter",
-    "raw": "",
-    "soft": "AAAA",
-    "index": null,
-    "ondex": null,
-    "count": null,
-    "qb64": "7AAEAAAA",
-    "qb2": "ec0004000000"
-  },
-  {
-    "code": "5E",
-    "name": "X25519_Cipher_QB2_L1",
-    "type": "matter",
-    "raw": "0000000000000000000000",
-    "soft": "AE",
-    "index": null,
-    "ondex": null,
-    "count": null,
-    "qb64": "5EAEAAAAAAAAAAAAAAAA",
-    "qb2": "e44004000000000000000000000000"
-  },
-  {
-    "code": "5E",
-    "name": "X25519_Cipher_QB2_L1",
-    "type": "matter",
-    "raw": "c7c3f2291e214026b85efb",
-    "soft": "AE",
-    "index": null,
-    "ondex": null,
-    "count": null,
-    "qb64": "5EAEAMfD8ikeIUAmuF77",
-    "qb2": "e4400400c7c3f2291e214026b85efb"
+    "qb64": "6EABAADY",
+    "qb2": "e840010000d8"
   },
   {
     "code": "4E",
@@ -1971,37 +1851,61 @@
     "code": "4E",
     "name": "X25519_Cipher_QB2_L0",
     "type": "matter",
-    "raw": "b7b11e4a3660645c5616116597f642fd8f77698c21",
+    "raw": "87cbc5a7f39c967e26125db6c995e6a4220318e775",
     "soft": "AH",
     "index": null,
     "ondex": null,
     "count": null,
-    "qb64": "4EAHt7EeSjZgZFxWFhFll_ZC_Y93aYwh",
-    "qb2": "e04007b7b11e4a3660645c5616116597f642fd8f77698c21"
+    "qb64": "4EAHh8vFp_Ocln4mEl22yZXmpCIDGOd1",
+    "qb2": "e0400787cbc5a7f39c967e26125db6c995e6a4220318e775"
   },
   {
-    "code": "4E",
-    "name": "X25519_Cipher_QB2_L0",
+    "code": "7AAD",
+    "name": "X25519_Cipher_QB64_Big_L0",
     "type": "matter",
-    "raw": "000000000000000000",
-    "soft": "AD",
+    "raw": "000000000000000000000000000000",
+    "soft": "AAAF",
     "index": null,
     "ondex": null,
     "count": null,
-    "qb64": "4EADAAAAAAAAAAAA",
-    "qb2": "e04003000000000000000000"
+    "qb64": "7AADAAAFAAAAAAAAAAAAAAAAAAAA",
+    "qb2": "ec0003000005000000000000000000000000000000"
   },
   {
-    "code": "4E",
-    "name": "X25519_Cipher_QB2_L0",
+    "code": "7AAD",
+    "name": "X25519_Cipher_QB64_Big_L0",
     "type": "matter",
-    "raw": "fcd9691d2e72627abb",
-    "soft": "AD",
+    "raw": "b5d5585f12c614df68b3b5894da42d",
+    "soft": "AAAF",
     "index": null,
     "ondex": null,
     "count": null,
-    "qb64": "4EAD_NlpHS5yYnq7",
-    "qb2": "e04003fcd9691d2e72627abb"
+    "qb64": "7AADAAAFtdVYXxLGFN9os7WJTaQt",
+    "qb2": "ec0003000005b5d5585f12c614df68b3b5894da42d"
+  },
+  {
+    "code": "8AAD",
+    "name": "X25519_Cipher_QB64_Big_L1",
+    "type": "matter",
+    "raw": "0000000000000000",
+    "soft": "AAAD",
+    "index": null,
+    "ondex": null,
+    "count": null,
+    "qb64": "8AADAAADAAAAAAAAAAAA",
+    "qb2": "f00003000003000000000000000000"
+  },
+  {
+    "code": "8AAD",
+    "name": "X25519_Cipher_QB64_Big_L1",
+    "type": "matter",
+    "raw": "aef0256077db4d96",
+    "soft": "AAAD",
+    "index": null,
+    "ondex": null,
+    "count": null,
+    "qb64": "8AADAAADAK7wJWB3202W",
+    "qb2": "f0000300000300aef0256077db4d96"
   },
   {
     "code": "7AAD",
@@ -2019,133 +1923,85 @@
     "code": "7AAD",
     "name": "X25519_Cipher_QB64_Big_L0",
     "type": "matter",
-    "raw": "ed810aef6f875a0c4e",
+    "raw": "5f1447022cea712326",
     "soft": "AAAD",
     "index": null,
     "ondex": null,
     "count": null,
-    "qb64": "7AADAAAD7YEK72-HWgxO",
-    "qb2": "ec0003000003ed810aef6f875a0c4e"
+    "qb64": "7AADAAADXxRHAizqcSMm",
+    "qb2": "ec00030000035f1447022cea712326"
   },
   {
-    "code": "7AAD",
-    "name": "X25519_Cipher_QB64_Big_L0",
+    "code": "5D",
+    "name": "X25519_Cipher_QB64_L1",
     "type": "matter",
-    "raw": "000000000000",
-    "soft": "AAAC",
+    "raw": "0000000000000000000000",
+    "soft": "AE",
     "index": null,
     "ondex": null,
     "count": null,
-    "qb64": "7AADAAACAAAAAAAA",
-    "qb2": "ec0003000002000000000000"
+    "qb64": "5DAEAAAAAAAAAAAAAAAA",
+    "qb2": "e43004000000000000000000000000"
   },
   {
-    "code": "7AAD",
-    "name": "X25519_Cipher_QB64_Big_L0",
+    "code": "5D",
+    "name": "X25519_Cipher_QB64_L1",
     "type": "matter",
-    "raw": "dabf66dbe685",
-    "soft": "AAAC",
+    "raw": "85405a5517206756be24ca",
+    "soft": "AE",
     "index": null,
     "ondex": null,
     "count": null,
-    "qb64": "7AADAAAC2r9m2-aF",
-    "qb2": "ec0003000002dabf66dbe685"
-  },
-  {
-    "code": "7AAD",
-    "name": "X25519_Cipher_QB64_Big_L0",
-    "type": "matter",
-    "raw": "000000",
-    "soft": "AAAB",
-    "index": null,
-    "ondex": null,
-    "count": null,
-    "qb64": "7AADAAABAAAA",
-    "qb2": "ec0003000001000000"
-  },
-  {
-    "code": "7AAD",
-    "name": "X25519_Cipher_QB64_Big_L0",
-    "type": "matter",
-    "raw": "d37b4d",
-    "soft": "AAAB",
-    "index": null,
-    "ondex": null,
-    "count": null,
-    "qb64": "7AADAAAB03tN",
-    "qb2": "ec0003000001d37b4d"
+    "qb64": "5DAEAIVAWlUXIGdWviTK",
+    "qb2": "e430040085405a5517206756be24ca"
   },
   {
     "code": "4D",
     "name": "X25519_Cipher_QB64_L0",
     "type": "matter",
-    "raw": "000000000000000000000000000000",
-    "soft": "AF",
+    "raw": "000000000000000000000000",
+    "soft": "AE",
     "index": null,
     "ondex": null,
     "count": null,
-    "qb64": "4DAFAAAAAAAAAAAAAAAAAAAA",
-    "qb2": "e03005000000000000000000000000000000"
+    "qb64": "4DAEAAAAAAAAAAAAAAAA",
+    "qb2": "e03004000000000000000000000000"
   },
   {
     "code": "4D",
     "name": "X25519_Cipher_QB64_L0",
     "type": "matter",
-    "raw": "3f3ee7d5fcee1954e10a9a4c322b6a",
-    "soft": "AF",
+    "raw": "1c94efb73637fd177cf19756",
+    "soft": "AE",
     "index": null,
     "ondex": null,
     "count": null,
-    "qb64": "4DAFPz7n1fzuGVThCppMMitq",
-    "qb2": "e030053f3ee7d5fcee1954e10a9a4c322b6a"
+    "qb64": "4DAEHJTvtzY3_Rd88ZdW",
+    "qb2": "e030041c94efb73637fd177cf19756"
   },
   {
     "code": "4D",
     "name": "X25519_Cipher_QB64_L0",
     "type": "matter",
-    "raw": "000000",
-    "soft": "AB",
+    "raw": "000000000000000000000000000000000000000000",
+    "soft": "AH",
     "index": null,
     "ondex": null,
     "count": null,
-    "qb64": "4DABAAAA",
-    "qb2": "e03001000000"
+    "qb64": "4DAHAAAAAAAAAAAAAAAAAAAAAAAAAAAA",
+    "qb2": "e03007000000000000000000000000000000000000000000"
   },
   {
     "code": "4D",
     "name": "X25519_Cipher_QB64_L0",
     "type": "matter",
-    "raw": "4c7219",
-    "soft": "AB",
+    "raw": "4f5f2109c7468c0af6f40545c7c3f2291e214026fb",
+    "soft": "AH",
     "index": null,
     "ondex": null,
     "count": null,
-    "qb64": "4DABTHIZ",
-    "qb2": "e030014c7219"
-  },
-  {
-    "code": "4D",
-    "name": "X25519_Cipher_QB64_L0",
-    "type": "matter",
-    "raw": "000000000000000000000000000000000000",
-    "soft": "AG",
-    "index": null,
-    "ondex": null,
-    "count": null,
-    "qb64": "4DAGAAAAAAAAAAAAAAAAAAAAAAAA",
-    "qb2": "e03006000000000000000000000000000000000000"
-  },
-  {
-    "code": "4D",
-    "name": "X25519_Cipher_QB64_L0",
-    "type": "matter",
-    "raw": "15c89de8821b2e7b695e587909e94a5641d7",
-    "soft": "AG",
-    "index": null,
-    "ondex": null,
-    "count": null,
-    "qb64": "4DAGFcid6IIbLntpXlh5CelKVkHX",
-    "qb2": "e0300615c89de8821b2e7b695e587909e94a5641d7"
+    "qb64": "4DAHT18hCcdGjAr29AVFx8PyKR4hQCb7",
+    "qb2": "e030074f5f2109c7468c0af6f40545c7c3f2291e214026fb"
   },
   {
     "code": "1AAH",
@@ -2163,13 +2019,13 @@
     "code": "1AAH",
     "name": "X25519_Cipher_Salt",
     "type": "matter",
-    "raw": "7c7e41cc642ceaf96bc5f4cf1e8df95717c0d31f186aa57a52b4b21d4cad18b393876b7f4a6b316dd0dbae09dc85494d9dedc7550ba418bc0a79e6af5e62f7e4239ad92765ba70eb",
+    "raw": "770e5d95b7b11e4a3660645c5616116597f642fd8f77698c0c263021bdb81c4bfcd9691d2e72627aeb7803bbbc605d3ded810aef6f875a0c5335d14e4767f92ddabf66dba99ee685",
     "soft": "",
     "index": null,
     "ondex": null,
     "count": null,
-    "qb64": "1AAHfH5BzGQs6vlrxfTPHo35VxfA0x8YaqV6UrSyHUytGLOTh2t_SmsxbdDbrgnchUlNne3HVQukGLwKeeavXmL35COa2SdlunDr",
-    "qb2": "d400077c7e41cc642ceaf96bc5f4cf1e8df95717c0d31f186aa57a52b4b21d4cad18b393876b7f4a6b316dd0dbae09dc85494d9dedc7550ba418bc0a79e6af5e62f7e4239ad92765ba70eb"
+    "qb64": "1AAHdw5dlbexHko2YGRcVhYRZZf2Qv2Pd2mMDCYwIb24HEv82WkdLnJieut4A7u8YF097YEK72-HWgxTNdFOR2f5Ldq_ZtupnuaF",
+    "qb2": "d40007770e5d95b7b11e4a3660645c5616116597f642fd8f77698c0c263021bdb81c4bfcd9691d2e72627aeb7803bbbc605d3ded810aef6f875a0c5335d14e4767f92ddabf66dba99ee685"
   },
   {
     "code": "P",
@@ -2187,13 +2043,13 @@
     "code": "P",
     "name": "X25519_Cipher_Seed",
     "type": "matter",
-    "raw": "f76ca32aa02a72a0da3e82909971256007c85dce57cc7cf97aedd2fdfc8a8da369814016958ada10e32ecacea1e7ac1592c4b232ce73f7bff54d973805eea70f690883621c860202df8a1b191399d064b71e758ea66ddd8443b2314a",
+    "raw": "dd8289bae611241207d37b4dd91736673f3ee7d5fcee1954e10a9a4c00322b6a4894d01be34c7219c58d928f15c89de8821b2e7b695e587909e94a5609d641d77c7e41cc642ceaf96bc5f4cf1e8df95717c0d31f186aa57a52b4b21d",
     "soft": "",
     "index": null,
     "ondex": null,
     "count": null,
-    "qb64": "PPdsoyqgKnKg2j6CkJlxJWAHyF3OV8x8-Xrt0v38io2jaYFAFpWK2hDjLsrOoeesFZLEsjLOc_e_9U2XOAXupw9pCINiHIYCAt-KGxkTmdBktx51jqZt3YRDsjFK",
-    "qb2": "3cf76ca32aa02a72a0da3e82909971256007c85dce57cc7cf97aedd2fdfc8a8da369814016958ada10e32ecacea1e7ac1592c4b232ce73f7bff54d973805eea70f690883621c860202df8a1b191399d064b71e758ea66ddd8443b2314a"
+    "qb64": "PN2CibrmESQSB9N7TdkXNmc_PufV_O4ZVOEKmkwAMitqSJTQG-NMchnFjZKPFcid6IIbLntpXlh5CelKVgnWQdd8fkHMZCzq-WvF9M8ejflXF8DTHxhqpXpStLId",
+    "qb2": "3cdd8289bae611241207d37b4dd91736673f3ee7d5fcee1954e10a9a4c00322b6a4894d01be34c7219c58d928f15c89de8821b2e7b695e587909e94a5609d641d77c7e41cc642ceaf96bc5f4cf1e8df95717c0d31f186aa57a52b4b21d"
   },
   {
     "code": "O",
@@ -2211,13 +2067,13 @@
     "code": "O",
     "name": "X25519_Private",
     "type": "matter",
-    "raw": "5dccd37256208feb291f167df94acdc90d44bb95f655e3b6e9c5e6ada1ed9d37",
+    "raw": "4cad18b393876b7f4a6b316dd0dbae09dc85494d9dedc7550ba418bc0a79e6af",
     "soft": "",
     "index": null,
     "ondex": null,
     "count": null,
-    "qb64": "OF3M03JWII_rKR8WfflKzckNRLuV9lXjtunF5q2h7Z03",
-    "qb2": "385dccd37256208feb291f167df94acdc90d44bb95f655e3b6e9c5e6ada1ed9d37"
+    "qb64": "OEytGLOTh2t_SmsxbdDbrgnchUlNne3HVQukGLwKeeav",
+    "qb2": "384cad18b393876b7f4a6b316dd0dbae09dc85494d9dedc7550ba418bc0a79e6af"
   },
   {
     "code": "L",
@@ -2235,13 +2091,13 @@
     "code": "L",
     "name": "X448",
     "type": "matter",
-    "raw": "35394c6c58f46a1562f84a5e63f45a380ea70bfdd573c5ff1d6dcb425180d1953309f0c64e0fa52a4380646efe4e2331ebfdc75be573711d",
+    "raw": "5e62f7e4239ad92765ba70ebf76ca32aa02a72a0da3e82909971256007c85dce57cc7cf97aedd2fdfc8a8da369814016958ada10e32ecace",
     "soft": "",
     "index": null,
     "ondex": null,
     "count": null,
-    "qb64": "LDU5TGxY9GoVYvhKXmP0WjgOpwv91XPF_x1ty0JRgNGVMwnwxk4PpSpDgGRu_k4jMev9x1vlc3Ed",
-    "qb2": "2c35394c6c58f46a1562f84a5e63f45a380ea70bfdd573c5ff1d6dcb425180d1953309f0c64e0fa52a4380646efe4e2331ebfdc75be573711d"
+    "qb64": "LF5i9-QjmtknZbpw6_dsoyqgKnKg2j6CkJlxJWAHyF3OV8x8-Xrt0v38io2jaYFAFpWK2hDjLsrO",
+    "qb2": "2c5e62f7e4239ad92765ba70ebf76ca32aa02a72a0da3e82909971256007c85dce57cc7cf97aedd2fdfc8a8da369814016958ada10e32ecace"
   },
   {
     "code": "1AAM",
@@ -2797,7 +2653,7 @@
   },
   {
     "code": "--T",
-    "name": "BigSealSourceCouples",
+    "name": "BigSealSourceTriples",
     "type": "counter_20",
     "raw": "",
     "soft": "AAAAA",
@@ -2809,7 +2665,7 @@
   },
   {
     "code": "--T",
-    "name": "BigSealSourceCouples",
+    "name": "BigSealSourceTriples",
     "type": "counter_20",
     "raw": "",
     "soft": "-MuDy",
@@ -2821,7 +2677,7 @@
   },
   {
     "code": "--T",
-    "name": "BigSealSourceCouples",
+    "name": "BigSealSourceTriples",
     "type": "counter_20",
     "raw": "",
     "soft": "_____",
@@ -3049,7 +2905,7 @@
   },
   {
     "code": "-T",
-    "name": "SealSourceCouples",
+    "name": "SealSourceTriples",
     "type": "counter_20",
     "raw": "",
     "soft": "AA",
@@ -3061,7 +2917,7 @@
   },
   {
     "code": "-T",
-    "name": "SealSourceCouples",
+    "name": "SealSourceTriples",
     "type": "counter_20",
     "raw": "",
     "soft": "kE",
@@ -3073,7 +2929,7 @@
   },
   {
     "code": "-T",
-    "name": "SealSourceCouples",
+    "name": "SealSourceTriples",
     "type": "counter_20",
     "raw": "",
     "soft": "__",
@@ -3660,6 +3516,42 @@
     "qb2": "fbe07fffffff"
   },
   {
+    "code": "--b",
+    "name": "BigBoundStateSextuples",
+    "type": "counter_20",
+    "raw": "",
+    "soft": "AAAAA",
+    "index": null,
+    "ondex": null,
+    "count": 0,
+    "qb64": "--bAAAAA",
+    "qb2": "fbe6c0000000"
+  },
+  {
+    "code": "--b",
+    "name": "BigBoundStateSextuples",
+    "type": "counter_20",
+    "raw": "",
+    "soft": "m0vOE",
+    "index": null,
+    "ondex": null,
+    "count": 651359108,
+    "qb64": "--bm0vOE",
+    "qb2": "fbe6e6d2f384"
+  },
+  {
+    "code": "--b",
+    "name": "BigBoundStateSextuples",
+    "type": "counter_20",
+    "raw": "",
+    "soft": "_____",
+    "index": null,
+    "ondex": null,
+    "count": 1073741823,
+    "qb64": "--b_____",
+    "qb2": "fbe6ffffffff"
+  },
+  {
     "code": "--K",
     "name": "BigControllerIdxSigs",
     "type": "counter_20",
@@ -3676,12 +3568,12 @@
     "name": "BigControllerIdxSigs",
     "type": "counter_20",
     "raw": "",
-    "soft": "m0vOE",
+    "soft": "9ASEC",
     "index": null,
     "ondex": null,
-    "count": 651359108,
-    "qb64": "--Km0vOE",
-    "qb2": "fbe2a6d2f384"
+    "count": 1023484162,
+    "qb64": "--K9ASEC",
+    "qb2": "fbe2bd012102"
   },
   {
     "code": "--K",
@@ -3712,12 +3604,12 @@
     "name": "BigDatagramSegmentGroup",
     "type": "counter_20",
     "raw": "",
-    "soft": "9ASEC",
+    "soft": "t1I_X",
     "index": null,
     "ondex": null,
-    "count": 1023484162,
-    "qb64": "--D9ASEC",
-    "qb2": "fbe0fd012102"
+    "count": 768905175,
+    "qb64": "--Dt1I_X",
+    "qb2": "fbe0edd48fd7"
   },
   {
     "code": "--D",
@@ -3748,12 +3640,12 @@
     "name": "BigDigestSealSingles",
     "type": "counter_20",
     "raw": "",
-    "soft": "t1I_X",
+    "soft": "b9e5s",
     "index": null,
     "ondex": null,
-    "count": 768905175,
-    "qb64": "--Qt1I_X",
-    "qb2": "fbe42dd48fd7"
+    "count": 469102188,
+    "qb64": "--Qb9e5s",
+    "qb2": "fbe41bf5ee6c"
   },
   {
     "code": "--Q",
@@ -3784,12 +3676,12 @@
     "name": "BigESSRPayloadGroup",
     "type": "counter_20",
     "raw": "",
-    "soft": "b9e5s",
+    "soft": "R07iN",
     "index": null,
     "ondex": null,
-    "count": 469102188,
-    "qb64": "--Zb9e5s",
-    "qb2": "fbe65bf5ee6c"
+    "count": 299088013,
+    "qb64": "--ZR07iN",
+    "qb2": "fbe651d3b88d"
   },
   {
     "code": "--Z",
@@ -3820,12 +3712,12 @@
     "name": "BigESSRWrapperGroup",
     "type": "counter_20",
     "raw": "",
-    "soft": "R07iN",
+    "soft": "kE0M5",
     "index": null,
     "ondex": null,
-    "count": 299088013,
-    "qb64": "--ER07iN",
-    "qb2": "fbe111d3b88d"
+    "count": 605242169,
+    "qb64": "--EkE0M5",
+    "qb2": "fbe124134339"
   },
   {
     "code": "--E",
@@ -3856,12 +3748,12 @@
     "name": "BigFirstSeenReplayCouples",
     "type": "counter_20",
     "raw": "",
-    "soft": "kE0M5",
+    "soft": "R4zCX",
     "index": null,
     "ondex": null,
-    "count": 605242169,
-    "qb64": "--OkE0M5",
-    "qb2": "fbe3a4134339"
+    "count": 300101783,
+    "qb64": "--OR4zCX",
+    "qb2": "fbe391e33097"
   },
   {
     "code": "--O",
@@ -3892,12 +3784,12 @@
     "name": "BigFixBodyGroup",
     "type": "counter_20",
     "raw": "",
-    "soft": "R4zCX",
+    "soft": "MI2oS",
     "index": null,
     "ondex": null,
-    "count": 300101783,
-    "qb64": "--FR4zCX",
-    "qb2": "fbe151e33097"
+    "count": 203647506,
+    "qb64": "--FMI2oS",
+    "qb2": "fbe14c236a12"
   },
   {
     "code": "--F",
@@ -3928,12 +3820,12 @@
     "name": "BigGenericGroup",
     "type": "counter_20",
     "raw": "",
-    "soft": "MI2oS",
+    "soft": "gEJd7",
     "index": null,
     "ondex": null,
-    "count": 203647506,
-    "qb64": "--AMI2oS",
-    "qb2": "fbe00c236a12"
+    "count": 537958267,
+    "qb64": "--AgEJd7",
+    "qb2": "fbe02010977b"
   },
   {
     "code": "--A",
@@ -3964,12 +3856,12 @@
     "name": "BigGenericListGroup",
     "type": "counter_20",
     "raw": "",
-    "soft": "gEJd7",
+    "soft": "Sz6GU",
     "index": null,
     "ondex": null,
-    "count": 537958267,
-    "qb64": "--JgEJd7",
-    "qb2": "fbe26010977b"
+    "count": 315597204,
+    "qb64": "--JSz6GU",
+    "qb2": "fbe252cfa194"
   },
   {
     "code": "--J",
@@ -4000,12 +3892,12 @@
     "name": "BigGenericMapGroup",
     "type": "counter_20",
     "raw": "",
-    "soft": "Sz6GU",
+    "soft": "nsups",
     "index": null,
     "ondex": null,
-    "count": 315597204,
-    "qb64": "--ISz6GU",
-    "qb2": "fbe212cfa194"
+    "count": 666036844,
+    "qb64": "--Insups",
+    "qb2": "fbe227b2ea6c"
   },
   {
     "code": "--I",
@@ -4036,12 +3928,12 @@
     "name": "BigMapBodyGroup",
     "type": "counter_20",
     "raw": "",
-    "soft": "nsups",
+    "soft": "MpEb2",
     "index": null,
     "ondex": null,
-    "count": 666036844,
-    "qb64": "--Gnsups",
-    "qb2": "fbe1a7b2ea6c"
+    "count": 212092662,
+    "qb64": "--GMpEb2",
+    "qb2": "fbe18ca446f6"
   },
   {
     "code": "--G",
@@ -4072,12 +3964,12 @@
     "name": "BigMerkleRootSealSingles",
     "type": "counter_20",
     "raw": "",
-    "soft": "MpEb2",
+    "soft": "JcGRZ",
     "index": null,
     "ondex": null,
-    "count": 212092662,
-    "qb64": "--RMpEb2",
-    "qb2": "fbe44ca446f6"
+    "count": 158360665,
+    "qb64": "--RJcGRZ",
+    "qb2": "fbe449706459"
   },
   {
     "code": "--R",
@@ -4108,12 +4000,12 @@
     "name": "BigNonNativeBodyGroup",
     "type": "counter_20",
     "raw": "",
-    "soft": "JcGRZ",
+    "soft": "qQ-cP",
     "index": null,
     "ondex": null,
-    "count": 158360665,
-    "qb64": "--HJcGRZ",
-    "qb2": "fbe1c9706459"
+    "count": 709093135,
+    "qb64": "--HqQ-cP",
+    "qb2": "fbe1ea43e70f"
   },
   {
     "code": "--H",
@@ -4144,12 +4036,12 @@
     "name": "BigNonTransReceiptCouples",
     "type": "counter_20",
     "raw": "",
-    "soft": "qQ-cP",
+    "soft": "8bywr",
     "index": null,
     "ondex": null,
-    "count": 709093135,
-    "qb64": "--MqQ-cP",
-    "qb2": "fbe32a43e70f"
+    "count": 1013918763,
+    "qb64": "--M8bywr",
+    "qb2": "fbe33c6f2c2b"
   },
   {
     "code": "--M",
@@ -4165,7 +4057,7 @@
   },
   {
     "code": "--P",
-    "name": "BigPathedMaterialGroup",
+    "name": "BigPathedMaterialCouples",
     "type": "counter_20",
     "raw": "",
     "soft": "AAAAA",
@@ -4177,19 +4069,19 @@
   },
   {
     "code": "--P",
-    "name": "BigPathedMaterialGroup",
+    "name": "BigPathedMaterialCouples",
     "type": "counter_20",
     "raw": "",
-    "soft": "8bywr",
+    "soft": "M48b6",
     "index": null,
     "ondex": null,
-    "count": 1013918763,
-    "qb64": "--P8bywr",
-    "qb2": "fbe3fc6f2c2b"
+    "count": 216254202,
+    "qb64": "--PM48b6",
+    "qb2": "fbe3cce3c6fa"
   },
   {
     "code": "--P",
-    "name": "BigPathedMaterialGroup",
+    "name": "BigPathedMaterialCouples",
     "type": "counter_20",
     "raw": "",
     "soft": "_____",
@@ -4200,7 +4092,7 @@
     "qb2": "fbe3ffffffff"
   },
   {
-    "code": "--T",
+    "code": "--S",
     "name": "BigSealSourceCouples",
     "type": "counter_20",
     "raw": "",
@@ -4208,23 +4100,23 @@
     "index": null,
     "ondex": null,
     "count": 0,
-    "qb64": "--TAAAAA",
-    "qb2": "fbe4c0000000"
+    "qb64": "--SAAAAA",
+    "qb2": "fbe480000000"
   },
   {
-    "code": "--T",
+    "code": "--S",
     "name": "BigSealSourceCouples",
     "type": "counter_20",
     "raw": "",
-    "soft": "M48b6",
+    "soft": "tSQjD",
     "index": null,
     "ondex": null,
-    "count": 216254202,
-    "qb64": "--TM48b6",
-    "qb2": "fbe4cce3c6fa"
+    "count": 759761091,
+    "qb64": "--StSQjD",
+    "qb2": "fbe4ad4908c3"
   },
   {
-    "code": "--T",
+    "code": "--S",
     "name": "BigSealSourceCouples",
     "type": "counter_20",
     "raw": "",
@@ -4232,8 +4124,8 @@
     "index": null,
     "ondex": null,
     "count": 1073741823,
-    "qb64": "--T_____",
-    "qb2": "fbe4ffffffff"
+    "qb64": "--S_____",
+    "qb2": "fbe4bfffffff"
   },
   {
     "code": "--U",
@@ -4252,12 +4144,12 @@
     "name": "BigSealSourceLastSingles",
     "type": "counter_20",
     "raw": "",
-    "soft": "tSQjD",
+    "soft": "3kvFR",
     "index": null,
     "ondex": null,
-    "count": 759761091,
-    "qb64": "--UtSQjD",
-    "qb2": "fbe52d4908c3"
+    "count": 932376913,
+    "qb64": "--U3kvFR",
+    "qb2": "fbe53792f151"
   },
   {
     "code": "--U",
@@ -4272,7 +4164,7 @@
     "qb2": "fbe53fffffff"
   },
   {
-    "code": "--S",
+    "code": "--T",
     "name": "BigSealSourceTriples",
     "type": "counter_20",
     "raw": "",
@@ -4280,23 +4172,23 @@
     "index": null,
     "ondex": null,
     "count": 0,
-    "qb64": "--SAAAAA",
-    "qb2": "fbe480000000"
+    "qb64": "--TAAAAA",
+    "qb2": "fbe4c0000000"
   },
   {
-    "code": "--S",
+    "code": "--T",
     "name": "BigSealSourceTriples",
     "type": "counter_20",
     "raw": "",
-    "soft": "3kvFR",
+    "soft": "oeSIq",
     "index": null,
     "ondex": null,
-    "count": 932376913,
-    "qb64": "--S3kvFR",
-    "qb2": "fbe4b792f151"
+    "count": 679027242,
+    "qb64": "--ToeSIq",
+    "qb2": "fbe4e879222a"
   },
   {
-    "code": "--S",
+    "code": "--T",
     "name": "BigSealSourceTriples",
     "type": "counter_20",
     "raw": "",
@@ -4304,8 +4196,8 @@
     "index": null,
     "ondex": null,
     "count": 1073741823,
-    "qb64": "--S_____",
-    "qb2": "fbe4bfffffff"
+    "qb64": "--T_____",
+    "qb2": "fbe4ffffffff"
   },
   {
     "code": "--X",
@@ -4324,12 +4216,12 @@
     "name": "BigTransIdxSigGroups",
     "type": "counter_20",
     "raw": "",
-    "soft": "oeSIq",
+    "soft": "aLFOk",
     "index": null,
     "ondex": null,
-    "count": 679027242,
-    "qb64": "--XoeSIq",
-    "qb2": "fbe5e879222a"
+    "count": 439112612,
+    "qb64": "--XaLFOk",
+    "qb2": "fbe5da2c53a4"
   },
   {
     "code": "--X",
@@ -4360,12 +4252,12 @@
     "name": "BigTransLastIdxSigGroups",
     "type": "counter_20",
     "raw": "",
-    "soft": "aLFOk",
+    "soft": "9DqgD",
     "index": null,
     "ondex": null,
-    "count": 439112612,
-    "qb64": "--YaLFOk",
-    "qb2": "fbe61a2c53a4"
+    "count": 1024370691,
+    "qb64": "--Y9DqgD",
+    "qb2": "fbe63d0ea803"
   },
   {
     "code": "--Y",
@@ -4396,12 +4288,12 @@
     "name": "BigTransReceiptQuadruples",
     "type": "counter_20",
     "raw": "",
-    "soft": "9DqgD",
+    "soft": "4qi0J",
     "index": null,
     "ondex": null,
-    "count": 1024370691,
-    "qb64": "--N9DqgD",
-    "qb2": "fbe37d0ea803"
+    "count": 950676745,
+    "qb64": "--N4qi0J",
+    "qb2": "fbe378aa2d09"
   },
   {
     "code": "--N",
@@ -4432,12 +4324,12 @@
     "name": "BigTypedDigestSealCouples",
     "type": "counter_20",
     "raw": "",
-    "soft": "4qi0J",
+    "soft": "hV8_h",
     "index": null,
     "ondex": null,
-    "count": 950676745,
-    "qb64": "--W4qi0J",
-    "qb2": "fbe5b8aa2d09"
+    "count": 559402977,
+    "qb64": "--WhV8_h",
+    "qb2": "fbe5a157cfe1"
   },
   {
     "code": "--W",
@@ -4450,6 +4342,42 @@
     "count": 1073741823,
     "qb64": "--W_____",
     "qb2": "fbe5bfffffff"
+  },
+  {
+    "code": "--c",
+    "name": "BigTypedMediaQuadruples",
+    "type": "counter_20",
+    "raw": "",
+    "soft": "AAAAA",
+    "index": null,
+    "ondex": null,
+    "count": 0,
+    "qb64": "--cAAAAA",
+    "qb2": "fbe700000000"
+  },
+  {
+    "code": "--c",
+    "name": "BigTypedMediaQuadruples",
+    "type": "counter_20",
+    "raw": "",
+    "soft": "H-McB",
+    "index": null,
+    "ondex": null,
+    "count": 133744385,
+    "qb64": "--cH-McB",
+    "qb2": "fbe707f8c701"
+  },
+  {
+    "code": "--c",
+    "name": "BigTypedMediaQuadruples",
+    "type": "counter_20",
+    "raw": "",
+    "soft": "_____",
+    "index": null,
+    "ondex": null,
+    "count": 1073741823,
+    "qb64": "--c_____",
+    "qb2": "fbe73fffffff"
   },
   {
     "code": "--L",
@@ -4468,12 +4396,12 @@
     "name": "BigWitnessIdxSigs",
     "type": "counter_20",
     "raw": "",
-    "soft": "hV8_h",
+    "soft": "BzB5U",
     "index": null,
     "ondex": null,
-    "count": 559402977,
-    "qb64": "--LhV8_h",
-    "qb2": "fbe2e157cfe1"
+    "count": 30154324,
+    "qb64": "--LBzB5U",
+    "qb2": "fbe2c1cc1e54"
   },
   {
     "code": "--L",
@@ -4504,12 +4432,12 @@
     "name": "BlindedStateQuadruples",
     "type": "counter_20",
     "raw": "",
-    "soft": "H-",
+    "soft": "L8",
     "index": null,
     "ondex": null,
-    "count": 510,
-    "qb64": "-aH-",
-    "qb2": "f9a1fe"
+    "count": 764,
+    "qb64": "-aL8",
+    "qb2": "f9a2fc"
   },
   {
     "code": "-a",
@@ -4540,12 +4468,12 @@
     "name": "BodyWithAttachmentGroup",
     "type": "counter_20",
     "raw": "",
-    "soft": "Bz",
+    "soft": "zD",
     "index": null,
     "ondex": null,
-    "count": 115,
-    "qb64": "-BBz",
-    "qb2": "f81073"
+    "count": 3267,
+    "qb64": "-BzD",
+    "qb2": "f81cc3"
   },
   {
     "code": "-B",
@@ -4558,6 +4486,42 @@
     "count": 4095,
     "qb64": "-B__",
     "qb2": "f81fff"
+  },
+  {
+    "code": "-b",
+    "name": "BoundStateSextuples",
+    "type": "counter_20",
+    "raw": "",
+    "soft": "AA",
+    "index": null,
+    "ondex": null,
+    "count": 0,
+    "qb64": "-bAA",
+    "qb2": "f9b000"
+  },
+  {
+    "code": "-b",
+    "name": "BoundStateSextuples",
+    "type": "counter_20",
+    "raw": "",
+    "soft": "AJ",
+    "index": null,
+    "ondex": null,
+    "count": 9,
+    "qb64": "-bAJ",
+    "qb2": "f9b009"
+  },
+  {
+    "code": "-b",
+    "name": "BoundStateSextuples",
+    "type": "counter_20",
+    "raw": "",
+    "soft": "__",
+    "index": null,
+    "ondex": null,
+    "count": 4095,
+    "qb64": "-b__",
+    "qb2": "f9bfff"
   },
   {
     "code": "-K",
@@ -4576,12 +4540,12 @@
     "name": "ControllerIdxSigs",
     "type": "counter_20",
     "raw": "",
-    "soft": "L8",
+    "soft": "_L",
     "index": null,
     "ondex": null,
-    "count": 764,
-    "qb64": "-KL8",
-    "qb2": "f8a2fc"
+    "count": 4043,
+    "qb64": "-K_L",
+    "qb2": "f8afcb"
   },
   {
     "code": "-K",
@@ -4612,12 +4576,12 @@
     "name": "DatagramSegmentGroup",
     "type": "counter_20",
     "raw": "",
-    "soft": "zD",
+    "soft": "qp",
     "index": null,
     "ondex": null,
-    "count": 3267,
-    "qb64": "-DzD",
-    "qb2": "f83cc3"
+    "count": 2729,
+    "qb64": "-Dqp",
+    "qb2": "f83aa9"
   },
   {
     "code": "-D",
@@ -4648,12 +4612,12 @@
     "name": "DigestSealSingles",
     "type": "counter_20",
     "raw": "",
-    "soft": "AJ",
+    "soft": "fO",
     "index": null,
     "ondex": null,
-    "count": 9,
-    "qb64": "-QAJ",
-    "qb2": "f90009"
+    "count": 1998,
+    "qb64": "-QfO",
+    "qb2": "f907ce"
   },
   {
     "code": "-Q",
@@ -4684,12 +4648,12 @@
     "name": "ESSRPayloadGroup",
     "type": "counter_20",
     "raw": "",
-    "soft": "_L",
+    "soft": "po",
     "index": null,
     "ondex": null,
-    "count": 4043,
-    "qb64": "-Z_L",
-    "qb2": "f99fcb"
+    "count": 2664,
+    "qb64": "-Zpo",
+    "qb2": "f99a68"
   },
   {
     "code": "-Z",
@@ -4720,12 +4684,12 @@
     "name": "ESSRWrapperGroup",
     "type": "counter_20",
     "raw": "",
-    "soft": "qp",
+    "soft": "ID",
     "index": null,
     "ondex": null,
-    "count": 2729,
-    "qb64": "-Eqp",
-    "qb2": "f84aa9"
+    "count": 515,
+    "qb64": "-EID",
+    "qb2": "f84203"
   },
   {
     "code": "-E",
@@ -4756,12 +4720,12 @@
     "name": "FirstSeenReplayCouples",
     "type": "counter_20",
     "raw": "",
-    "soft": "fO",
+    "soft": "Yd",
     "index": null,
     "ondex": null,
-    "count": 1998,
-    "qb64": "-OfO",
-    "qb2": "f8e7ce"
+    "count": 1565,
+    "qb64": "-OYd",
+    "qb2": "f8e61d"
   },
   {
     "code": "-O",
@@ -4792,12 +4756,12 @@
     "name": "FixBodyGroup",
     "type": "counter_20",
     "raw": "",
-    "soft": "po",
+    "soft": "cY",
     "index": null,
     "ondex": null,
-    "count": 2664,
-    "qb64": "-Fpo",
-    "qb2": "f85a68"
+    "count": 1816,
+    "qb64": "-FcY",
+    "qb2": "f85718"
   },
   {
     "code": "-F",
@@ -4828,12 +4792,12 @@
     "name": "GenericGroup",
     "type": "counter_20",
     "raw": "",
-    "soft": "ID",
+    "soft": "ei",
     "index": null,
     "ondex": null,
-    "count": 515,
-    "qb64": "-AID",
-    "qb2": "f80203"
+    "count": 1954,
+    "qb64": "-Aei",
+    "qb2": "f807a2"
   },
   {
     "code": "-A",
@@ -4864,12 +4828,12 @@
     "name": "GenericListGroup",
     "type": "counter_20",
     "raw": "",
-    "soft": "Yd",
+    "soft": "SP",
     "index": null,
     "ondex": null,
-    "count": 1565,
-    "qb64": "-JYd",
-    "qb2": "f8961d"
+    "count": 1167,
+    "qb64": "-JSP",
+    "qb2": "f8948f"
   },
   {
     "code": "-J",
@@ -4900,12 +4864,12 @@
     "name": "GenericMapGroup",
     "type": "counter_20",
     "raw": "",
-    "soft": "cY",
+    "soft": "5V",
     "index": null,
     "ondex": null,
-    "count": 1816,
-    "qb64": "-IcY",
-    "qb2": "f88718"
+    "count": 3669,
+    "qb64": "-I5V",
+    "qb2": "f88e55"
   },
   {
     "code": "-I",
@@ -4936,12 +4900,12 @@
     "name": "KERIACDCGenusVersion",
     "type": "counter_20",
     "raw": "",
-    "soft": "eiv",
+    "soft": "LrP",
     "index": null,
     "ondex": null,
-    "count": 125103,
-    "qb64": "-_AAAeiv",
-    "qb2": "fbf00001e8af"
+    "count": 47823,
+    "qb64": "-_AAALrP",
+    "qb2": "fbf00000bacf"
   },
   {
     "code": "-_AAA",
@@ -4972,12 +4936,12 @@
     "name": "MapBodyGroup",
     "type": "counter_20",
     "raw": "",
-    "soft": "SP",
+    "soft": "KT",
     "index": null,
     "ondex": null,
-    "count": 1167,
-    "qb64": "-GSP",
-    "qb2": "f8648f"
+    "count": 659,
+    "qb64": "-GKT",
+    "qb2": "f86293"
   },
   {
     "code": "-G",
@@ -5008,12 +4972,12 @@
     "name": "MerkleRootSealSingles",
     "type": "counter_20",
     "raw": "",
-    "soft": "5V",
+    "soft": "o9",
     "index": null,
     "ondex": null,
-    "count": 3669,
-    "qb64": "-R5V",
-    "qb2": "f91e55"
+    "count": 2621,
+    "qb64": "-Ro9",
+    "qb2": "f91a3d"
   },
   {
     "code": "-R",
@@ -5044,12 +5008,12 @@
     "name": "NonNativeBodyGroup",
     "type": "counter_20",
     "raw": "",
-    "soft": "Lr",
+    "soft": "-o",
     "index": null,
     "ondex": null,
-    "count": 747,
-    "qb64": "-HLr",
-    "qb2": "f872eb"
+    "count": 4008,
+    "qb64": "-H-o",
+    "qb2": "f87fa8"
   },
   {
     "code": "-H",
@@ -5080,12 +5044,12 @@
     "name": "NonTransReceiptCouples",
     "type": "counter_20",
     "raw": "",
-    "soft": "KT",
+    "soft": "N9",
     "index": null,
     "ondex": null,
-    "count": 659,
-    "qb64": "-MKT",
-    "qb2": "f8c293"
+    "count": 893,
+    "qb64": "-MN9",
+    "qb2": "f8c37d"
   },
   {
     "code": "-M",
@@ -5101,7 +5065,7 @@
   },
   {
     "code": "-P",
-    "name": "PathedMaterialGroup",
+    "name": "PathedMaterialCouples",
     "type": "counter_20",
     "raw": "",
     "soft": "AA",
@@ -5113,19 +5077,19 @@
   },
   {
     "code": "-P",
-    "name": "PathedMaterialGroup",
+    "name": "PathedMaterialCouples",
     "type": "counter_20",
     "raw": "",
-    "soft": "o9",
+    "soft": "ml",
     "index": null,
     "ondex": null,
-    "count": 2621,
-    "qb64": "-Po9",
-    "qb2": "f8fa3d"
+    "count": 2469,
+    "qb64": "-Pml",
+    "qb2": "f8f9a5"
   },
   {
     "code": "-P",
-    "name": "PathedMaterialGroup",
+    "name": "PathedMaterialCouples",
     "type": "counter_20",
     "raw": "",
     "soft": "__",
@@ -5136,7 +5100,7 @@
     "qb2": "f8ffff"
   },
   {
-    "code": "-T",
+    "code": "-S",
     "name": "SealSourceCouples",
     "type": "counter_20",
     "raw": "",
@@ -5144,23 +5108,23 @@
     "index": null,
     "ondex": null,
     "count": 0,
-    "qb64": "-TAA",
-    "qb2": "f93000"
+    "qb64": "-SAA",
+    "qb2": "f92000"
   },
   {
-    "code": "-T",
+    "code": "-S",
     "name": "SealSourceCouples",
     "type": "counter_20",
     "raw": "",
-    "soft": "-o",
+    "soft": "lQ",
     "index": null,
     "ondex": null,
-    "count": 4008,
-    "qb64": "-T-o",
-    "qb2": "f93fa8"
+    "count": 2384,
+    "qb64": "-SlQ",
+    "qb2": "f92950"
   },
   {
-    "code": "-T",
+    "code": "-S",
     "name": "SealSourceCouples",
     "type": "counter_20",
     "raw": "",
@@ -5168,8 +5132,8 @@
     "index": null,
     "ondex": null,
     "count": 4095,
-    "qb64": "-T__",
-    "qb2": "f93fff"
+    "qb64": "-S__",
+    "qb2": "f92fff"
   },
   {
     "code": "-U",
@@ -5188,12 +5152,12 @@
     "name": "SealSourceLastSingles",
     "type": "counter_20",
     "raw": "",
-    "soft": "N9",
+    "soft": "P-",
     "index": null,
     "ondex": null,
-    "count": 893,
-    "qb64": "-UN9",
-    "qb2": "f9437d"
+    "count": 1022,
+    "qb64": "-UP-",
+    "qb2": "f943fe"
   },
   {
     "code": "-U",
@@ -5208,7 +5172,7 @@
     "qb2": "f94fff"
   },
   {
-    "code": "-S",
+    "code": "-T",
     "name": "SealSourceTriples",
     "type": "counter_20",
     "raw": "",
@@ -5216,23 +5180,23 @@
     "index": null,
     "ondex": null,
     "count": 0,
-    "qb64": "-SAA",
-    "qb2": "f92000"
+    "qb64": "-TAA",
+    "qb2": "f93000"
   },
   {
-    "code": "-S",
+    "code": "-T",
     "name": "SealSourceTriples",
     "type": "counter_20",
     "raw": "",
-    "soft": "ml",
+    "soft": "ql",
     "index": null,
     "ondex": null,
-    "count": 2469,
-    "qb64": "-Sml",
-    "qb2": "f929a5"
+    "count": 2725,
+    "qb64": "-Tql",
+    "qb2": "f93aa5"
   },
   {
-    "code": "-S",
+    "code": "-T",
     "name": "SealSourceTriples",
     "type": "counter_20",
     "raw": "",
@@ -5240,8 +5204,8 @@
     "index": null,
     "ondex": null,
     "count": 4095,
-    "qb64": "-S__",
-    "qb2": "f92fff"
+    "qb64": "-T__",
+    "qb2": "f93fff"
   },
   {
     "code": "-X",
@@ -5260,12 +5224,12 @@
     "name": "TransIdxSigGroups",
     "type": "counter_20",
     "raw": "",
-    "soft": "lQ",
+    "soft": "aA",
     "index": null,
     "ondex": null,
-    "count": 2384,
-    "qb64": "-XlQ",
-    "qb2": "f97950"
+    "count": 1664,
+    "qb64": "-XaA",
+    "qb2": "f97680"
   },
   {
     "code": "-X",
@@ -5296,12 +5260,12 @@
     "name": "TransLastIdxSigGroups",
     "type": "counter_20",
     "raw": "",
-    "soft": "P-",
+    "soft": "k0",
     "index": null,
     "ondex": null,
-    "count": 1022,
-    "qb64": "-YP-",
-    "qb2": "f983fe"
+    "count": 2356,
+    "qb64": "-Yk0",
+    "qb2": "f98934"
   },
   {
     "code": "-Y",
@@ -5332,12 +5296,12 @@
     "name": "TransReceiptQuadruples",
     "type": "counter_20",
     "raw": "",
-    "soft": "ql",
+    "soft": "49",
     "index": null,
     "ondex": null,
-    "count": 2725,
-    "qb64": "-Nql",
-    "qb2": "f8daa5"
+    "count": 3645,
+    "qb64": "-N49",
+    "qb2": "f8de3d"
   },
   {
     "code": "-N",
@@ -5368,12 +5332,12 @@
     "name": "TypedDigestSealCouples",
     "type": "counter_20",
     "raw": "",
-    "soft": "aA",
+    "soft": "Lu",
     "index": null,
     "ondex": null,
-    "count": 1664,
-    "qb64": "-WaA",
-    "qb2": "f96680"
+    "count": 750,
+    "qb64": "-WLu",
+    "qb2": "f962ee"
   },
   {
     "code": "-W",
@@ -5386,6 +5350,42 @@
     "count": 4095,
     "qb64": "-W__",
     "qb2": "f96fff"
+  },
+  {
+    "code": "-c",
+    "name": "TypedMediaQuadruples",
+    "type": "counter_20",
+    "raw": "",
+    "soft": "AA",
+    "index": null,
+    "ondex": null,
+    "count": 0,
+    "qb64": "-cAA",
+    "qb2": "f9c000"
+  },
+  {
+    "code": "-c",
+    "name": "TypedMediaQuadruples",
+    "type": "counter_20",
+    "raw": "",
+    "soft": "xR",
+    "index": null,
+    "ondex": null,
+    "count": 3153,
+    "qb64": "-cxR",
+    "qb2": "f9cc51"
+  },
+  {
+    "code": "-c",
+    "name": "TypedMediaQuadruples",
+    "type": "counter_20",
+    "raw": "",
+    "soft": "__",
+    "index": null,
+    "ondex": null,
+    "count": 4095,
+    "qb64": "-c__",
+    "qb2": "f9cfff"
   },
   {
     "code": "-L",
@@ -5404,12 +5404,12 @@
     "name": "WitnessIdxSigs",
     "type": "counter_20",
     "raw": "",
-    "soft": "k0",
+    "soft": "ol",
     "index": null,
     "ondex": null,
-    "count": 2356,
-    "qb64": "-Lk0",
-    "qb2": "f8b934"
+    "count": 2597,
+    "qb64": "-Lol",
+    "qb2": "f8ba25"
   },
   {
     "code": "-L",
