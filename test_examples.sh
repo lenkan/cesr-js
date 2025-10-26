@@ -12,8 +12,9 @@ for example in examples/*; do
     tar -xf "$output" --dir "$example/cesr"
 
     cd "$example"
-    image=$(docker build -q .)
-    echo "## Running image $image"
-    docker run --rm "$image"
+    image_name="cesr-$(basename "$example")"
+    docker build -q -t "$image_name" .
+    echo "## Running image $image_name"
+    docker run --rm "$image_name"
     echo "## Success tests in $example"
 done
