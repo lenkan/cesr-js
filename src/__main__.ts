@@ -7,4 +7,4 @@ export {
   MessageFrame,
   IncompleteGroupParserError,
 } from "./parser.ts";
-export { parse, ParseInput, ParseOptions } from "./parse.ts";
+export { parse, Message, ParseInput, ParseOptions } from "./parse.ts";

@@ -1,5 +1,5 @@
 /* eslint-disable no-console */
-import { parseMessages } from "../message.ts";
+import { parse } from "../parse.ts";
 
 interface Arguments {
   options: Record<string, string | boolean>;
@@ -84,7 +84,7 @@ export async function execute(cli: CommandLineInterface) {
 
   const stream = cli.read(input);
 
-  for await (const message of parseMessages(stream)) {
+  for await (const message of parse(stream)) {
     if (app.options["--pretty"]) {
       console.dir(message, { depth: 100, colors: true });
     } else {

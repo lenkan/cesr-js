@@ -1,195 +1,157 @@
-import test from "node:test";
+import { createReadStream } from "fs";
 import assert from "node:assert/strict";
-import { randomBytes } from "node:crypto";
-import { CountCode_10, CountCode_20, IndexCode, IndexTable } from "./codes.ts";
+import { describe, test } from "node:test";
+import { readFile } from "node:fs/promises";
+import { encoding } from "./encoding.ts";
 import { parse } from "./parse.ts";
-import * as encoding from "./encoding.ts";
-import { IncompleteGroupParserError } from "./parser.ts";
 
-async function collectStream<T>(stream: AsyncIterable<T>): Promise<T[]> {
+async function* chunk(filename: string, size = 100): AsyncIterable<Uint8Array> {
+  let index = 0;
+
+  const data = Uint8Array.from(await readFile(filename));
+
+  while (index < data.byteLength) {
+    yield data.slice(index, index + size);
+    index += size;
+  }
+}
+
+async function collect<T>(iterator: AsyncIterable<T>): Promise<T[]> {
   const result: T[] = [];
-  for await (const item of stream) {
+
+  for await (const item of iterator) {
     result.push(item);
   }
+
   return result;
 }
 
-test("Should parse indexed signatures", async () => {
-  const attachment = [
-    encoding.encodeCounter({ code: CountCode_10.ControllerIdxSigs, count: 3 }),
-    encoding.encodeIndexer({ code: IndexCode.Ed25519_Big_Sig, raw: randomBytes(64), index: 0, ondex: 0 }),
-    encoding.encodeIndexer({ code: IndexCode.Ed25519_Big_Sig, raw: randomBytes(64), index: 1, ondex: 0 }),
-    encoding.encodeIndexedSignature("ed25519", randomBytes(64), 0),
-  ].join("");
+test("Test alice", { timeout: 100 }, async () => {
+  const result = await collect(parse(createReadStream("./fixtures/alice.cesr", {})));
 
-  const result = await collectStream(parse(attachment, { version: 1 }));
+  assert.equal(result.length, 2);
+  assert.equal(result[0].payload.t, "icp");
 
-  assert.equal(result.length, 4);
-  assert.partialDeepStrictEqual(result[0], { code: CountCode_10.ControllerIdxSigs });
-  assert.partialDeepStrictEqual(result[1], { code: IndexCode.Ed25519_Big_Sig });
-  assert.partialDeepStrictEqual(result[2], { code: IndexCode.Ed25519_Big_Sig });
-  assert.partialDeepStrictEqual(result[3], { code: IndexCode.Ed25519_Sig });
-});
-
-test("Should throw if counter is ended early", async () => {
-  const attachment = [
-    encoding.encodeCounter({ code: CountCode_10.ControllerIdxSigs, count: 2 }),
-    encoding.encodeIndexedSignature("ed25519", randomBytes(64), 0),
-    encoding.encodeCounter({ code: CountCode_10.WitnessIdxSigs, count: 2 }),
-    encoding.encodeIndexedSignature("ed25519", randomBytes(64), 0),
-    encoding.encodeIndexedSignature("ed25519", randomBytes(64), 0),
-  ].join("");
-
-  await assert.rejects(
-    async () => {
-      await collectStream(parse(attachment, { version: 1 }));
-    },
-    new IncompleteGroupParserError({
-      code: CountCode_10.ControllerIdxSigs,
-      count: 2,
-      frames: 1,
-      n: 22,
-    }),
-  );
-});
-
-test("Should switch from version 1 to version 2", async () => {
-  const attachment = [
-    encoding.encodeCounter({ code: CountCode_10.ControllerIdxSigs, count: 1 }),
-    encoding.encodeIndexedSignature("ed25519", randomBytes(64), 0),
-    encoding.encodeGenus({ genus: "AAA", major: 2 }),
-    encoding.encodeCounter({
-      code: CountCode_20.ControllerIdxSigs,
-      count: IndexTable[IndexCode.Ed25519_Sig].fs / 4,
-    }),
-    encoding.encodeIndexedSignature("ed25519", randomBytes(64), 0),
-  ].join("");
-
-  const result = await collectStream(parse(attachment, { version: 1 }));
-
-  assert.equal(result.length, 5);
-  assert.partialDeepStrictEqual(result[0], { code: CountCode_10.ControllerIdxSigs });
-  assert.partialDeepStrictEqual(result[1], { code: IndexCode.Ed25519_Sig });
-  assert.partialDeepStrictEqual(result[2], { code: CountCode_10.KERIACDCGenusVersion });
-  assert.partialDeepStrictEqual(result[3], { code: CountCode_20.ControllerIdxSigs });
-  assert.partialDeepStrictEqual(result[4], { code: IndexCode.Ed25519_Sig });
-});
-
-test("Should switch from version 2 to version 1", async () => {
-  const attachment = [
-    encoding.encodeCounter({
-      code: CountCode_20.ControllerIdxSigs,
-      count: IndexTable[IndexCode.Ed25519_Sig].fs / 4,
-    }),
-    encoding.encodeIndexedSignature("ed25519", randomBytes(64), 0),
-    encoding.encodeGenus({ genus: "AAA", major: 1, minor: 0 }),
-    encoding.encodeCounter({ code: CountCode_10.ControllerIdxSigs, count: 1 }),
-    encoding.encodeIndexedSignature("ed25519", randomBytes(64), 0),
-  ].join("");
-
-  const result = await collectStream(parse(attachment, { version: 2 }));
-
-  assert.equal(result.length, 5);
-  assert.partialDeepStrictEqual(result[0], { code: CountCode_20.ControllerIdxSigs });
-  assert.partialDeepStrictEqual(result[1], { code: IndexCode.Ed25519_Sig });
-  assert.partialDeepStrictEqual(result[2], { code: CountCode_10.KERIACDCGenusVersion });
-  assert.partialDeepStrictEqual(result[3], { code: CountCode_10.ControllerIdxSigs });
-  assert.partialDeepStrictEqual(result[4], { code: IndexCode.Ed25519_Sig });
-});
-
-test("Should parse attachment group v1", async () => {
-  const attachment = [
-    encoding.encodeAttachmentsV1(1 + 23 * 2),
-    encoding.encodeCounter({ code: CountCode_10.ControllerIdxSigs, count: 2 }),
-    encoding.encodeIndexer({ code: IndexCode.Ed25519_Big_Sig, raw: randomBytes(64), index: 0, ondex: 0 }),
-    encoding.encodeIndexer({ code: IndexCode.Ed25519_Big_Sig, raw: randomBytes(64), index: 1, ondex: 0 }),
-  ].join("");
-
-  const result = await collectStream(parse(attachment, { version: 1 }));
-  assert.equal(result.length, 4);
-});
-
-test("Should throw if group v1 is incomplete", async () => {
-  const attachment = [
-    encoding.encodeCounter({ code: CountCode_10.ControllerIdxSigs, count: 3 }),
-    encoding.encodeIndexer({ code: IndexCode.Ed25519_Big_Sig, raw: randomBytes(64), index: 0, ondex: 0 }),
-    encoding.encodeIndexer({ code: IndexCode.Ed25519_Big_Sig, raw: randomBytes(64), index: 1, ondex: 0 }),
-  ].join("");
-
-  await assert.rejects(async () => await collectStream(parse(attachment, { version: 1 })), "Incomplete group context");
-});
-
-test("Should throw if group v2 is incomplete", async () => {
-  const attachment = [
-    encoding.encodeCounter({ code: CountCode_20.ControllerIdxSigs, count: (88 * 3) / 4 }),
-    encoding.encodeIndexer({ code: IndexCode.Ed25519_Sig, raw: randomBytes(64), index: 0, ondex: 0 }),
-    encoding.encodeIndexer({ code: IndexCode.Ed25519_Sig, raw: randomBytes(64), index: 1, ondex: 0 }),
-  ].join("");
-
-  await assert.rejects(async () => await collectStream(parse(attachment, { version: 2 })), "Incomplete group context");
-});
-
-test("Should parse JSON after attachment group v1", async () => {
-  const attachment = [
-    encoding.encodeAttachmentsV1(1 + 23 * 2),
-    encoding.encodeCounter({ code: CountCode_10.ControllerIdxSigs, count: 2 }),
-    encoding.encodeIndexer({ code: IndexCode.Ed25519_Big_Sig, raw: randomBytes(64), index: 0, ondex: 0 }),
-    encoding.encodeIndexer({ code: IndexCode.Ed25519_Big_Sig, raw: randomBytes(64), index: 1, ondex: 0 }),
-    encoding.encodeMessage({ payload: { message: "foo" }, protocol: "KERI", major: 1 }),
-  ].join("");
-
-  const result = await collectStream(parse(attachment, { version: 1 }));
-  assert.equal(result.length, 5);
-});
-
-test("Should parse multiple attachment groups", async () => {
-  const attachment = [
-    encoding.encodeAttachmentsV1(1 + 23 * 2),
-    encoding.encodeCounter({ code: CountCode_10.ControllerIdxSigs, count: 2 }),
-    encoding.encodeIndexer({ code: IndexCode.Ed25519_Big_Sig, raw: randomBytes(64), index: 0, ondex: 0 }),
-    encoding.encodeIndexer({ code: IndexCode.Ed25519_Big_Sig, raw: randomBytes(64), index: 1, ondex: 0 }),
-    encoding.encodeAttachmentsV1(1 + 23 * 2),
-    encoding.encodeCounter({ code: CountCode_10.ControllerIdxSigs, count: 2 }),
-    encoding.encodeIndexer({ code: IndexCode.Ed25519_Big_Sig, raw: randomBytes(64), index: 0, ondex: 0 }),
-    encoding.encodeIndexer({ code: IndexCode.Ed25519_Big_Sig, raw: randomBytes(64), index: 1, ondex: 0 }),
-  ].join("");
-
-  const result = await collectStream(parse(attachment, { version: 1 }));
-  assert.equal(result.length, 8);
-});
-
-test("Should parse transferable idx sig group", async () => {
-  const attachment = [
-    "-VA0",
-    encoding.encodeCounter({ code: CountCode_10.TransIdxSigGroups, count: 1 }),
-    "EL8vpSig7NmSxLJ44QSJozcTVYSqPUHVQWPZtyVmPUO_",
-    "0AAAAAAAAAAAAAAAAAAAAAAA",
-    "EL8vpSig7NmSxLJ44QSJozcTVYSqPUHVQWPZtyVmPUO_",
-    encoding.encodeCounter({ code: CountCode_10.ControllerIdxSigs, count: 1 }),
-    encoding.encodeIndexedSignature("ed25519", randomBytes(64), 0),
-  ].join("");
-
-  const result = await collectStream(parse(attachment, { version: 1 }));
-  assert.equal(result.length, 7);
-});
-
-test("Should parse grant message attachments", async () => {
-  const atc = [
-    "-FAB",
-    "EDGJXBwhWweT2nQpMiMPt7F9k1nybWCoiPvFp04acnuu",
-    "0AAAAAAAAAAAAAAAAAAAAAAA",
-    "EDGJXBwhWweT2nQpMiMPt7F9k1nybWCoiPvFp04acnuu",
+  assert.deepEqual(result[0].attachments, [
+    "-VBU",
     "-AAB",
-    "AAD-xGXzbSca7bl7uCmPLaWyc8azvwH72WX_KqQ2dh5xhlypvDMg_9rN3lnnHDPUHbs-u3OiqjQ88HBRBacK2F0L",
-    // The below pathed material group contains nested pathed material groups
-    "-LCy5AACAA-e-evt-FABEDGJXBwhWweT2nQpMiMPt7F9k1nybWCoiPvFp04acnuu0AAAAAAAAAAAAAAAAAAAAAAAEDGJXBwhWweT2nQpMiMPt7F9k1nybWCoiPvFp04acnuu-AABAAAMo3SODbV95rM0KEEZoNX6_cRf7wUHIzKzCc_QrYD0YY_7AuuPfT3sAvs16W1ZsYso3uTbMLnqJq7q0vsj0ZQI",
-    "-LAg4AACA-e-acdc-IABEL5jmZNF5iYBz6h_M6TKXKlMkItcWcG2xyvqukWxBCbk0AAAAAAAAAAAAAAAAAAAAAAAEE25P4GEhB9qS6LobUKnObrx2-oef1abw9ZcMempuaCL",
-    "-LAW5AACAA-e-iss-VAS-GAB0AAAAAAAAAAAAAAAAAAAAAACEAqxAnXydODkdRnOb0fojJJV_BwU3cqXPIoObes3yi5z",
-    "-LBC5AACAA-e-anc-VA--AABAACg0rErmaSflAfExrWZ14dDypHVpgHnw4vnJ4ivrU8IqGjPPi4rpQ4ZeotH8hZ_4erOMNBaYJGmoudrxW6VaNME",
-    "-BABAACRhin0S6ADj-OVXysCR1HU-hfbiHX4FFXtTDk9QQGiJmKnhU8EYg4o6xkcxBQRwB1mZX08m9LOrzfH4ukuGCAF",
-    "-EAB0AAAAAAAAAAAAAAAAAAAAAAA1AAG2025-06-26T15c50c28d370607p00c00",
-  ].join("");
+    "AABNdZWH0GbClYvhaOCeFDVU5ZzfK8fyYV9bRkPy-be92qcPT51PpbAKqleKJ0He9OiwYVQ5sYHUzC7RfUsUQyEE",
+    "-BAC",
+    "AAD3BFVo11CTQy2S-5x8gGij_PXBpKDApRtNmoqyITNolRVGNBQKOp0bpgaRqtLGMQBkIejLH4jAf_juj8qGlmIP",
+    "ABACLmNhfNNNYNidckbPK_bN0p7v1uXFWee-rMbMrlAIEsD2B5OacGRN77gqje9t-uJHHCLm8DgErQq9UN88ZtcO",
+    "-EAB",
+    "0AAAAAAAAAAAAAAAAAAAAAAA",
+    "1AAG2025-02-01T12c03c46d247069p00c00",
+  ]);
 
-  const result = await collectStream(parse(atc, { version: 1 }));
-  assert.equal(result.length, 36);
+  assert.equal(result[1].payload.t, "ixn");
+  assert.deepEqual(result[1].attachments, [
+    "-VBU",
+    "-AAB",
+    "AAAf10ab3SbPCY5g9pkFEITFu64Q-Pu9ErEUot6RM25o68s7x4Y8NxeI2Sq85KCIre_r1RkE4C-QvslgT7LUDF4J",
+    "-BAC",
+    "AAB1eHRUTMxehm1_N3mCIuUtVPqFwGoW6LVsGXKthVph8p3szmD4gKdjqJc2S_sG-T9xEQQim_1qGmY439ZcQp0C",
+    "ABDA8ndBBf9iAZNyq2k33TILE7WX-_k1CuhQ_bXoQIiUGvYKRweODHWBgbvhH8oTuKl6li4h818aNkQzAsaGj6UO",
+    "-EAB",
+    "0AAAAAAAAAAAAAAAAAAAAAAB",
+    "1AAG2025-02-01T12c03c48d444070p00c00",
+  ]);
+});
+
+test("Test witness", { timeout: 100 }, async () => {
+  const stream = ReadableStream.from(createReadStream("./fixtures/witness.cesr", {}));
+
+  const result = await collect(parse(stream));
+
+  assert.equal(result.length, 3);
+  assert.equal(result[0].payload.t, "icp");
+  assert.equal(result[1].payload.t, "rpy");
+});
+
+test("Test parse GEDA", async () => {
+  const stream = ReadableStream.from(createReadStream("./fixtures/geda.cesr", {}));
+  const events = await collect(parse(stream));
+
+  assert.equal(events.length, 17);
+  assert.equal(events[0].payload.t, "icp");
+  assert.equal(events[1].payload.t, "rot");
+  assert.equal(events[2].payload.t, "rot");
+});
+
+test("Test parse credential", async () => {
+  const stream = ReadableStream.from(createReadStream("./fixtures/credential.cesr", {}));
+  const events = await collect(parse(stream));
+
+  assert.equal(events.length, 6);
+  assert.equal(events[0].payload.t, "icp");
+  assert.equal(events[1].payload.t, "ixn");
+  assert.equal(events[2].payload.t, "ixn");
+  assert.equal(events[3].payload.t, "vcp");
+  assert.equal(events[4].payload.t, "iss");
+  assert.match(events[5].payload.v as string, /^ACDC/);
+});
+
+test("Parse GEDA in chunks", async () => {
+  const data = ReadableStream.from(chunk("./fixtures/geda.cesr"));
+
+  const events = await collect(parse(data));
+  assert.equal(events.length, 17);
+});
+
+describe("Parse JSON", () => {
+  test("Parse JSON without attachments", async () => {
+    const input = encoding.encodeMessage({ t: "icp" }, { legacy: true });
+    const result = await collect(parse(input));
+    assert.equal(result.length, 1);
+    assert.deepEqual(result[0].payload, { v: "KERI10JSON000023_", t: "icp" });
+  });
+
+  test("Parse unfinished JSON without full version string", async () => {
+    const input = encoding.encodeMessage({ t: "icp" }).slice(0, 20);
+
+    await assert.rejects(() => collect(parse(input)), new Error("Unexpected end of stream"));
+  });
+});
+
+describe("Parse CESR 2", async () => {
+  test("Parse CESR 2", async () => {
+    const input = await readFile("./fixtures/cesr_20.cesr");
+    const result = await collect(parse(input, { version: 2 }));
+
+    assert.equal(result.length, 2);
+    assert.equal(result[0].payload.t, "icp");
+    assert.equal(result[0].payload.v, "KERICAAJSONAAEq.");
+    assert.deepEqual(result[0].attachments, [
+      "-CAX",
+      "-KAW",
+      "AACME000QcZDeDtgMwJC6b0qhWckJBL-U9Ls9dhYKO9mcaIdffYYO_gi6tFl1xvKMwre886T8ODYLLVrMqlc3TcN",
+    ]);
+    assert.equal(result[1].payload.t, "ixn");
+    assert.equal(result[1].payload.v, "KERICAAJSONAADK.");
+    assert.deepEqual(result[1].attachments, [
+      "-CAX",
+      "-KAW",
+      "AADBLfcct7HWPJkVWt09FakB1hNbSTj6D5o9m4yYOMBfUdv7msDsPRSK46ScKQkIO4XAiAkg_xzmvAmsSTkvoLwM",
+    ]);
+  });
+});
+
+test("Test oobi with mailbox", { timeout: 100 }, async () => {
+  const result = await collect(parse(createReadStream("./fixtures/mailbox.cesr", {})));
+
+  assert.equal(result.length, 4);
+  assert.equal(result[0].payload.t, "icp");
+  assert.equal(result[1].payload.t, "rpy");
+  assert.equal(result[2].payload.t, "rpy");
+  assert.equal(result[3].payload.t, "rpy");
+
+  assert.deepEqual(result[3].attachments, [
+    "-VA0",
+    "-FAB",
+    "EL8vpSig7NmSxLJ44QSJozcTVYSqPUHVQWPZtyVmPUO_",
+    "0AAAAAAAAAAAAAAAAAAAAAAA",
+    "EL8vpSig7NmSxLJ44QSJozcTVYSqPUHVQWPZtyVmPUO_",
+    "-AAB",
+    "AAA9rX7EH8MSl9OIW67yuFoMBgPhrOHrrf0tLyZpOLoD6HbVSr4qM7n0itmwvG3o9YbyZkmXOE7288K8KNsdS3UC",
+  ]);
 });

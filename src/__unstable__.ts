@@ -4,6 +4,6 @@ export * from "./codes.ts";
 export * from "./code-table.ts";
 export * from "./encoding.ts";
 export * from "./encoding-base64.ts";
-export * from "./message.ts";
+export * from "./parse.ts";
 
 export { cesr };
