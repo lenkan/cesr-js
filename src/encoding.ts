@@ -271,7 +271,7 @@ export function encodeCounter(raw: CounterInit): string {
   return decodeUtf8(encoder.encode(raw, "text"));
 }
 
-export function encodeAttachmentsV1(count: number) {
+export function encodeAttachmentsV1(count: number): string {
   if (count > 64 ** 2) {
     return encodeCounter({ code: CountCode_10.BigAttachmentGroup, count });
   }
@@ -279,7 +279,7 @@ export function encodeAttachmentsV1(count: number) {
   return encodeCounter({ code: CountCode_10.AttachmentGroup, count });
 }
 
-export function encodeAttachmentsV2(count: number) {
+export function encodeAttachmentsV2(count: number): string {
   if (count > 64 ** 2) {
     return encodeCounter({ code: CountCode_20.BigAttachmentGroup, count });
   }
@@ -291,7 +291,7 @@ export function encodeIndexer(frame: IndexerInit): string {
   return decodeUtf8(indexer.encode(frame, "text"));
 }
 
-export function encodeVersionString(init: MessageVersionInit) {
+export function encodeVersionString(init: MessageVersionInit): string {
   const protocol = init.protocol ?? "KERI";
   const major = init.major ?? 1;
   const minor = init.minor ?? 0;
