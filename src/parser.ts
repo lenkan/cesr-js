@@ -30,17 +30,44 @@ export interface ParserOptions {
    */
   version?: number;
 
+  /**
+   * Enable streaming mode. In streaming mode, the parser will not throw errors
+   * for incomplete groups until the `complete` method is called.
+   */
   stream?: boolean;
 }
 
-interface ParsingContext {
-  code: string;
-  count: number;
+/**
+ * Context information for a group being parsed
+ */
+export interface ParserContext {
+  /**
+   * The group code
+   */
+  readonly code: string;
+
+  /**
+   * The expected count of items in the group.
+   *
+   * For CESR v2, this is always the number of bytes expected in the group.
+   *
+   * For CESR v1, this can be either number of items in the group, or number of bytes,
+   * depending on the group code.
+   */
+  readonly count: number;
+
+  /**
+   * The number of frames parsed in the group so far.
+   */
   frames: number;
+
+  /**
+   * The number of bytes parsed in the group so far.
+   */
   n: number;
 }
 
-function isContextFinished(version: number, context: ParsingContext): boolean {
+function isContextFinished(version: number, context: ParserContext): boolean {
   if (version === 1) {
     switch (context.code) {
       case CountCode_10.ControllerIdxSigs:
@@ -78,6 +105,16 @@ function isContextFinished(version: number, context: ParsingContext): boolean {
   return context.n === context.count;
 }
 
+export class IncompleteGroupParserError extends Error {
+  context: ParserContext;
+
+  constructor(context: ParserContext) {
+    super(`Incomplete group context: ${JSON.stringify(context)}`);
+    this.name = "IncompleteGroupParserError";
+    this.context = { ...context };
+  }
+}
+
 /**
  * A CESR (Composable Event Streaming Representation) parser that processes byte streams
  * and extracts structured frames.
@@ -101,15 +138,17 @@ function isContextFinished(version: number, context: ParsingContext): boolean {
  */
 export class Parser {
   #buffer: Uint8Array;
-  #stack: ParsingContext[] = [];
+  #stack: ParserContext[] = [];
   #genus: Genus;
   #matter: CodeTable;
   #indexer: CodeTable;
   #stream: boolean;
+  #counter: CodeTable;
 
   constructor(options: ParserOptions = {}) {
     this.#buffer = new Uint8Array(0);
     this.#matter = new CodeTable(MatterTable);
+    this.#counter = new CodeTable({}, { strict: false });
     this.#indexer = new CodeTable(IndexTable, { strict: true });
     this.#stream = options.stream ?? false;
     this.#genus = {
@@ -144,19 +183,24 @@ export class Parser {
     };
   }
 
-  #readCesr(input: Uint8Array, context?: ParsingContext): ReadResult {
-    if (!context) {
-      return this.#matter.read(input);
-    }
+  #readGroup(input: Uint8Array): ReadResult {
+    return this.#counter.read(input);
+  }
 
+  #readCesr(input: Uint8Array, context: ParserContext): ReadResult {
     switch (this.#genus.genus) {
       case "AAA":
         switch (this.#genus.major) {
           case 1:
             switch (context.code) {
               case CountCode_10.ControllerIdxSigs:
-              case CountCode_10.WitnessIdxSigs:
+              case CountCode_10.WitnessIdxSigs: {
+                if (input[0] === 45) {
+                  this.complete();
+                }
+
                 return this.#indexer.read(input);
+              }
               default:
                 return this.#matter.read(input);
             }
@@ -169,8 +213,13 @@ export class Parser {
               case CountCode_20.TransLastIdxSigGroups:
               case CountCode_20.BigTransLastIdxSigGroups:
               case CountCode_20.BigControllerIdxSigs:
-              case CountCode_20.ControllerIdxSigs:
+              case CountCode_20.ControllerIdxSigs: {
+                if (input[0] === 45) {
+                  this.complete();
+                }
+
                 return this.#indexer.read(input);
+              }
               default:
                 return this.#matter.read(input);
             }
@@ -217,14 +266,16 @@ export class Parser {
   }
 
   #read(input: Uint8Array): ReadResult {
-    if (this.#stack.length === 0) {
+    const context = this.#stack[this.#stack.length - 1];
+
+    if (!context) {
       const start = input[0];
 
       switch (start) {
         case 35: // "#"
           throw new Error(`Unsupported cold start byte ${start}, annotated streams not implemented`);
         case 45: // "-"
-          return this.#readCesr(input);
+          return this.#readGroup(input);
         case 95: // "_"
           throw new Error(`Unsupported cold start byte ${start}, op codes not implemented`);
         case 123: // "{"
@@ -245,7 +296,6 @@ export class Parser {
       }
     }
 
-    const context = this.#stack[this.#stack.length - 1];
     return this.#readCesr(input, context);
   }
 
@@ -315,16 +365,7 @@ export class Parser {
     const context = this.#stack[this.#stack.length - 1];
 
     if (context) {
-      throw new Error(
-        [
-          "Incomplete group context",
-          `  Code: ${context.code}`,
-          `  Genus: ${this.#genus.genus} ${this.#genus.major}.${this.#genus.minor}`,
-          `  Expected count: ${context.count}`,
-          `  Current frames: ${context.frames}`,
-          `  Current n: ${context.n}`,
-        ].join("\n"),
-      );
+      throw new IncompleteGroupParserError(context);
     }
 
     if (this.#buffer.length > 0) {

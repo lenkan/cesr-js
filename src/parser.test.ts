@@ -1,6 +1,6 @@
 import test from "node:test";
 import assert from "node:assert";
-import { Parser } from "./parser.ts";
+import { IncompleteGroupParserError, Parser } from "./parser.ts";
 import { encodeUtf8 } from "./encoding-utf8.ts";
 import * as encoding from "./encoding.ts";
 import { CountCode_10, CountCode_20, IndexCode, MatterCode } from "./codes.ts";
@@ -54,7 +54,7 @@ test("Should parse a single frame in group", () => {
   });
 });
 
-test("Should throw if group v1 is incomplete", () => {
+test("Should throw if input ends before group is complete", () => {
   const input = encodeUtf8(
     [
       encoding.encodeCounter({ code: CountCode_10.ControllerIdxSigs, count: 3 }),
@@ -65,7 +65,40 @@ test("Should throw if group v1 is incomplete", () => {
 
   const parser = new Parser({ version: 1 });
 
-  assert.throws(() => Array.from(parser.parse(input)), "Incomplete group context");
+  assert.throws(
+    () => Array.from(parser.parse(input)),
+    new IncompleteGroupParserError({
+      code: CountCode_10.ControllerIdxSigs,
+      count: 3,
+      frames: 2,
+      n: 46,
+    }),
+  );
+});
+
+test("Should throw if new group starts before previous group is complete", async () => {
+  const input = encodeUtf8(
+    [
+      encoding.encodeCounter({ code: CountCode_10.ControllerIdxSigs, count: 3 }),
+      encoding.encodeIndexer({ code: IndexCode.Ed25519_Big_Sig, raw: randomBytes(64), index: 0, ondex: 0 }),
+      encoding.encodeIndexer({ code: IndexCode.Ed25519_Big_Sig, raw: randomBytes(64), index: 1, ondex: 0 }),
+      encoding.encodeCounter({ code: CountCode_10.WitnessIdxSigs, count: 2 }),
+      encoding.encodeIndexer({ code: IndexCode.Ed25519_Big_Sig, raw: randomBytes(64), index: 0, ondex: 0 }),
+      encoding.encodeIndexer({ code: IndexCode.Ed25519_Big_Sig, raw: randomBytes(64), index: 1, ondex: 0 }),
+    ].join(""),
+  );
+
+  const parser = new Parser({ version: 1 });
+
+  assert.throws(
+    () => Array.from(parser.parse(input)),
+    new IncompleteGroupParserError({
+      code: CountCode_10.ControllerIdxSigs,
+      count: 3,
+      frames: 2,
+      n: 46,
+    }),
+  );
 });
 
 test("Should throw if group v2 is incomplete", () => {

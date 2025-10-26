@@ -69,7 +69,7 @@ export class CodeTable {
   #hards: Record<string, number> = {};
   #strict: boolean;
 
-  constructor(table: Record<string, CodeSizeInit>, options: CodeTableOptions = {}) {
+  constructor(table: CodeTableInit, options: CodeTableOptions = {}) {
     this.#strict = options.strict ?? false;
 
     for (const [key, value] of Object.entries(table)) {

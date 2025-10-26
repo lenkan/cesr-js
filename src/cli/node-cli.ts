@@ -1,4 +1,5 @@
 #!/usr/bin/env node
+/* eslint-disable no-console */
 import { createReadStream } from "node:fs";
 import { execute } from "./cli.ts";
 

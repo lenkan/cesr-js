@@ -4,6 +4,7 @@ import { randomBytes } from "node:crypto";
 import { CountCode_10, CountCode_20, IndexCode, IndexTable } from "./codes.ts";
 import { parse } from "./parse.ts";
 import * as encoding from "./encoding.ts";
+import { IncompleteGroupParserError } from "./parser.ts";
 
 async function collectStream<T>(stream: AsyncIterable<T>): Promise<T[]> {
   const result: T[] = [];
@@ -39,9 +40,17 @@ test("Should throw if counter is ended early", async () => {
     encoding.encodeIndexedSignature("ed25519", randomBytes(64), 0),
   ].join("");
 
-  await assert.rejects(async () => {
-    await collectStream(parse(attachment, { version: 1 }));
-  }, new Error(`Unknown code -BAC`));
+  await assert.rejects(
+    async () => {
+      await collectStream(parse(attachment, { version: 1 }));
+    },
+    new IncompleteGroupParserError({
+      code: CountCode_10.ControllerIdxSigs,
+      count: 2,
+      frames: 1,
+      n: 22,
+    }),
+  );
 });
 
 test("Should switch from version 1 to version 2", async () => {

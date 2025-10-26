@@ -11,6 +11,7 @@
     "strictNullChecks": true,
     "allowImportingTsExtensions": true,
     "rewriteRelativeImportExtensions": true,
-    "preserveWatchOutput": true
+    "preserveWatchOutput": true,
+    "erasableSyntaxOnly": true
   }
 }

@@ -1,3 +1,4 @@
+/* eslint-disable no-console */
 import { parseMessages } from "../message.ts";
 
 interface Arguments {
