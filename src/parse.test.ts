@@ -4,6 +4,7 @@ import { describe, test } from "node:test";
 import { readFile } from "node:fs/promises";
 import { encoding } from "./encoding.ts";
 import { parse } from "./parse.ts";
+import { encodeUtf8 } from "./encoding-utf8.ts";
 
 async function* chunk(filename: string, size = 100): AsyncIterable<Uint8Array> {
   let index = 0;
@@ -25,6 +26,26 @@ async function collect<T>(iterator: AsyncIterable<T>): Promise<T[]> {
 
   return result;
 }
+
+test("Parse from string", async () => {
+  const input = encoding.encodeMessage({ t: "icp" }, { legacy: true });
+  const result = await collect(parse(input));
+  assert.equal(result.length, 1);
+});
+
+test("Parse from Uint8Array", async () => {
+  const input = encodeUtf8(encoding.encodeMessage({ t: "icp" }, { legacy: true }));
+  const result = await collect(parse(input));
+  assert.equal(result.length, 1);
+});
+
+test("Parse from Response", async () => {
+  const input = new Response(encoding.encodeMessage({ t: "icp" }, { legacy: true }));
+  assert(input.body);
+
+  const result = await collect(parse(input.body));
+  assert.equal(result.length, 1);
+});
 
 test("Test alice", { timeout: 100 }, async () => {
   const result = await collect(parse(createReadStream("./fixtures/alice.cesr", {})));

@@ -309,6 +309,10 @@ export class Parser {
    * @returns An iterable iterator that yields Frame objects (either CesrFrame or MessageFrame)
    */
   *parse(source: Uint8Array): IterableIterator<Frame> {
+    if (!(source instanceof Uint8Array)) {
+      throw new Error(`Parser.parse expected Uint8Array, got ${typeof source}`);
+    }
+
     this.#buffer = concat(this.#buffer, source);
 
     while (this.#buffer.length > 0) {
