@@ -1,5 +1,4 @@
-import type { ParserOptions } from "./parser.ts";
-import { parse, type ParserInput } from "./parser.ts";
+import { parse, type ParseInput, type ParseOptions } from "./parse.ts";
 
 /**
  * Parses JSON messages with CESR attachments from an incoming stream of bytes.
@@ -7,7 +6,7 @@ import { parse, type ParserInput } from "./parser.ts";
  * @param input Incoming stream of bytes
  * @returns An async iterable of messages with attachments
  */
-export async function* parseMessages(input: ParserInput, options: ParserOptions = {}): AsyncIterableIterator<Message> {
+export async function* parseMessages(input: ParseInput, options: ParseOptions = {}): AsyncIterableIterator<Message> {
   let message: Message | null = null;
 
   for await (const frame of parse(input, options)) {

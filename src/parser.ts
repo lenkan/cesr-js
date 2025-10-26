@@ -1,5 +1,5 @@
 import { CountCode_10, CountCode_20, IndexTable, MatterTable } from "./codes.ts";
-import { decodeUtf8, encodeUtf8 } from "./encoding-utf8.ts";
+import { decodeUtf8 } from "./encoding-utf8.ts";
 import { decodeGenus, decodeVersionString, type Genus } from "./encoding.ts";
 import { concat } from "./array-utils.ts";
 import { CodeTable, type ReadResult } from "./code-table.ts";
@@ -25,14 +25,19 @@ export interface MessageFrame {
 export type Frame = CesrFrame | MessageFrame;
 
 export interface ParserOptions {
+  /**
+   * CESR version to use for cold start parsing. Defaults to 1.
+   */
   version?: number;
+
+  stream?: boolean;
 }
 
 interface ParsingContext {
   code: string;
   count: number;
-  n: number;
   frames: number;
+  n: number;
 }
 
 function isContextFinished(version: number, context: ParsingContext): boolean {
@@ -73,17 +78,40 @@ function isContextFinished(version: number, context: ParsingContext): boolean {
   return context.n === context.count;
 }
 
-class Parser {
+/**
+ * A CESR (Composable Event Streaming Representation) parser that processes byte streams
+ * and extracts structured frames.
+ *
+ * The Parser class maintains internal state to handle streaming data, buffering incomplete
+ * frames and tracking parsing contexts for nested group structures. It supports both
+ * streaming and non-streaming modes, and can handle different CESR versions.
+ *
+ * @example
+ * Basic usage:
+ * ```ts
+ * const parser = new Parser({ version: 1 });
+ * const data = new Uint8Array(cesrEncodedBytes);
+ *
+ * for (const frame of parser.parse(data)) {
+ *   console.log('Frame type:', frame.type, 'code:', frame.code);
+ * }
+ *
+ * parser.complete(); // Ensure all groups are properly closed
+ * ```
+ */
+export class Parser {
   #buffer: Uint8Array;
   #stack: ParsingContext[] = [];
   #genus: Genus;
   #matter: CodeTable;
   #indexer: CodeTable;
+  #stream: boolean;
 
   constructor(options: ParserOptions = {}) {
     this.#buffer = new Uint8Array(0);
     this.#matter = new CodeTable(MatterTable);
     this.#indexer = new CodeTable(IndexTable, { strict: true });
+    this.#stream = options.stream ?? false;
     this.#genus = {
       genus: "AAA",
       major: options.version ?? 1,
@@ -190,32 +218,46 @@ class Parser {
 
   #read(input: Uint8Array): ReadResult {
     if (this.#stack.length === 0) {
-      const start = input[0] >> 5;
+      const start = input[0];
 
       switch (start) {
-        case 0b000:
-          throw new Error(`Unsupported cold start byte ${input[0]}, annotated streams not implemented`);
-        case 0b001:
+        case 35: // "#"
+          throw new Error(`Unsupported cold start byte ${start}, annotated streams not implemented`);
+        case 45: // "-"
           return this.#readCesr(input);
-        case 0b010:
-          throw new Error(`Unsupported cold start byte ${this.#buffer[0]}, op codes not implemented`);
-        case 0b011:
+        case 95: // "_"
+          throw new Error(`Unsupported cold start byte ${start}, op codes not implemented`);
+        case 123: // "{"
           return this.#readJSON(input);
+      }
+
+      const tritet = input[0] >> 5;
+      switch (tritet) {
         case 0b101:
-          throw new Error(`Unsupported cold start byte ${this.#buffer[0]}, CBOR decoding not implemented`);
+          throw new Error(`Unsupported cold start byte ${start}, CBOR decoding not implemented`);
         case 0b100:
         case 0b110:
-          throw new Error(`Unsupported cold start byte ${this.#buffer[0]}, MGPK decoding not implemented`);
+          throw new Error(`Unsupported cold start byte ${start}, MGPK decoding not implemented`);
         case 0b111:
-          throw new Error(`Unsupported cold start byte ${this.#buffer[0]}, binary domain decoding not implemented`);
+          throw new Error(`Unsupported cold start byte ${start}, binary domain decoding not implemented`);
         default:
-          throw new Error(`Unsupported cold start byte ${this.#buffer[0]}`);
+          throw new Error(`Unsupported cold start byte ${start}, stream must start with a message, group or op code`);
       }
     }
 
-    return this.#readCesr(this.#buffer, this.#stack[this.#stack.length - 1]);
+    const context = this.#stack[this.#stack.length - 1];
+    return this.#readCesr(input, context);
   }
 
+  /**
+   * Parses CESR frames from a Uint8Array source.
+   *
+   * This method processes the input bytes and yields parsed frames as they become available.
+   * The input is buffered internally, allowing for incremental parsing of streaming data.
+   *
+   * @param source - The Uint8Array containing CESR-encoded data to parse
+   * @returns An iterable iterator that yields Frame objects (either CesrFrame or MessageFrame)
+   */
   *parse(source: Uint8Array): IterableIterator<Frame> {
     this.#buffer = concat(this.#buffer, source);
 
@@ -244,65 +286,49 @@ class Parser {
         };
       }
     }
-  }
 
-  get finished() {
-    return this.#buffer.length === 0 && this.#stack.length === 0;
-  }
-}
-
-/**
- * Parses CESR frames from an incoming stream of bytes.
- *
- * @param input Incoming stream of bytes
- * @returns An iterable of CESR frames
- */
-export function* parseSync(input: Uint8Array | string, options: ParserOptions = {}): IterableIterator<Frame> {
-  if (typeof input === "string") {
-    input = encodeUtf8(input);
-  }
-
-  const parser = new Parser(options);
-
-  for (const frame of parser.parse(input)) {
-    yield frame;
-  }
-
-  if (!parser.finished) {
-    throw new Error("Unexpected end of stream");
-  }
-}
-
-/**
- * Parses CESR frames from an incoming stream of bytes.
- *
- * @param input Incoming stream of bytes
- * @returns An async iterable of CESR frames
- */
-export async function* parse(input: ParserInput, options?: ParserOptions): AsyncIterableIterator<Frame> {
-  const parser = new Parser(options);
-
-  for await (const chunk of resolveInput(input)) {
-    for (const frame of parser.parse(chunk)) {
-      yield frame;
+    if (this.#stream === false) {
+      this.complete();
     }
   }
 
-  if (!parser.finished) {
-    throw new Error("Unexpected end of stream");
+  /**
+   * Complete the parsing process, throwing if there is any incomplete group or unexpected data.
+   *
+   * @example
+   *
+   * ```ts
+   * import { Parser } from "cesr";
+   *
+   * const parser = new Parser();
+   * const data = ...; // some Uint8Array data containing CESR frames
+   *
+   * for (const frame of parser.parse(data)) {
+   *   console.log(frame);
+   * }
+   *
+   * // Ensure that group parsing is complete
+   * parser.complete();
+   * ```
+   */
+  complete(): void {
+    const context = this.#stack[this.#stack.length - 1];
+
+    if (context) {
+      throw new Error(
+        [
+          "Incomplete group context",
+          `  Code: ${context.code}`,
+          `  Genus: ${this.#genus.genus} ${this.#genus.major}.${this.#genus.minor}`,
+          `  Expected count: ${context.count}`,
+          `  Current frames: ${context.frames}`,
+          `  Current n: ${context.n}`,
+        ].join("\n"),
+      );
+    }
+
+    if (this.#buffer.length > 0) {
+      throw new Error("Unexpected end of stream");
+    }
   }
-}
-
-export type ParserInput = Uint8Array | string | AsyncIterable<Uint8Array>;
-
-function resolveInput(input: ParserInput): AsyncIterable<Uint8Array> {
-  if (typeof input === "string") {
-    return ReadableStream.from([encodeUtf8(input)]);
-  }
-
-  if (input instanceof Uint8Array) {
-    return ReadableStream.from([input]);
-  }
-
-  return input;
 }

@@ -1,5 +1,5 @@
 {
-  "exclude": ["node_modules", "dist", "examples"],
+  "exclude": ["node_modules", "dist", "examples", "docs"],
   "compilerOptions": {
     "lib": ["ES2024"],
     "module": "NodeNext",
