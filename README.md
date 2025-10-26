@@ -1,14 +1,25 @@
-# CESR
+# CESR-JS
 
 [![NPM Version](https://img.shields.io/npm/v/cesr.svg?style=flat)](https://www.npmjs.com/package/cesr)
 [![NPM License](https://img.shields.io/npm/l/cesr.svg?style=flat)](https://github.com/lenkan/cesr-js/blob/main/LICENSE)
 [![CI](https://github.com/lenkan/cesr-js/actions/workflows/ci.yaml/badge.svg)](https://github.com/lenkan/cesr-js/actions/workflows/ci.yaml)
+[![Documentation](https://img.shields.io/badge/documentation-green)](https://lenkan.dev/cesr-js)
 
-This is a work in progress JavaScript implementation of [Composable Event Stream Representation](https://github.com/trustoverip/tswg-cesr-specification).
+A JavaScript/TypeScript implementation of [Composable Event Stream Representation (CESR)](https://github.com/trustoverip/tswg-cesr-specification) for parsing and processing cryptographic event streams.
 
-This package is currently not intended for any real world use case. It has been implemented for learning purposes.
+> **⚠️ Work in Progress**: This package is currently under development and not intended for production use.
 
-# Usage
+## 📖 Documentation
+
+- **[API Reference](https://lenkan.dev/cesr-js)** - Complete API documentation
+
+## 🚀 Installation
+
+```bash
+npm install cesr
+```
+
+## 📋 Usage
 
 Install using npm
 
@@ -16,10 +27,11 @@ Install using npm
 npm install cesr
 ```
 
-Example usage that fetches and then parses a KERI OOBI stream:
+### Basic Example
+
+Parse a CESR stream from a URL:
 
 ```typescript
-// @ts-check
 import { parse } from "cesr";
 
 const url = new URL("/lenkan/cesr-js/refs/heads/main/fixtures/geda.cesr", "https://raw.githubusercontent.com");
@@ -32,22 +44,48 @@ if (response.body) {
 }
 ```
 
-## Command line interface
+## 🖥️ Command Line Interface
 
-The command line interface can be used to parse CESR streams.
+Install globally to use the CLI:
 
 ```bash
 npm install -g cesr
+```
+
+### CLI Usage
+
+```bash
+# Show help
 cesr --help
 
 # Parse a CESR file from a URL
 cesr https://raw.githubusercontent.com/lenkan/cesr-js/refs/heads/main/fixtures/geda.cesr
 
-# Parse a CESR file from stdin
-curl https://raw.githubusercontent.com/lenkan/cesr-js/refs/heads/main/fixtures/geda.cesr | cesr --pretty -
+# Parse from stdin with pretty printing
+curl https://example.com/stream.cesr | cesr --pretty -
+
+# Parse a local file
+cesr ./path/to/file.cesr
 ```
 
-# Features
+## ✨ Features
 
-- [x] Parsing CESR Stream
-- [ ] API for encoding/decoding primitives
+- ✅ **CESR Frame Parsing** - Complete support for CESR primitive parsing
+- ✅ **JSON Messages** - Parse embedded JSON messages in streams
+- ✅ **Streaming Support** - Process data incrementally as it arrives
+- ✅ **TypeScript Support** - Full type definitions included
+- ✅ **Command Line Tool** - Parse CESR streams from command line
+- ⏳ **MSGPACK Messages** - Coming soon
+- ⏳ **CBOR Messages** - Coming soon
+- 🔧 **Encoding/Decoding API** - Available from `cesr/__unstable__` (experimental)
+
+## 🤝 Contributing
+
+This project is open source and contributions are welcome! Please feel free to:
+
+- Report bugs or issues
+- Suggest new features
+
+## 📄 License
+
+This project is licensed under the terms specified in the [LICENSE](./LICENSE) file.
