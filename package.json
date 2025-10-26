@@ -17,7 +17,9 @@
     "test:example": "./test_examples.sh",
     "lint": "eslint && prettier --check . && tsc --noEmit",
     "clean": "node scripts/clean.js",
-    "format": "prettier --write ."
+    "format": "prettier --write .",
+    "docs:build": "typedoc src/__main__.ts",
+    "docs:serve": "concurrently \"serve docs\" \"npm run docs:build -- --watch --preserveWatchOutput\""
   },
   "exports": {
     ".": "./dist/__main__.js",
