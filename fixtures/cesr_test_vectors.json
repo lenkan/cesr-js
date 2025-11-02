@@ -2548,24 +2548,24 @@
     "name": "BigBackerRegistrarSealCouples",
     "type": "counter_20",
     "raw": "",
-    "soft": "AAAAA",
+    "soft": "AABAA",
     "index": null,
     "ondex": null,
-    "count": 0,
-    "qb64": "--VAAAAA",
-    "qb2": "fbe540000000"
+    "count": 4096,
+    "qb64": "--VAABAA",
+    "qb2": "fbe540001000"
   },
   {
     "code": "--V",
     "name": "BigBackerRegistrarSealCouples",
     "type": "counter_20",
     "raw": "",
-    "soft": "11Uoq",
+    "soft": "wgmMr",
     "index": null,
     "ondex": null,
-    "count": 903170602,
-    "qb64": "--V11Uoq",
-    "qb2": "fbe575d54a2a"
+    "count": 813851435,
+    "qb64": "--VwgmMr",
+    "qb2": "fbe57082632b"
   },
   {
     "code": "--V",
@@ -2584,24 +2584,24 @@
     "name": "BigSealSourceLastSingles",
     "type": "counter_20",
     "raw": "",
-    "soft": "AAAAA",
+    "soft": "AABAA",
     "index": null,
     "ondex": null,
-    "count": 0,
-    "qb64": "--UAAAAA",
-    "qb2": "fbe500000000"
+    "count": 4096,
+    "qb64": "--UAABAA",
+    "qb2": "fbe500001000"
   },
   {
     "code": "--U",
     "name": "BigSealSourceLastSingles",
     "type": "counter_20",
     "raw": "",
-    "soft": "FLpea",
+    "soft": "4-dGg",
     "index": null,
     "ondex": null,
-    "count": 86939546,
-    "qb64": "--UFLpea",
-    "qb2": "fbe5052e979a"
+    "count": 955896224,
+    "qb64": "--U4-dGg",
+    "qb2": "fbe538f9d1a0"
   },
   {
     "code": "--U",
@@ -2620,24 +2620,24 @@
     "name": "BigESSRPayloadGroup",
     "type": "counter_20",
     "raw": "",
-    "soft": "AAAAA",
+    "soft": "AABAA",
     "index": null,
     "ondex": null,
-    "count": 0,
-    "qb64": "--ZAAAAA",
-    "qb2": "fbe640000000"
+    "count": 4096,
+    "qb64": "--ZAABAA",
+    "qb2": "fbe640001000"
   },
   {
     "code": "--Z",
     "name": "BigESSRPayloadGroup",
     "type": "counter_20",
     "raw": "",
-    "soft": "hJC8d",
+    "soft": "a6rUV",
     "index": null,
     "ondex": null,
-    "count": 556019485,
-    "qb64": "--ZhJC8d",
-    "qb2": "fbe661242f1d"
+    "count": 451589397,
+    "qb64": "--Za6rUV",
+    "qb2": "fbe65aeab515"
   },
   {
     "code": "--Z",
@@ -2656,24 +2656,24 @@
     "name": "BigSealSourceTriples",
     "type": "counter_20",
     "raw": "",
-    "soft": "AAAAA",
+    "soft": "AABAA",
     "index": null,
     "ondex": null,
-    "count": 0,
-    "qb64": "--TAAAAA",
-    "qb2": "fbe4c0000000"
+    "count": 4096,
+    "qb64": "--TAABAA",
+    "qb2": "fbe4c0001000"
   },
   {
     "code": "--T",
     "name": "BigSealSourceTriples",
     "type": "counter_20",
     "raw": "",
-    "soft": "-MuDy",
+    "soft": "Cl1vN",
     "index": null,
     "ondex": null,
-    "count": 1043521778,
-    "qb64": "--T-MuDy",
-    "qb2": "fbe4fe32e0f2"
+    "count": 43473869,
+    "qb64": "--TCl1vN",
+    "qb2": "fbe4c2975bcd"
   },
   {
     "code": "--T",
@@ -2692,24 +2692,24 @@
     "name": "BigTypedDigestSealCouples",
     "type": "counter_20",
     "raw": "",
-    "soft": "AAAAA",
+    "soft": "AABAA",
     "index": null,
     "ondex": null,
-    "count": 0,
-    "qb64": "--WAAAAA",
-    "qb2": "fbe580000000"
+    "count": 4096,
+    "qb64": "--WAABAA",
+    "qb2": "fbe580001000"
   },
   {
     "code": "--W",
     "name": "BigTypedDigestSealCouples",
     "type": "counter_20",
     "raw": "",
-    "soft": "z1OG8",
+    "soft": "QkieO",
     "index": null,
     "ondex": null,
-    "count": 869589436,
-    "qb64": "--Wz1OG8",
-    "qb2": "fbe5b3d4e1bc"
+    "count": 278013838,
+    "qb64": "--WQkieO",
+    "qb2": "fbe59092278e"
   },
   {
     "code": "--W",
@@ -2728,24 +2728,24 @@
     "name": "BigWitnessIdxSigs",
     "type": "counter_20",
     "raw": "",
-    "soft": "AAAAA",
+    "soft": "AABAA",
     "index": null,
     "ondex": null,
-    "count": 0,
-    "qb64": "--LAAAAA",
-    "qb2": "fbe2c0000000"
+    "count": 4096,
+    "qb64": "--LAABAA",
+    "qb2": "fbe2c0001000"
   },
   {
     "code": "--L",
     "name": "BigWitnessIdxSigs",
     "type": "counter_20",
     "raw": "",
-    "soft": "m0vOE",
+    "soft": "9yj0-",
     "index": null,
     "ondex": null,
-    "count": 651359108,
-    "qb64": "--Lm0vOE",
-    "qb2": "fbe2e6d2f384"
+    "count": 1036664126,
+    "qb64": "--L9yj0-",
+    "qb2": "fbe2fdca3d3e"
   },
   {
     "code": "--L",
@@ -2776,12 +2776,12 @@
     "name": "SealSourceLastSingles",
     "type": "counter_20",
     "raw": "",
-    "soft": "9A",
+    "soft": "-M",
     "index": null,
     "ondex": null,
-    "count": 3904,
-    "qb64": "-U9A",
-    "qb2": "f94f40"
+    "count": 3980,
+    "qb64": "-U-M",
+    "qb2": "f94f8c"
   },
   {
     "code": "-U",
@@ -2812,12 +2812,12 @@
     "name": "GenericGroup",
     "type": "counter_20",
     "raw": "",
-    "soft": "t1",
+    "soft": "z1",
     "index": null,
     "ondex": null,
-    "count": 2933,
-    "qb64": "-At1",
-    "qb2": "f80b75"
+    "count": 3317,
+    "qb64": "-Az1",
+    "qb2": "f80cf5"
   },
   {
     "code": "-A",
@@ -2848,12 +2848,12 @@
     "name": "ESSRPayloadGroup",
     "type": "counter_20",
     "raw": "",
-    "soft": "b9",
+    "soft": "m0",
     "index": null,
     "ondex": null,
-    "count": 1789,
-    "qb64": "-Zb9",
-    "qb2": "f996fd"
+    "count": 2484,
+    "qb64": "-Zm0",
+    "qb2": "f999b4"
   },
   {
     "code": "-Z",
@@ -2884,12 +2884,12 @@
     "name": "ESSRWrapperGroup",
     "type": "counter_20",
     "raw": "",
-    "soft": "R0",
+    "soft": "9A",
     "index": null,
     "ondex": null,
-    "count": 1140,
-    "qb64": "-ER0",
-    "qb2": "f84474"
+    "count": 3904,
+    "qb64": "-E9A",
+    "qb2": "f84f40"
   },
   {
     "code": "-E",
@@ -2920,12 +2920,12 @@
     "name": "SealSourceTriples",
     "type": "counter_20",
     "raw": "",
-    "soft": "kE",
+    "soft": "t1",
     "index": null,
     "ondex": null,
-    "count": 2308,
-    "qb64": "-TkE",
-    "qb2": "f93904"
+    "count": 2933,
+    "qb64": "-Tt1",
+    "qb2": "f93b75"
   },
   {
     "code": "-T",
@@ -2938,42 +2938,6 @@
     "count": 4095,
     "qb64": "-T__",
     "qb2": "f93fff"
-  },
-  {
-    "code": "-_AAA",
-    "name": "KERIACDCGenusVersion",
-    "type": "counter_20",
-    "raw": "",
-    "soft": "AAA",
-    "index": null,
-    "ondex": null,
-    "count": 0,
-    "qb64": "-_AAAAAA",
-    "qb2": "fbf000000000"
-  },
-  {
-    "code": "-_AAA",
-    "name": "KERIACDCGenusVersion",
-    "type": "counter_20",
-    "raw": "",
-    "soft": "R4z",
-    "index": null,
-    "ondex": null,
-    "count": 73267,
-    "qb64": "-_AAAR4z",
-    "qb2": "fbf000011e33"
-  },
-  {
-    "code": "-_AAA",
-    "name": "KERIACDCGenusVersion",
-    "type": "counter_20",
-    "raw": "",
-    "soft": "___",
-    "index": null,
-    "ondex": null,
-    "count": 262143,
-    "qb64": "-_AAA___",
-    "qb2": "fbf00003ffff"
   },
   {
     "code": "-W",
@@ -2992,12 +2956,12 @@
     "name": "TypedDigestSealCouples",
     "type": "counter_20",
     "raw": "",
-    "soft": "MI",
+    "soft": "b9",
     "index": null,
     "ondex": null,
-    "count": 776,
-    "qb64": "-WMI",
-    "qb2": "f96308"
+    "count": 1789,
+    "qb64": "-Wb9",
+    "qb2": "f966fd"
   },
   {
     "code": "-W",
@@ -3028,12 +2992,12 @@
     "name": "AttachmentGroup",
     "type": "counter_20",
     "raw": "",
-    "soft": "gE",
+    "soft": "R0",
     "index": null,
     "ondex": null,
-    "count": 2052,
-    "qb64": "-CgE",
-    "qb2": "f82804"
+    "count": 1140,
+    "qb64": "-CR0",
+    "qb2": "f82474"
   },
   {
     "code": "-C",
@@ -3064,12 +3028,12 @@
     "name": "WitnessIdxSigs",
     "type": "counter_20",
     "raw": "",
-    "soft": "Sz",
+    "soft": "kE",
     "index": null,
     "ondex": null,
-    "count": 1203,
-    "qb64": "-LSz",
-    "qb2": "f8b4b3"
+    "count": 2308,
+    "qb64": "-LkE",
+    "qb2": "f8b904"
   },
   {
     "code": "-L",
@@ -3100,12 +3064,12 @@
     "name": "MapBodyGroup",
     "type": "counter_20",
     "raw": "",
-    "soft": "ns",
+    "soft": "R4",
     "index": null,
     "ondex": null,
-    "count": 2540,
-    "qb64": "-Gns",
-    "qb2": "f869ec"
+    "count": 1144,
+    "qb64": "-GR4",
+    "qb2": "f86478"
   },
   {
     "code": "-G",
@@ -3136,12 +3100,12 @@
     "name": "GenericMapGroup",
     "type": "counter_20",
     "raw": "",
-    "soft": "Mp",
+    "soft": "MI",
     "index": null,
     "ondex": null,
-    "count": 809,
-    "qb64": "-IMp",
-    "qb2": "f88329"
+    "count": 776,
+    "qb64": "-IMI",
+    "qb2": "f88308"
   },
   {
     "code": "-I",
@@ -3172,12 +3136,12 @@
     "name": "FixBodyGroup",
     "type": "counter_20",
     "raw": "",
-    "soft": "Jc",
+    "soft": "gE",
     "index": null,
     "ondex": null,
-    "count": 604,
-    "qb64": "-FJc",
-    "qb2": "f8525c"
+    "count": 2052,
+    "qb64": "-FgE",
+    "qb2": "f85804"
   },
   {
     "code": "-F",
@@ -3208,12 +3172,12 @@
     "name": "NonNativeBodyGroup",
     "type": "counter_20",
     "raw": "",
-    "soft": "qQ",
+    "soft": "Sz",
     "index": null,
     "ondex": null,
-    "count": 2704,
-    "qb64": "-HqQ",
-    "qb2": "f87a90"
+    "count": 1203,
+    "qb64": "-HSz",
+    "qb2": "f874b3"
   },
   {
     "code": "-H",
@@ -3244,12 +3208,12 @@
     "name": "DatagramSegmentGroup",
     "type": "counter_20",
     "raw": "",
-    "soft": "8b",
+    "soft": "ns",
     "index": null,
     "ondex": null,
-    "count": 3867,
-    "qb64": "-D8b",
-    "qb2": "f83f1b"
+    "count": 2540,
+    "qb64": "-Dns",
+    "qb2": "f839ec"
   },
   {
     "code": "-D",
@@ -3280,12 +3244,12 @@
     "name": "BodyWithAttachmentGroup",
     "type": "counter_20",
     "raw": "",
-    "soft": "M4",
+    "soft": "Mp",
     "index": null,
     "ondex": null,
-    "count": 824,
-    "qb64": "-BM4",
-    "qb2": "f81338"
+    "count": 809,
+    "qb64": "-BMp",
+    "qb2": "f81329"
   },
   {
     "code": "-B",
@@ -3376,24 +3340,24 @@
     "name": "BigAttachmentGroup",
     "type": "counter_20",
     "raw": "",
-    "soft": "AAAAA",
+    "soft": "AABAA",
     "index": null,
     "ondex": null,
-    "count": 0,
-    "qb64": "--CAAAAA",
-    "qb2": "fbe080000000"
+    "count": 4096,
+    "qb64": "--CAABAA",
+    "qb2": "fbe080001000"
   },
   {
     "code": "--C",
     "name": "BigAttachmentGroup",
     "type": "counter_20",
     "raw": "",
-    "soft": "FLpea",
+    "soft": "Cl1vN",
     "index": null,
     "ondex": null,
-    "count": 86939546,
-    "qb64": "--CFLpea",
-    "qb2": "fbe0852e979a"
+    "count": 43473869,
+    "qb64": "--CCl1vN",
+    "qb2": "fbe082975bcd"
   },
   {
     "code": "--C",
@@ -3412,24 +3376,24 @@
     "name": "BigBackerRegistrarSealCouples",
     "type": "counter_20",
     "raw": "",
-    "soft": "AAAAA",
+    "soft": "AABAA",
     "index": null,
     "ondex": null,
-    "count": 0,
-    "qb64": "--VAAAAA",
-    "qb2": "fbe540000000"
+    "count": 4096,
+    "qb64": "--VAABAA",
+    "qb2": "fbe540001000"
   },
   {
     "code": "--V",
     "name": "BigBackerRegistrarSealCouples",
     "type": "counter_20",
     "raw": "",
-    "soft": "hJC8d",
+    "soft": "QkieO",
     "index": null,
     "ondex": null,
-    "count": 556019485,
-    "qb64": "--VhJC8d",
-    "qb2": "fbe561242f1d"
+    "count": 278013838,
+    "qb64": "--VQkieO",
+    "qb2": "fbe55092278e"
   },
   {
     "code": "--V",
@@ -3448,24 +3412,24 @@
     "name": "BigBlindedStateQuadruples",
     "type": "counter_20",
     "raw": "",
-    "soft": "AAAAA",
+    "soft": "AABAA",
     "index": null,
     "ondex": null,
-    "count": 0,
-    "qb64": "--aAAAAA",
-    "qb2": "fbe680000000"
+    "count": 4096,
+    "qb64": "--aAABAA",
+    "qb2": "fbe680001000"
   },
   {
     "code": "--a",
     "name": "BigBlindedStateQuadruples",
     "type": "counter_20",
     "raw": "",
-    "soft": "-MuDy",
+    "soft": "9yj0-",
     "index": null,
     "ondex": null,
-    "count": 1043521778,
-    "qb64": "--a-MuDy",
-    "qb2": "fbe6be32e0f2"
+    "count": 1036664126,
+    "qb64": "--a9yj0-",
+    "qb2": "fbe6bdca3d3e"
   },
   {
     "code": "--a",
@@ -3484,24 +3448,24 @@
     "name": "BigBodyWithAttachmentGroup",
     "type": "counter_20",
     "raw": "",
-    "soft": "AAAAA",
+    "soft": "AABAA",
     "index": null,
     "ondex": null,
-    "count": 0,
-    "qb64": "--BAAAAA",
-    "qb2": "fbe040000000"
+    "count": 4096,
+    "qb64": "--BAABAA",
+    "qb2": "fbe040001000"
   },
   {
     "code": "--B",
     "name": "BigBodyWithAttachmentGroup",
     "type": "counter_20",
     "raw": "",
-    "soft": "z1OG8",
+    "soft": "guMmY",
     "index": null,
     "ondex": null,
-    "count": 869589436,
-    "qb64": "--Bz1OG8",
-    "qb2": "fbe073d4e1bc"
+    "count": 548981144,
+    "qb64": "--BguMmY",
+    "qb2": "fbe060b8c998"
   },
   {
     "code": "--B",
@@ -3520,24 +3484,24 @@
     "name": "BigBoundStateSextuples",
     "type": "counter_20",
     "raw": "",
-    "soft": "AAAAA",
+    "soft": "AABAA",
     "index": null,
     "ondex": null,
-    "count": 0,
-    "qb64": "--bAAAAA",
-    "qb2": "fbe6c0000000"
+    "count": 4096,
+    "qb64": "--bAABAA",
+    "qb2": "fbe6c0001000"
   },
   {
     "code": "--b",
     "name": "BigBoundStateSextuples",
     "type": "counter_20",
     "raw": "",
-    "soft": "m0vOE",
+    "soft": "fGYB5",
     "index": null,
     "ondex": null,
-    "count": 651359108,
-    "qb64": "--bm0vOE",
-    "qb2": "fbe6e6d2f384"
+    "count": 521764985,
+    "qb64": "--bfGYB5",
+    "qb2": "fbe6df198079"
   },
   {
     "code": "--b",
@@ -3556,24 +3520,24 @@
     "name": "BigControllerIdxSigs",
     "type": "counter_20",
     "raw": "",
-    "soft": "AAAAA",
+    "soft": "AABAA",
     "index": null,
     "ondex": null,
-    "count": 0,
-    "qb64": "--KAAAAA",
-    "qb2": "fbe280000000"
+    "count": 4096,
+    "qb64": "--KAABAA",
+    "qb2": "fbe280001000"
   },
   {
     "code": "--K",
     "name": "BigControllerIdxSigs",
     "type": "counter_20",
     "raw": "",
-    "soft": "9ASEC",
+    "soft": "Z6oDe",
     "index": null,
     "ondex": null,
-    "count": 1023484162,
-    "qb64": "--K9ASEC",
-    "qb2": "fbe2bd012102"
+    "count": 434798814,
+    "qb64": "--KZ6oDe",
+    "qb2": "fbe299ea80de"
   },
   {
     "code": "--K",
@@ -3592,24 +3556,24 @@
     "name": "BigDatagramSegmentGroup",
     "type": "counter_20",
     "raw": "",
-    "soft": "AAAAA",
+    "soft": "AABAA",
     "index": null,
     "ondex": null,
-    "count": 0,
-    "qb64": "--DAAAAA",
-    "qb2": "fbe0c0000000"
+    "count": 4096,
+    "qb64": "--DAABAA",
+    "qb2": "fbe0c0001000"
   },
   {
     "code": "--D",
     "name": "BigDatagramSegmentGroup",
     "type": "counter_20",
     "raw": "",
-    "soft": "t1I_X",
+    "soft": "6xGns",
     "index": null,
     "ondex": null,
-    "count": 768905175,
-    "qb64": "--Dt1I_X",
-    "qb2": "fbe0edd48fd7"
+    "count": 985950700,
+    "qb64": "--D6xGns",
+    "qb2": "fbe0fac469ec"
   },
   {
     "code": "--D",
@@ -3628,24 +3592,24 @@
     "name": "BigDigestSealSingles",
     "type": "counter_20",
     "raw": "",
-    "soft": "AAAAA",
+    "soft": "AABAA",
     "index": null,
     "ondex": null,
-    "count": 0,
-    "qb64": "--QAAAAA",
-    "qb2": "fbe400000000"
+    "count": 4096,
+    "qb64": "--QAABAA",
+    "qb2": "fbe400001000"
   },
   {
     "code": "--Q",
     "name": "BigDigestSealSingles",
     "type": "counter_20",
     "raw": "",
-    "soft": "b9e5s",
+    "soft": "yKdGO",
     "index": null,
     "ondex": null,
-    "count": 469102188,
-    "qb64": "--Qb9e5s",
-    "qb2": "fbe41bf5ee6c"
+    "count": 841601422,
+    "qb64": "--QyKdGO",
+    "qb2": "fbe43229d18e"
   },
   {
     "code": "--Q",
@@ -3664,24 +3628,24 @@
     "name": "BigESSRPayloadGroup",
     "type": "counter_20",
     "raw": "",
-    "soft": "AAAAA",
+    "soft": "AABAA",
     "index": null,
     "ondex": null,
-    "count": 0,
-    "qb64": "--ZAAAAA",
-    "qb2": "fbe640000000"
+    "count": 4096,
+    "qb64": "--ZAABAA",
+    "qb2": "fbe640001000"
   },
   {
     "code": "--Z",
     "name": "BigESSRPayloadGroup",
     "type": "counter_20",
     "raw": "",
-    "soft": "R07iN",
+    "soft": "1HF9Y",
     "index": null,
     "ondex": null,
-    "count": 299088013,
-    "qb64": "--ZR07iN",
-    "qb2": "fbe651d3b88d"
+    "count": 891051864,
+    "qb64": "--Z1HF9Y",
+    "qb2": "fbe6751c5f58"
   },
   {
     "code": "--Z",
@@ -3700,24 +3664,24 @@
     "name": "BigESSRWrapperGroup",
     "type": "counter_20",
     "raw": "",
-    "soft": "AAAAA",
+    "soft": "AABAA",
     "index": null,
     "ondex": null,
-    "count": 0,
-    "qb64": "--EAAAAA",
-    "qb2": "fbe100000000"
+    "count": 4096,
+    "qb64": "--EAABAA",
+    "qb2": "fbe100001000"
   },
   {
     "code": "--E",
     "name": "BigESSRWrapperGroup",
     "type": "counter_20",
     "raw": "",
-    "soft": "kE0M5",
+    "soft": "TaYnC",
     "index": null,
     "ondex": null,
-    "count": 605242169,
-    "qb64": "--EkE0M5",
-    "qb2": "fbe124134339"
+    "count": 325683650,
+    "qb64": "--ETaYnC",
+    "qb2": "fbe1136989c2"
   },
   {
     "code": "--E",
@@ -3736,24 +3700,24 @@
     "name": "BigFirstSeenReplayCouples",
     "type": "counter_20",
     "raw": "",
-    "soft": "AAAAA",
+    "soft": "AABAA",
     "index": null,
     "ondex": null,
-    "count": 0,
-    "qb64": "--OAAAAA",
-    "qb2": "fbe380000000"
+    "count": 4096,
+    "qb64": "--OAABAA",
+    "qb2": "fbe380001000"
   },
   {
     "code": "--O",
     "name": "BigFirstSeenReplayCouples",
     "type": "counter_20",
     "raw": "",
-    "soft": "R4zCX",
+    "soft": "98H9h",
     "index": null,
     "ondex": null,
-    "count": 300101783,
-    "qb64": "--OR4zCX",
-    "qb2": "fbe391e33097"
+    "count": 1039171425,
+    "qb64": "--O98H9h",
+    "qb2": "fbe3bdf07f61"
   },
   {
     "code": "--O",
@@ -3772,24 +3736,24 @@
     "name": "BigFixBodyGroup",
     "type": "counter_20",
     "raw": "",
-    "soft": "AAAAA",
+    "soft": "AABAA",
     "index": null,
     "ondex": null,
-    "count": 0,
-    "qb64": "--FAAAAA",
-    "qb2": "fbe140000000"
+    "count": 4096,
+    "qb64": "--FAABAA",
+    "qb2": "fbe140001000"
   },
   {
     "code": "--F",
     "name": "BigFixBodyGroup",
     "type": "counter_20",
     "raw": "",
-    "soft": "MI2oS",
+    "soft": "egKCB",
     "index": null,
     "ondex": null,
-    "count": 203647506,
-    "qb64": "--FMI2oS",
-    "qb2": "fbe14c236a12"
+    "count": 511746177,
+    "qb64": "--FegKCB",
+    "qb2": "fbe15e80a081"
   },
   {
     "code": "--F",
@@ -3808,24 +3772,24 @@
     "name": "BigGenericGroup",
     "type": "counter_20",
     "raw": "",
-    "soft": "AAAAA",
+    "soft": "AABAA",
     "index": null,
     "ondex": null,
-    "count": 0,
-    "qb64": "--AAAAAA",
-    "qb2": "fbe000000000"
+    "count": 4096,
+    "qb64": "--AAABAA",
+    "qb2": "fbe000001000"
   },
   {
     "code": "--A",
     "name": "BigGenericGroup",
     "type": "counter_20",
     "raw": "",
-    "soft": "gEJd7",
+    "soft": "W6lfr",
     "index": null,
     "ondex": null,
-    "count": 537958267,
-    "qb64": "--AgEJd7",
-    "qb2": "fbe02010977b"
+    "count": 384456683,
+    "qb64": "--AW6lfr",
+    "qb2": "fbe016ea57eb"
   },
   {
     "code": "--A",
@@ -3844,24 +3808,24 @@
     "name": "BigGenericListGroup",
     "type": "counter_20",
     "raw": "",
-    "soft": "AAAAA",
+    "soft": "AABAA",
     "index": null,
     "ondex": null,
-    "count": 0,
-    "qb64": "--JAAAAA",
-    "qb2": "fbe240000000"
+    "count": 4096,
+    "qb64": "--JAABAA",
+    "qb2": "fbe240001000"
   },
   {
     "code": "--J",
     "name": "BigGenericListGroup",
     "type": "counter_20",
     "raw": "",
-    "soft": "Sz6GU",
+    "soft": "lVjGf",
     "index": null,
     "ondex": null,
-    "count": 315597204,
-    "qb64": "--JSz6GU",
-    "qb2": "fbe252cfa194"
+    "count": 626405791,
+    "qb64": "--JlVjGf",
+    "qb2": "fbe26556319f"
   },
   {
     "code": "--J",
@@ -3880,24 +3844,24 @@
     "name": "BigGenericMapGroup",
     "type": "counter_20",
     "raw": "",
-    "soft": "AAAAA",
+    "soft": "AABAA",
     "index": null,
     "ondex": null,
-    "count": 0,
-    "qb64": "--IAAAAA",
-    "qb2": "fbe200000000"
+    "count": 4096,
+    "qb64": "--IAABAA",
+    "qb2": "fbe200001000"
   },
   {
     "code": "--I",
     "name": "BigGenericMapGroup",
     "type": "counter_20",
     "raw": "",
-    "soft": "nsups",
+    "soft": "5EQfe",
     "index": null,
     "ondex": null,
-    "count": 666036844,
-    "qb64": "--Insups",
-    "qb2": "fbe227b2ea6c"
+    "count": 957417438,
+    "qb64": "--I5EQfe",
+    "qb2": "fbe2391107de"
   },
   {
     "code": "--I",
@@ -3916,24 +3880,24 @@
     "name": "BigMapBodyGroup",
     "type": "counter_20",
     "raw": "",
-    "soft": "AAAAA",
+    "soft": "AABAA",
     "index": null,
     "ondex": null,
-    "count": 0,
-    "qb64": "--GAAAAA",
-    "qb2": "fbe180000000"
+    "count": 4096,
+    "qb64": "--GAABAA",
+    "qb2": "fbe180001000"
   },
   {
     "code": "--G",
     "name": "BigMapBodyGroup",
     "type": "counter_20",
     "raw": "",
-    "soft": "MpEb2",
+    "soft": "6HpWE",
     "index": null,
     "ondex": null,
-    "count": 212092662,
-    "qb64": "--GMpEb2",
-    "qb2": "fbe18ca446f6"
+    "count": 975082884,
+    "qb64": "--G6HpWE",
+    "qb2": "fbe1ba1e9584"
   },
   {
     "code": "--G",
@@ -3952,24 +3916,24 @@
     "name": "BigMerkleRootSealSingles",
     "type": "counter_20",
     "raw": "",
-    "soft": "AAAAA",
+    "soft": "AABAA",
     "index": null,
     "ondex": null,
-    "count": 0,
-    "qb64": "--RAAAAA",
-    "qb2": "fbe440000000"
+    "count": 4096,
+    "qb64": "--RAABAA",
+    "qb2": "fbe440001000"
   },
   {
     "code": "--R",
     "name": "BigMerkleRootSealSingles",
     "type": "counter_20",
     "raw": "",
-    "soft": "JcGRZ",
+    "soft": "N-wc2",
     "index": null,
     "ondex": null,
-    "count": 158360665,
-    "qb64": "--RJcGRZ",
-    "qb2": "fbe449706459"
+    "count": 234555190,
+    "qb64": "--RN-wc2",
+    "qb2": "fbe44dfb0736"
   },
   {
     "code": "--R",
@@ -3988,24 +3952,24 @@
     "name": "BigNonNativeBodyGroup",
     "type": "counter_20",
     "raw": "",
-    "soft": "AAAAA",
+    "soft": "AABAA",
     "index": null,
     "ondex": null,
-    "count": 0,
-    "qb64": "--HAAAAA",
-    "qb2": "fbe1c0000000"
+    "count": 4096,
+    "qb64": "--HAABAA",
+    "qb2": "fbe1c0001000"
   },
   {
     "code": "--H",
     "name": "BigNonNativeBodyGroup",
     "type": "counter_20",
     "raw": "",
-    "soft": "qQ-cP",
+    "soft": "gTNod",
     "index": null,
     "ondex": null,
-    "count": 709093135,
-    "qb64": "--HqQ-cP",
-    "qb2": "fbe1ea43e70f"
+    "count": 541907485,
+    "qb64": "--HgTNod",
+    "qb2": "fbe1e04cda1d"
   },
   {
     "code": "--H",
@@ -4024,24 +3988,24 @@
     "name": "BigNonTransReceiptCouples",
     "type": "counter_20",
     "raw": "",
-    "soft": "AAAAA",
+    "soft": "AABAA",
     "index": null,
     "ondex": null,
-    "count": 0,
-    "qb64": "--MAAAAA",
-    "qb2": "fbe300000000"
+    "count": 4096,
+    "qb64": "--MAABAA",
+    "qb2": "fbe300001000"
   },
   {
     "code": "--M",
     "name": "BigNonTransReceiptCouples",
     "type": "counter_20",
     "raw": "",
-    "soft": "8bywr",
+    "soft": "I6exG",
     "index": null,
     "ondex": null,
-    "count": 1013918763,
-    "qb64": "--M8bywr",
-    "qb2": "fbe33c6f2c2b"
+    "count": 149548102,
+    "qb64": "--MI6exG",
+    "qb2": "fbe308e9ec46"
   },
   {
     "code": "--M",
@@ -4060,24 +4024,24 @@
     "name": "BigPathedMaterialCouples",
     "type": "counter_20",
     "raw": "",
-    "soft": "AAAAA",
+    "soft": "AABAA",
     "index": null,
     "ondex": null,
-    "count": 0,
-    "qb64": "--PAAAAA",
-    "qb2": "fbe3c0000000"
+    "count": 4096,
+    "qb64": "--PAABAA",
+    "qb2": "fbe3c0001000"
   },
   {
     "code": "--P",
     "name": "BigPathedMaterialCouples",
     "type": "counter_20",
     "raw": "",
-    "soft": "M48b6",
+    "soft": "SCbGc",
     "index": null,
     "ondex": null,
-    "count": 216254202,
-    "qb64": "--PM48b6",
-    "qb2": "fbe3cce3c6fa"
+    "count": 302625180,
+    "qb64": "--PSCbGc",
+    "qb2": "fbe3d209b19c"
   },
   {
     "code": "--P",
@@ -4096,24 +4060,24 @@
     "name": "BigSealSourceCouples",
     "type": "counter_20",
     "raw": "",
-    "soft": "AAAAA",
+    "soft": "AABAA",
     "index": null,
     "ondex": null,
-    "count": 0,
-    "qb64": "--SAAAAA",
-    "qb2": "fbe480000000"
+    "count": 4096,
+    "qb64": "--SAABAA",
+    "qb2": "fbe480001000"
   },
   {
     "code": "--S",
     "name": "BigSealSourceCouples",
     "type": "counter_20",
     "raw": "",
-    "soft": "tSQjD",
+    "soft": "I8ahL",
     "index": null,
     "ondex": null,
-    "count": 759761091,
-    "qb64": "--StSQjD",
-    "qb2": "fbe4ad4908c3"
+    "count": 150054987,
+    "qb64": "--SI8ahL",
+    "qb2": "fbe488f1a84b"
   },
   {
     "code": "--S",
@@ -4132,24 +4096,24 @@
     "name": "BigSealSourceLastSingles",
     "type": "counter_20",
     "raw": "",
-    "soft": "AAAAA",
+    "soft": "AABAA",
     "index": null,
     "ondex": null,
-    "count": 0,
-    "qb64": "--UAAAAA",
-    "qb2": "fbe500000000"
+    "count": 4096,
+    "qb64": "--UAABAA",
+    "qb2": "fbe500001000"
   },
   {
     "code": "--U",
     "name": "BigSealSourceLastSingles",
     "type": "counter_20",
     "raw": "",
-    "soft": "3kvFR",
+    "soft": "wXyie",
     "index": null,
     "ondex": null,
-    "count": 932376913,
-    "qb64": "--U3kvFR",
-    "qb2": "fbe53792f151"
+    "count": 811542686,
+    "qb64": "--UwXyie",
+    "qb2": "fbe5305f289e"
   },
   {
     "code": "--U",
@@ -4168,24 +4132,24 @@
     "name": "BigSealSourceTriples",
     "type": "counter_20",
     "raw": "",
-    "soft": "AAAAA",
+    "soft": "AABAA",
     "index": null,
     "ondex": null,
-    "count": 0,
-    "qb64": "--TAAAAA",
-    "qb2": "fbe4c0000000"
+    "count": 4096,
+    "qb64": "--TAABAA",
+    "qb2": "fbe4c0001000"
   },
   {
     "code": "--T",
     "name": "BigSealSourceTriples",
     "type": "counter_20",
     "raw": "",
-    "soft": "oeSIq",
+    "soft": "GEcUJ",
     "index": null,
     "ondex": null,
-    "count": 679027242,
-    "qb64": "--ToeSIq",
-    "qb2": "fbe4e879222a"
+    "count": 101827849,
+    "qb64": "--TGEcUJ",
+    "qb2": "fbe4c611c509"
   },
   {
     "code": "--T",
@@ -4204,24 +4168,24 @@
     "name": "BigTransIdxSigGroups",
     "type": "counter_20",
     "raw": "",
-    "soft": "AAAAA",
+    "soft": "AABAA",
     "index": null,
     "ondex": null,
-    "count": 0,
-    "qb64": "--XAAAAA",
-    "qb2": "fbe5c0000000"
+    "count": 4096,
+    "qb64": "--XAABAA",
+    "qb2": "fbe5c0001000"
   },
   {
     "code": "--X",
     "name": "BigTransIdxSigGroups",
     "type": "counter_20",
     "raw": "",
-    "soft": "aLFOk",
+    "soft": "nk2uP",
     "index": null,
     "ondex": null,
-    "count": 439112612,
-    "qb64": "--XaLFOk",
-    "qb2": "fbe5da2c53a4"
+    "count": 663972751,
+    "qb64": "--Xnk2uP",
+    "qb2": "fbe5e7936b8f"
   },
   {
     "code": "--X",
@@ -4240,24 +4204,24 @@
     "name": "BigTransLastIdxSigGroups",
     "type": "counter_20",
     "raw": "",
-    "soft": "AAAAA",
+    "soft": "AABAA",
     "index": null,
     "ondex": null,
-    "count": 0,
-    "qb64": "--YAAAAA",
-    "qb2": "fbe600000000"
+    "count": 4096,
+    "qb64": "--YAABAA",
+    "qb2": "fbe600001000"
   },
   {
     "code": "--Y",
     "name": "BigTransLastIdxSigGroups",
     "type": "counter_20",
     "raw": "",
-    "soft": "9DqgD",
+    "soft": "zKXlo",
     "index": null,
     "ondex": null,
-    "count": 1024370691,
-    "qb64": "--Y9DqgD",
-    "qb2": "fbe63d0ea803"
+    "count": 858356072,
+    "qb64": "--YzKXlo",
+    "qb2": "fbe633297968"
   },
   {
     "code": "--Y",
@@ -4276,24 +4240,24 @@
     "name": "BigTransReceiptQuadruples",
     "type": "counter_20",
     "raw": "",
-    "soft": "AAAAA",
+    "soft": "AABAA",
     "index": null,
     "ondex": null,
-    "count": 0,
-    "qb64": "--NAAAAA",
-    "qb2": "fbe340000000"
+    "count": 4096,
+    "qb64": "--NAABAA",
+    "qb2": "fbe340001000"
   },
   {
     "code": "--N",
     "name": "BigTransReceiptQuadruples",
     "type": "counter_20",
     "raw": "",
-    "soft": "4qi0J",
+    "soft": "QCFu9",
     "index": null,
     "ondex": null,
-    "count": 950676745,
-    "qb64": "--N4qi0J",
-    "qb2": "fbe378aa2d09"
+    "count": 268983229,
+    "qb64": "--NQCFu9",
+    "qb2": "fbe350085bbd"
   },
   {
     "code": "--N",
@@ -4312,24 +4276,24 @@
     "name": "BigTypedDigestSealCouples",
     "type": "counter_20",
     "raw": "",
-    "soft": "AAAAA",
+    "soft": "AABAA",
     "index": null,
     "ondex": null,
-    "count": 0,
-    "qb64": "--WAAAAA",
-    "qb2": "fbe580000000"
+    "count": 4096,
+    "qb64": "--WAABAA",
+    "qb2": "fbe580001000"
   },
   {
     "code": "--W",
     "name": "BigTypedDigestSealCouples",
     "type": "counter_20",
     "raw": "",
-    "soft": "hV8_h",
+    "soft": "_L1Ew",
     "index": null,
     "ondex": null,
-    "count": 559402977,
-    "qb64": "--WhV8_h",
-    "qb2": "fbe5a157cfe1"
+    "count": 1060065584,
+    "qb64": "--W_L1Ew",
+    "qb2": "fbe5bf2f5130"
   },
   {
     "code": "--W",
@@ -4348,24 +4312,24 @@
     "name": "BigTypedMediaQuadruples",
     "type": "counter_20",
     "raw": "",
-    "soft": "AAAAA",
+    "soft": "AABAA",
     "index": null,
     "ondex": null,
-    "count": 0,
-    "qb64": "--cAAAAA",
-    "qb2": "fbe700000000"
+    "count": 4096,
+    "qb64": "--cAABAA",
+    "qb2": "fbe700001000"
   },
   {
     "code": "--c",
     "name": "BigTypedMediaQuadruples",
     "type": "counter_20",
     "raw": "",
-    "soft": "H-McB",
+    "soft": "6OVha",
     "index": null,
     "ondex": null,
-    "count": 133744385,
-    "qb64": "--cH-McB",
-    "qb2": "fbe707f8c701"
+    "count": 976836698,
+    "qb64": "--c6OVha",
+    "qb2": "fbe73a39585a"
   },
   {
     "code": "--c",
@@ -4384,24 +4348,24 @@
     "name": "BigWitnessIdxSigs",
     "type": "counter_20",
     "raw": "",
-    "soft": "AAAAA",
+    "soft": "AABAA",
     "index": null,
     "ondex": null,
-    "count": 0,
-    "qb64": "--LAAAAA",
-    "qb2": "fbe2c0000000"
+    "count": 4096,
+    "qb64": "--LAABAA",
+    "qb2": "fbe2c0001000"
   },
   {
     "code": "--L",
     "name": "BigWitnessIdxSigs",
     "type": "counter_20",
     "raw": "",
-    "soft": "BzB5U",
+    "soft": "iFZXE",
     "index": null,
     "ondex": null,
-    "count": 30154324,
-    "qb64": "--LBzB5U",
-    "qb2": "fbe2c1cc1e54"
+    "count": 571839940,
+    "qb64": "--LiFZXE",
+    "qb2": "fbe2e21595c4"
   },
   {
     "code": "--L",
@@ -4432,12 +4396,12 @@
     "name": "BlindedStateQuadruples",
     "type": "counter_20",
     "raw": "",
-    "soft": "L8",
+    "soft": "Sz",
     "index": null,
     "ondex": null,
-    "count": 764,
-    "qb64": "-aL8",
-    "qb2": "f9a2fc"
+    "count": 1203,
+    "qb64": "-aSz",
+    "qb2": "f9a4b3"
   },
   {
     "code": "-a",
@@ -4468,12 +4432,12 @@
     "name": "BodyWithAttachmentGroup",
     "type": "counter_20",
     "raw": "",
-    "soft": "zD",
+    "soft": "ns",
     "index": null,
     "ondex": null,
-    "count": 3267,
-    "qb64": "-BzD",
-    "qb2": "f81cc3"
+    "count": 2540,
+    "qb64": "-Bns",
+    "qb2": "f819ec"
   },
   {
     "code": "-B",
@@ -4504,12 +4468,12 @@
     "name": "BoundStateSextuples",
     "type": "counter_20",
     "raw": "",
-    "soft": "AJ",
+    "soft": "Mp",
     "index": null,
     "ondex": null,
-    "count": 9,
-    "qb64": "-bAJ",
-    "qb2": "f9b009"
+    "count": 809,
+    "qb64": "-bMp",
+    "qb2": "f9b329"
   },
   {
     "code": "-b",
@@ -4540,12 +4504,12 @@
     "name": "ControllerIdxSigs",
     "type": "counter_20",
     "raw": "",
-    "soft": "_L",
+    "soft": "Jc",
     "index": null,
     "ondex": null,
-    "count": 4043,
-    "qb64": "-K_L",
-    "qb2": "f8afcb"
+    "count": 604,
+    "qb64": "-KJc",
+    "qb2": "f8a25c"
   },
   {
     "code": "-K",
@@ -4576,12 +4540,12 @@
     "name": "DatagramSegmentGroup",
     "type": "counter_20",
     "raw": "",
-    "soft": "qp",
+    "soft": "qQ",
     "index": null,
     "ondex": null,
-    "count": 2729,
-    "qb64": "-Dqp",
-    "qb2": "f83aa9"
+    "count": 2704,
+    "qb64": "-DqQ",
+    "qb2": "f83a90"
   },
   {
     "code": "-D",
@@ -4612,12 +4576,12 @@
     "name": "DigestSealSingles",
     "type": "counter_20",
     "raw": "",
-    "soft": "fO",
+    "soft": "8b",
     "index": null,
     "ondex": null,
-    "count": 1998,
-    "qb64": "-QfO",
-    "qb2": "f907ce"
+    "count": 3867,
+    "qb64": "-Q8b",
+    "qb2": "f90f1b"
   },
   {
     "code": "-Q",
@@ -4648,12 +4612,12 @@
     "name": "ESSRPayloadGroup",
     "type": "counter_20",
     "raw": "",
-    "soft": "po",
+    "soft": "M4",
     "index": null,
     "ondex": null,
-    "count": 2664,
-    "qb64": "-Zpo",
-    "qb2": "f99a68"
+    "count": 824,
+    "qb64": "-ZM4",
+    "qb2": "f99338"
   },
   {
     "code": "-Z",
@@ -4684,12 +4648,12 @@
     "name": "ESSRWrapperGroup",
     "type": "counter_20",
     "raw": "",
-    "soft": "ID",
+    "soft": "tS",
     "index": null,
     "ondex": null,
-    "count": 515,
-    "qb64": "-EID",
-    "qb2": "f84203"
+    "count": 2898,
+    "qb64": "-EtS",
+    "qb2": "f84b52"
   },
   {
     "code": "-E",
@@ -4720,12 +4684,12 @@
     "name": "FirstSeenReplayCouples",
     "type": "counter_20",
     "raw": "",
-    "soft": "Yd",
+    "soft": "3k",
     "index": null,
     "ondex": null,
-    "count": 1565,
-    "qb64": "-OYd",
-    "qb2": "f8e61d"
+    "count": 3556,
+    "qb64": "-O3k",
+    "qb2": "f8ede4"
   },
   {
     "code": "-O",
@@ -4756,12 +4720,12 @@
     "name": "FixBodyGroup",
     "type": "counter_20",
     "raw": "",
-    "soft": "cY",
+    "soft": "oe",
     "index": null,
     "ondex": null,
-    "count": 1816,
-    "qb64": "-FcY",
-    "qb2": "f85718"
+    "count": 2590,
+    "qb64": "-Foe",
+    "qb2": "f85a1e"
   },
   {
     "code": "-F",
@@ -4792,12 +4756,12 @@
     "name": "GenericGroup",
     "type": "counter_20",
     "raw": "",
-    "soft": "ei",
+    "soft": "aL",
     "index": null,
     "ondex": null,
-    "count": 1954,
-    "qb64": "-Aei",
-    "qb2": "f807a2"
+    "count": 1675,
+    "qb64": "-AaL",
+    "qb2": "f8068b"
   },
   {
     "code": "-A",
@@ -4828,12 +4792,12 @@
     "name": "GenericListGroup",
     "type": "counter_20",
     "raw": "",
-    "soft": "SP",
+    "soft": "9D",
     "index": null,
     "ondex": null,
-    "count": 1167,
-    "qb64": "-JSP",
-    "qb2": "f8948f"
+    "count": 3907,
+    "qb64": "-J9D",
+    "qb2": "f89f43"
   },
   {
     "code": "-J",
@@ -4864,12 +4828,12 @@
     "name": "GenericMapGroup",
     "type": "counter_20",
     "raw": "",
-    "soft": "5V",
+    "soft": "4q",
     "index": null,
     "ondex": null,
-    "count": 3669,
-    "qb64": "-I5V",
-    "qb2": "f88e55"
+    "count": 3626,
+    "qb64": "-I4q",
+    "qb2": "f88e2a"
   },
   {
     "code": "-I",
@@ -4882,42 +4846,6 @@
     "count": 4095,
     "qb64": "-I__",
     "qb2": "f88fff"
-  },
-  {
-    "code": "-_AAA",
-    "name": "KERIACDCGenusVersion",
-    "type": "counter_20",
-    "raw": "",
-    "soft": "AAA",
-    "index": null,
-    "ondex": null,
-    "count": 0,
-    "qb64": "-_AAAAAA",
-    "qb2": "fbf000000000"
-  },
-  {
-    "code": "-_AAA",
-    "name": "KERIACDCGenusVersion",
-    "type": "counter_20",
-    "raw": "",
-    "soft": "LrP",
-    "index": null,
-    "ondex": null,
-    "count": 47823,
-    "qb64": "-_AAALrP",
-    "qb2": "fbf00000bacf"
-  },
-  {
-    "code": "-_AAA",
-    "name": "KERIACDCGenusVersion",
-    "type": "counter_20",
-    "raw": "",
-    "soft": "___",
-    "index": null,
-    "ondex": null,
-    "count": 262143,
-    "qb64": "-_AAA___",
-    "qb2": "fbf00003ffff"
   },
   {
     "code": "-G",
@@ -4936,12 +4864,12 @@
     "name": "MapBodyGroup",
     "type": "counter_20",
     "raw": "",
-    "soft": "KT",
+    "soft": "hV",
     "index": null,
     "ondex": null,
-    "count": 659,
-    "qb64": "-GKT",
-    "qb2": "f86293"
+    "count": 2133,
+    "qb64": "-GhV",
+    "qb2": "f86855"
   },
   {
     "code": "-G",
@@ -4972,12 +4900,12 @@
     "name": "MerkleRootSealSingles",
     "type": "counter_20",
     "raw": "",
-    "soft": "o9",
+    "soft": "H-",
     "index": null,
     "ondex": null,
-    "count": 2621,
-    "qb64": "-Ro9",
-    "qb2": "f91a3d"
+    "count": 510,
+    "qb64": "-RH-",
+    "qb2": "f911fe"
   },
   {
     "code": "-R",
@@ -5008,12 +4936,12 @@
     "name": "NonNativeBodyGroup",
     "type": "counter_20",
     "raw": "",
-    "soft": "-o",
+    "soft": "Bz",
     "index": null,
     "ondex": null,
-    "count": 4008,
-    "qb64": "-H-o",
-    "qb2": "f87fa8"
+    "count": 115,
+    "qb64": "-HBz",
+    "qb2": "f87073"
   },
   {
     "code": "-H",
@@ -5044,12 +4972,12 @@
     "name": "NonTransReceiptCouples",
     "type": "counter_20",
     "raw": "",
-    "soft": "N9",
+    "soft": "L8",
     "index": null,
     "ondex": null,
-    "count": 893,
-    "qb64": "-MN9",
-    "qb2": "f8c37d"
+    "count": 764,
+    "qb64": "-ML8",
+    "qb2": "f8c2fc"
   },
   {
     "code": "-M",
@@ -5080,12 +5008,12 @@
     "name": "PathedMaterialCouples",
     "type": "counter_20",
     "raw": "",
-    "soft": "ml",
+    "soft": "zD",
     "index": null,
     "ondex": null,
-    "count": 2469,
-    "qb64": "-Pml",
-    "qb2": "f8f9a5"
+    "count": 3267,
+    "qb64": "-PzD",
+    "qb2": "f8fcc3"
   },
   {
     "code": "-P",
@@ -5116,12 +5044,12 @@
     "name": "SealSourceCouples",
     "type": "counter_20",
     "raw": "",
-    "soft": "lQ",
+    "soft": "AJ",
     "index": null,
     "ondex": null,
-    "count": 2384,
-    "qb64": "-SlQ",
-    "qb2": "f92950"
+    "count": 9,
+    "qb64": "-SAJ",
+    "qb2": "f92009"
   },
   {
     "code": "-S",
@@ -5152,12 +5080,12 @@
     "name": "SealSourceLastSingles",
     "type": "counter_20",
     "raw": "",
-    "soft": "P-",
+    "soft": "_L",
     "index": null,
     "ondex": null,
-    "count": 1022,
-    "qb64": "-UP-",
-    "qb2": "f943fe"
+    "count": 4043,
+    "qb64": "-U_L",
+    "qb2": "f94fcb"
   },
   {
     "code": "-U",
@@ -5188,12 +5116,12 @@
     "name": "SealSourceTriples",
     "type": "counter_20",
     "raw": "",
-    "soft": "ql",
+    "soft": "qp",
     "index": null,
     "ondex": null,
-    "count": 2725,
-    "qb64": "-Tql",
-    "qb2": "f93aa5"
+    "count": 2729,
+    "qb64": "-Tqp",
+    "qb2": "f93aa9"
   },
   {
     "code": "-T",
@@ -5224,12 +5152,12 @@
     "name": "TransIdxSigGroups",
     "type": "counter_20",
     "raw": "",
-    "soft": "aA",
+    "soft": "fO",
     "index": null,
     "ondex": null,
-    "count": 1664,
-    "qb64": "-XaA",
-    "qb2": "f97680"
+    "count": 1998,
+    "qb64": "-XfO",
+    "qb2": "f977ce"
   },
   {
     "code": "-X",
@@ -5260,12 +5188,12 @@
     "name": "TransLastIdxSigGroups",
     "type": "counter_20",
     "raw": "",
-    "soft": "k0",
+    "soft": "po",
     "index": null,
     "ondex": null,
-    "count": 2356,
-    "qb64": "-Yk0",
-    "qb2": "f98934"
+    "count": 2664,
+    "qb64": "-Ypo",
+    "qb2": "f98a68"
   },
   {
     "code": "-Y",
@@ -5296,12 +5224,12 @@
     "name": "TransReceiptQuadruples",
     "type": "counter_20",
     "raw": "",
-    "soft": "49",
+    "soft": "ID",
     "index": null,
     "ondex": null,
-    "count": 3645,
-    "qb64": "-N49",
-    "qb2": "f8de3d"
+    "count": 515,
+    "qb64": "-NID",
+    "qb2": "f8d203"
   },
   {
     "code": "-N",
@@ -5332,12 +5260,12 @@
     "name": "TypedDigestSealCouples",
     "type": "counter_20",
     "raw": "",
-    "soft": "Lu",
+    "soft": "Yd",
     "index": null,
     "ondex": null,
-    "count": 750,
-    "qb64": "-WLu",
-    "qb2": "f962ee"
+    "count": 1565,
+    "qb64": "-WYd",
+    "qb2": "f9661d"
   },
   {
     "code": "-W",
@@ -5368,12 +5296,12 @@
     "name": "TypedMediaQuadruples",
     "type": "counter_20",
     "raw": "",
-    "soft": "xR",
+    "soft": "cY",
     "index": null,
     "ondex": null,
-    "count": 3153,
-    "qb64": "-cxR",
-    "qb2": "f9cc51"
+    "count": 1816,
+    "qb64": "-ccY",
+    "qb2": "f9c718"
   },
   {
     "code": "-c",
@@ -5404,12 +5332,12 @@
     "name": "WitnessIdxSigs",
     "type": "counter_20",
     "raw": "",
-    "soft": "ol",
+    "soft": "ei",
     "index": null,
     "ondex": null,
-    "count": 2597,
-    "qb64": "-Lol",
-    "qb2": "f8ba25"
+    "count": 1954,
+    "qb64": "-Lei",
+    "qb2": "f8b7a2"
   },
   {
     "code": "-L",

@@ -15,9 +15,11 @@
     "dev": "tsc -p tsconfig.build.json --watch",
     "test": "node --test --test-reporter=spec --no-warnings --experimental-strip-types",
     "test:example": "./test_examples.sh",
-    "lint": "eslint && prettier --check . && tsc --noEmit",
+    "lint": "eslint",
+    "check": "tsc --noEmit",
     "clean": "node scripts/clean.js",
     "format": "prettier --write .",
+    "format:check": "prettier --check .",
     "docs:build": "typedoc",
     "docs:serve": "concurrently \"serve docs\" \"typedoc --watch --preserveWatchOutput\""
   },

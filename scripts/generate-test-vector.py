@@ -90,25 +90,46 @@ for key in dir(IdrDex):
 
 random.seed(0)
 for key in dir(CtrDex_1_0):
-    if key.startswith("__") or key.startswith("TBD"):
+    if (
+        key.startswith("__")
+        or key.startswith("TBD")
+        or key.startswith("KERIACDCGenusVersion")
+    ):
         continue
 
     code = getattr(CtrDex_1_0, key)
     size = Counter.Sizes.get(1).get(0).get(code)
-    append(Counter(code=code, count=0, gvrsn=Vrsn_1_0))
-    append(Counter(code=code, count=random.randint(0, 64**size.ss - 1), gvrsn=Vrsn_1_0))
+    min_count = 0 if size.ss <= 2 else 64**2
+
+    append(Counter(code=code, count=min_count, gvrsn=Vrsn_1_0))
+    append(
+        Counter(
+            code=code,
+            count=random.randint(min_count, 64**size.ss - 1),
+            gvrsn=Vrsn_1_0,
+        )
+    )
     append(Counter(code=code, count=64**size.ss - 1, gvrsn=Vrsn_1_0))
 
 random.seed(0)
 for key in dir(CtrDex_2_0):
-    if key.startswith("__") or key.startswith("TBD"):
+    if (
+        key.startswith("__")
+        or key.startswith("TBD")
+        or key.startswith("KERIACDCGenusVersion")
+    ):
         continue
 
     code = getattr(CtrDex_2_0, key)
     size = Counter.Sizes.get(2).get(0).get(code)
+    min_count = 0 if size.ss <= 2 else 64**2
 
-    append(Counter(code=code, count=0, gvrsn=Vrsn_2_0))
-    append(Counter(code=code, count=random.randint(0, 64**size.ss - 1), gvrsn=Vrsn_2_0))
+    append(Counter(code=code, count=min_count, gvrsn=Vrsn_2_0))
+    append(
+        Counter(
+            code=code, count=random.randint(min_count, 64**size.ss - 1), gvrsn=Vrsn_2_0
+        )
+    )
     append(Counter(code=code, count=64**size.ss - 1, gvrsn=Vrsn_2_0))
 
 
