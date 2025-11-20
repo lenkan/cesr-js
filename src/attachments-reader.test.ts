@@ -223,6 +223,18 @@ describe(path.parse(import.meta.filename).base, () => {
       assert.strictEqual(result.PathedMaterialCouples[0].path, "-a-b");
       assert.strictEqual(result.PathedMaterialCouples[1].path, "-c");
     });
+
+    test("should read ungrouped attachment", () => {
+      const attachments = new Attachments({ grouped: false, ControllerIdxSigs: [sig0] });
+      const input = attachments.encode();
+      const reader = new AttachmentsReader(input);
+
+      const result = reader.readAttachments();
+
+      assert(result);
+      assert.equal(result.ControllerIdxSigs.length, 1);
+      assert.strictEqual(result.grouped, false);
+    });
   });
 
   describe("reading multiple attachment types", () => {

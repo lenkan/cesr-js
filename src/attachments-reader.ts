@@ -182,6 +182,7 @@ export class AttachmentsReader {
     }
 
     let end = 0;
+    let grouped = false;
 
     if (this.#version === 1 && counter.code === CountCode_10.AttachmentGroup) {
       if (this.#buffer.length < counter.count * 4) {
@@ -190,6 +191,7 @@ export class AttachmentsReader {
 
       this.#readBytes(counter.text.length);
       end = this.#buffer.length - counter.count * 4;
+      grouped = true;
     } else if (this.#version === 2 && counter.code === CountCode_20.AttachmentGroup) {
       if (this.#buffer.length < counter.count * 4) {
         return null;
@@ -197,9 +199,10 @@ export class AttachmentsReader {
 
       this.#readBytes(counter.text.length);
       end = this.#buffer.length - counter.count * 4;
+      grouped = true;
     }
 
-    const attachments = new Attachments();
+    const attachments = new Attachments({ grouped });
 
     while (this.#buffer.length > end) {
       const counter = this.#readCounter();
