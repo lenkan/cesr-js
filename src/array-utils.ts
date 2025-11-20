@@ -1,4 +1,4 @@
-export function concat(a: Uint8Array, b: Uint8Array) {
+export function concat(a: Uint8Array, b: Uint8Array): Uint8Array {
   if (a.length === 0) {
     return b;
   }

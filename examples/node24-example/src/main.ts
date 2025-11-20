@@ -6,6 +6,11 @@ const response = await fetch(url);
 
 if (response.body) {
   for await (const message of parse(response.body)) {
-    console.log(message);
+    console.log(
+      JSON.stringify({
+        payload: message.body.payload,
+        attachments: message.attachments.frames(),
+      }),
+    );
   }
 }

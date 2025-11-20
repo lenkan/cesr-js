@@ -86,9 +86,20 @@ export async function execute(cli: CommandLineInterface) {
 
   for await (const message of parse(stream)) {
     if (app.options["--pretty"]) {
-      console.dir(message, { depth: 100, colors: true });
+      console.dir(
+        {
+          payload: message.body.payload,
+          attachments: message.attachments.frames(),
+        },
+        { depth: 100, colors: true },
+      );
     } else {
-      console.log(JSON.stringify(message));
+      console.log(
+        JSON.stringify({
+          payload: message.body.payload,
+          attachments: message.attachments.frames(),
+        }),
+      );
     }
   }
 }
