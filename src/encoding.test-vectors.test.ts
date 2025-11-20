@@ -112,7 +112,7 @@ describe(path.parse(import.meta.url).base, { skip: process.env.SKIP_TEST_VECTORS
         assert.equal(indexer, entry.qb64);
       });
 
-      test.skip(`encode binary ${entry.type} ${entry.name} - ${entry.qb64.substring(0, 10)}`, () => {
+      test(`encode binary ${entry.type} ${entry.name} - ${entry.qb64.substring(0, 10)}`, () => {
         const frame = encodeBinary(createFrameData(entry), IndexTable);
         assert.deepEqual(Buffer.from(frame).toString("hex"), entry.qb2);
       });
