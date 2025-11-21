@@ -1,4 +1,9 @@
-import { Attachments, type TransLastIdxSigGroup, type TransIdxSigGroup } from "./attachments.ts";
+import {
+  Attachments,
+  type TransLastIdxSigGroup,
+  type TransIdxSigGroup,
+  type PathedMaterialCouple,
+} from "./attachments.ts";
 import { CountCode_10, CountCode_20 } from "./codes.ts";
 import {
   type Counter,
@@ -170,6 +175,22 @@ export class AttachmentsReader {
     }
   }
 
+  #readPathedAttachments(size: number): PathedMaterialCouple {
+    const chunk = this.#readBytes(size * 4);
+    const reader = new AttachmentsReader(chunk, { version: this.#version });
+    const path = decodeString(reader.#readMatter().text);
+    const pathAttachments = reader.readAttachments();
+
+    if (!pathAttachments) {
+      throw new Error(`Not enougth data to read pathed attachments for path ${path}`);
+    }
+
+    return {
+      path,
+      attachments: pathAttachments ?? new Attachments({}),
+    };
+  }
+
   readAttachments(): Attachments | null {
     if (this.#buffer.length === 0) {
       return null;
@@ -251,15 +272,8 @@ export class AttachmentsReader {
               }
               break;
             case CountCode_10.PathedMaterialCouples: {
-              const start = this.#buffer.length;
-              while (this.#buffer.length > start - counter.count * 4) {
-                const path = decodeString(this.#readMatter().text);
-                const pathAttachments = this.readAttachments();
-
-                if (pathAttachments) {
-                  attachments.PathedMaterialCouples.push({ path, attachments: pathAttachments });
-                }
-              }
+              const pathedAttachments = this.#readPathedAttachments(counter.count);
+              attachments.PathedMaterialCouples.push(pathedAttachments);
               break;
             }
             case CountCode_10.TransIdxSigGroups: {

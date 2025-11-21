@@ -224,6 +224,30 @@ describe(path.parse(import.meta.filename).base, () => {
       assert.strictEqual(result.PathedMaterialCouples[1].path, "-c");
     });
 
+    test("should read ungrouped PathedMaterialCouples", () => {
+      const attachments = new Attachments({
+        PathedMaterialCouples: [
+          {
+            path: "-a-b",
+            attachments: {
+              grouped: false,
+              ControllerIdxSigs: [sig0],
+            },
+          },
+          { path: "-c", attachments: { grouped: false, ControllerIdxSigs: [sig0] } },
+        ],
+      });
+      const input = attachments.encode();
+      const reader = new AttachmentsReader(input);
+
+      const result = reader.readAttachments();
+
+      assert(result);
+      assert.strictEqual(result.PathedMaterialCouples?.length, 2);
+      assert.strictEqual(result.PathedMaterialCouples[0].path, "-a-b");
+      assert.strictEqual(result.PathedMaterialCouples[1].path, "-c");
+    });
+
     test("should read ungrouped attachment", () => {
       const attachments = new Attachments({ grouped: false, ControllerIdxSigs: [sig0] });
       const input = attachments.encode();
