@@ -1,5 +1,5 @@
 import test, { describe } from "node:test";
-import assert from "node:assert/strict";
+import assert from "node:assert";
 import vectors from "../fixtures/cesr_test_vectors.json" with { type: "json" };
 import {
   decodeCounter,
@@ -98,7 +98,7 @@ describe(path.parse(import.meta.url).base, { skip: process.env.SKIP_TEST_VECTORS
         const frame = decodeIndexer(entry.qb64);
         const raw = Uint8Array.from(Buffer.from(entry.raw as string, "hex"));
 
-        assert.equal(frame.code, entry.code);
+        assert.strictEqual(frame.code, entry.code);
         assert.deepEqual(frame.raw, raw);
       });
 
@@ -109,7 +109,7 @@ describe(path.parse(import.meta.url).base, { skip: process.env.SKIP_TEST_VECTORS
           index: entry.index ?? 0,
           ondex: entry.ondex ?? 0,
         });
-        assert.equal(indexer, entry.qb64);
+        assert.strictEqual(indexer, entry.qb64);
       });
 
       test(`encode binary ${entry.type} ${entry.name} - ${entry.qb64.substring(0, 10)}`, () => {

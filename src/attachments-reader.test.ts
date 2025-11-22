@@ -30,7 +30,7 @@ describe(path.parse(import.meta.filename).base, () => {
       const result = reader.readAttachments();
 
       assert(result);
-      assert.equal(result.toString(), "-VAA");
+      assert.strictEqual(result.toString(), "-VAA");
     });
 
     test("should read ControllerIdxSigs", () => {
@@ -256,7 +256,7 @@ describe(path.parse(import.meta.filename).base, () => {
       const result = reader.readAttachments();
 
       assert(result);
-      assert.equal(result.ControllerIdxSigs.length, 1);
+      assert.strictEqual(result.ControllerIdxSigs.length, 1);
       assert.strictEqual(result.grouped, false);
     });
   });

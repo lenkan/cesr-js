@@ -1,6 +1,6 @@
 import { basename } from "node:path";
 import { describe, test } from "node:test";
-import assert from "node:assert/strict";
+import assert from "node:assert";
 import { VersionString } from "./version-string.ts";
 import { encodeUtf8 } from "./encoding-utf8.ts";
 
