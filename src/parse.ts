@@ -64,7 +64,7 @@ export async function* parse(input: ParseInput, options?: ParseOptions): AsyncIt
 
       if (start === "{") {
         if (body) {
-          yield new Message(body, attachments ?? undefined);
+          yield new Message(body.payload, attachments ?? undefined);
           body = null;
           attachments = null;
         }
@@ -126,7 +126,7 @@ export async function* parse(input: ParseInput, options?: ParseOptions): AsyncIt
   }
 
   if (body) {
-    yield new Message(body, attachments ?? undefined);
+    yield new Message(body.payload, attachments ?? undefined);
   }
 
   if (buffer.length > 0) {

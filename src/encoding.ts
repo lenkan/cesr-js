@@ -18,9 +18,7 @@ export interface FrameData {
   text?: string;
 }
 
-export type Frame = Counter | Matter | Indexer;
-
-export interface ReadResult<T extends Frame = Frame> {
+export interface ReadResult<T> {
   /**
    * The frame, or null if there was not enough data in the input
    */

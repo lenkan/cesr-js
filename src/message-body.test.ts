@@ -8,10 +8,8 @@ import { VersionString } from "./version-string.ts";
 test.describe(basename(import.meta.url), () => {
   test("Should create event message with legacy format", () => {
     const message = new MessageBody({
-      payload: {
-        foo: "bar",
-      },
-      version: VersionString.KERI_LEGACY,
+      v: VersionString.KERI_LEGACY,
+      foo: "bar",
     });
 
     assert.partialDeepStrictEqual(message.payload, {
@@ -22,10 +20,8 @@ test.describe(basename(import.meta.url), () => {
 
   test("Should create message with modern version format", () => {
     const message = new MessageBody({
-      payload: {
-        foo: "bar",
-      },
-      version: VersionString.KERI,
+      v: VersionString.KERI,
+      foo: "bar",
     });
 
     assert.partialDeepStrictEqual(message.payload, {
@@ -36,10 +32,8 @@ test.describe(basename(import.meta.url), () => {
 
   test("Should serialize event", () => {
     const message = new MessageBody({
-      payload: {
-        foo: "bar",
-      },
-      version: VersionString.KERI_LEGACY,
+      v: VersionString.KERI_LEGACY,
+      foo: "bar",
     });
 
     assert.strictEqual(message.text, JSON.stringify(message.payload));
@@ -48,13 +42,13 @@ test.describe(basename(import.meta.url), () => {
   test.describe("Message version properties", () => {
     test("Should expose version properties", () => {
       const message = new MessageBody({
-        payload: { a: 1 },
-        version: {
+        v: new VersionString({
           protocol: "KERI",
           major: 2,
           minor: 3,
           legacy: false,
-        },
+        }).text,
+        a: 1,
       });
 
       assert.strictEqual(message.version.major, 2);
@@ -69,8 +63,7 @@ test.describe(basename(import.meta.url), () => {
   test.describe("Encode version string via Message constructor", () => {
     test("Should encode legacy version string for ACDC protocol", () => {
       const message = new MessageBody({
-        payload: {},
-        version: VersionString.ACDC_LEGACY,
+        v: VersionString.ACDC_LEGACY,
       });
 
       assert.ok(message.payload.v.startsWith("ACDC10JSON"));
@@ -79,8 +72,7 @@ test.describe(basename(import.meta.url), () => {
 
     test("Should encode modern version string for ACDC protocol", () => {
       const message = new MessageBody({
-        payload: {},
-        version: VersionString.ACDC,
+        v: VersionString.ACDC,
       });
 
       assert.ok(message.payload.v.startsWith("ACDCBAAJSON"));
@@ -89,8 +81,8 @@ test.describe(basename(import.meta.url), () => {
 
     test("Should add legacy version to object", () => {
       const message = new MessageBody({
-        payload: { a: 1 },
-        version: VersionString.KERI_LEGACY,
+        v: VersionString.KERI_LEGACY,
+        a: 1,
       });
 
       assert.strictEqual(message.text, '{"v":"KERI10JSON00001f_","a":1}');
@@ -98,8 +90,8 @@ test.describe(basename(import.meta.url), () => {
 
     test("Should add modern version to object", () => {
       const message = new MessageBody({
-        payload: { a: 1 },
-        version: VersionString.KERI,
+        v: VersionString.KERI,
+        a: 1,
       });
 
       assert.strictEqual(message.text, '{"v":"KERICAAJSONAAAe.","a":1}');
@@ -158,13 +150,13 @@ test.describe(basename(import.meta.url), () => {
 
   test("Should handle different protocol names", () => {
     const message = new MessageBody({
-      payload: { test: "data" },
-      version: {
+      v: VersionString.encode({
         protocol: "ACDC",
         major: 1,
         minor: 5,
         legacy: true,
-      },
+      }),
+      test: "data",
     });
 
     assert.ok(message.payload.v.startsWith("ACDC"));
@@ -172,13 +164,11 @@ test.describe(basename(import.meta.url), () => {
 
   test("Should create message with multiple fields", () => {
     const message = new MessageBody({
-      payload: {
-        very: "long",
-        message: "content",
-        with: ["multiple", "fields"],
-        and: { nested: "objects" },
-      },
-      version: VersionString.KERI_LEGACY,
+      v: VersionString.KERI_LEGACY,
+      very: "long",
+      message: "content",
+      with: ["multiple", "fields"],
+      and: { nested: "objects" },
     });
 
     assert.strictEqual(message.payload.v, "KERI10JSON000073_");
@@ -186,6 +176,7 @@ test.describe(basename(import.meta.url), () => {
 
   test("Should preserve payload properties", () => {
     const originalPayload = {
+      v: VersionString.KERI_LEGACY,
       t: "rot",
       d: "ELvaU6Z-i0d8JJR2nmwyYAfsv0-dn4lMOgPhQq5VXhE",
       i: "EAoTNZH3ULvaU6Z-i0d8JJR2nmwyYAfsv0-dn4lMO",
@@ -201,20 +192,18 @@ test.describe(basename(import.meta.url), () => {
       a: [],
     };
 
-    const message = new MessageBody({
-      payload: originalPayload,
-      version: VersionString.KERI_LEGACY,
-    });
+    const message = new MessageBody(originalPayload);
+    const { v, ...rest } = message.payload;
+    assert.strictEqual(v, "KERI10JSON00016f_");
 
-    for (const [key, value] of Object.entries(originalPayload)) {
+    for (const [key, value] of Object.entries(rest)) {
       assert.deepStrictEqual(message.payload[key], value, `Property ${key} should be preserved`);
     }
   });
 
   test("Should handle empty payload", () => {
     const message = new MessageBody({
-      payload: {},
-      version: VersionString.KERI_LEGACY,
+      v: VersionString.KERI_LEGACY,
     });
 
     const payload = message.payload;
@@ -225,54 +214,30 @@ test.describe(basename(import.meta.url), () => {
   test("Should throw error for invalid protocol", () => {
     assert.throws(() => {
       new MessageBody({
-        payload: { test: "data" },
-        version: {
-          protocol: "TOOLONG", // Too long
-          major: 1,
-          minor: 0,
-        },
+        v: VersionString.KERI.replace("KERI", "TOOLONG"),
       });
-    }, /Protocol must be 4 uppercase characters/);
+    }, /Invalid version string TOOLONGCAAJSONAAAA./);
 
     assert.throws(() => {
       new MessageBody({
-        payload: { test: "data" },
-        version: {
-          protocol: "ABC", // Too short
-          major: 1,
-          minor: 0,
-        },
+        v: VersionString.KERI.replace("KERI", "ABC"),
       });
-    }, /Protocol must be 4 uppercase characters/);
+    }, /Invalid version string ABCCAAJSONAAAA./);
   });
 
   test("Should throw error for unsupported message kind", () => {
     assert.throws(() => {
       new MessageBody({
-        payload: { test: "data" },
-        version: {
-          protocol: "KERI",
-          major: 1,
-          minor: 0,
-          kind: "CBOR", // Unsupported format
-        },
+        v: VersionString.KERI.replace("JSON", "CBOR"),
       });
     }, /Only JSON format is supported for now/);
   });
 
   test("Should handle version string in payload", () => {
     const message = new MessageBody({
-      payload: {
-        v: "KERI10JSON000042_",
-        t: "icp",
-        d: "ELvaU6Z-i0d8JJR2nmwyYAfsv0-dn4lMOgPhQq5VXhE",
-      },
-      version: {
-        protocol: "KERI",
-        major: 1,
-        minor: 0,
-        legacy: true,
-      },
+      v: "KERI10JSON000042_",
+      t: "icp",
+      d: "ELvaU6Z-i0d8JJR2nmwyYAfsv0-dn4lMOgPhQq5VXhE",
     });
 
     assert.ok(message.payload.v);
@@ -281,14 +246,9 @@ test.describe(basename(import.meta.url), () => {
 
   test("Should produce consistent output for same input", () => {
     const init = {
-      payload: {
-        t: "icp",
-        d: "ELvaU6Z-i0d8JJR2nmwyYAfsv0-dn4lMOgPhQq5VXhE",
-      },
-      protocol: "KERI",
-      major: 1,
-      minor: 0,
-      legacy: true,
+      v: VersionString.KERI_LEGACY,
+      t: "icp",
+      d: "ELvaU6Z-i0d8JJR2nmwyYAfsv0-dn4lMOgPhQq5VXhE",
     };
 
     const message1 = new MessageBody(init);
@@ -300,13 +260,13 @@ test.describe(basename(import.meta.url), () => {
 
   test("Should handle different major/minor versions", () => {
     const message = new MessageBody({
-      payload: { test: "data" },
-      version: {
+      v: VersionString.encode({
         protocol: "KERI",
         major: 15, // Max single digit hex
         minor: 9, // Max single digit hex
         legacy: true,
-      },
+      }),
+      test: "data",
     });
 
     const versionString = message.payload.v as string;
@@ -315,13 +275,13 @@ test.describe(basename(import.meta.url), () => {
 
   test("Should provide access to raw bytes", () => {
     const message = new MessageBody({
-      payload: { test: "data" },
-      version: {
+      v: VersionString.encode({
         protocol: "KERI",
         major: 1,
         minor: 0,
         legacy: true,
-      },
+      }),
+      test: "data",
     });
 
     const raw = message.raw;

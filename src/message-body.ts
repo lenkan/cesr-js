@@ -1,22 +1,18 @@
 import { decodeUtf8, encodeUtf8 } from "./encoding-utf8.ts";
-import { VersionString, type VersionStringInit } from "./version-string.ts";
+import { VersionString } from "./version-string.ts";
 
 const customInspectSymbol = Symbol.for("nodejs.util.inspect.custom");
 
-export interface MessageBodyInit<T extends Record<string, unknown> = Record<string, unknown>> {
-  payload: T;
-  version?: VersionStringInit;
-}
+export type MessageBodyInit<T extends Record<string, unknown> = Record<string, unknown>> = T & { v: string };
 
-function encode(init: MessageBodyInit): [VersionString, Uint8Array] {
-  const tmpversion = new VersionString(
-    init.version ?? {
-      protocol: "KERI",
-    },
-  );
+function encode(init: MessageBodyInit): Uint8Array {
+  const { v, ...payload } = init;
 
-  // eslint-disable-next-line @typescript-eslint/no-unused-vars
-  const { v: _v, ...payload } = init.payload;
+  if (typeof v !== "string") {
+    throw new Error(`Version field 'v' in payload must be a string, got ${typeof v}`);
+  }
+
+  const tmpversion = VersionString.parse(v);
 
   const tmp = encodeUtf8(
     JSON.stringify({
@@ -41,21 +37,18 @@ function encode(init: MessageBodyInit): [VersionString, Uint8Array] {
     }),
   );
 
-  return [version, raw];
+  return raw;
 }
 
 export class MessageBody<T extends Record<string, unknown> = Record<string, unknown>> {
   readonly #raw: Uint8Array;
-  readonly #version: VersionString;
 
   constructor(init: MessageBodyInit) {
-    const [version, raw] = encode(init);
-    this.#raw = raw;
-    this.#version = version;
+    this.#raw = encode(init);
   }
 
   get version(): VersionString {
-    return this.#version;
+    return VersionString.parse(this.payload.v);
   }
 
   get text(): string {
@@ -74,19 +67,13 @@ export class MessageBody<T extends Record<string, unknown> = Record<string, unkn
     return this.#raw.length;
   }
 
-  /**
-   * Custom inspect function for pretty printing in Node.js console.
-   * Example: console.log(message) will show this formatted output.
-   * Also works in browsers with a simpler format.
-   */
   [customInspectSymbol](depth: number): string {
     const payload = this.payload;
 
     if (depth < 0) {
-      return "[Message]";
+      return "[MessageBody]";
     }
 
-    // Simple pretty print that works in both Node.js and browsers
     const payloadStr = JSON.stringify(payload, null, 2).replace(/\n/g, "\n  ");
 
     return ["MessageBody {", `  version: ${this.version.text}`, `  payload: ${payloadStr},`, "}"].join("\n");
@@ -95,6 +82,10 @@ export class MessageBody<T extends Record<string, unknown> = Record<string, unkn
   static isMessageBody(value: Uint8Array): boolean {
     const start = value[0];
     return start === 0x7b; // '{' character
+  }
+
+  static encode(init: MessageBodyInit): Uint8Array {
+    return encode(init);
   }
 
   static parse(input: Uint8Array): MessageBody | null {
@@ -111,17 +102,14 @@ export class MessageBody<T extends Record<string, unknown> = Record<string, unkn
       return null;
     }
 
-    const version = VersionString.parse(input.slice(0, 24));
+    const version = VersionString.extract(input.slice(0, 24));
     if (input.length < version.size) {
       return null;
     }
 
     const frame = input.slice(0, version.size);
 
-    return new MessageBody({
-      payload: JSON.parse(decodeUtf8(frame)),
-      version,
-    });
+    return new MessageBody(JSON.parse(decodeUtf8(frame)));
   }
 
   readonly [Symbol.toStringTag] = "Message";

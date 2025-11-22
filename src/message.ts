@@ -4,7 +4,7 @@ import type { VersionString } from "./version-string.ts";
 
 const customInspectSymbol = Symbol.for("nodejs.util.inspect.custom");
 
-export class Message<T extends Record<string, unknown> = Record<string, unknown>> implements MessageBodyInit {
+export class Message<T extends Record<string, unknown> = Record<string, unknown>> {
   #attachments: Attachments;
   readonly #body: MessageBody<T>;
 
@@ -33,11 +33,11 @@ export class Message<T extends Record<string, unknown> = Record<string, unknown>
     return this.#attachments;
   }
 
-  set attachments(value: Attachments | AttachmentsInit) {
+  set attachments(value: AttachmentsInit) {
     this.#attachments = new Attachments(value);
   }
 
-  toString(): string {
+  encode(): string {
     return this.#body.text + this.#attachments.toString();
   }
 

@@ -8,24 +8,17 @@ import { Attachments } from "./attachments.ts";
 test.describe(basename(import.meta.url), () => {
   test("Should serialize message with attachments", () => {
     const message = new Message({
-      payload: {
-        foo: "bar",
-      },
-      version: VersionString.KERI_LEGACY,
+      v: VersionString.KERI_LEGACY,
+      foo: "bar",
     });
 
-    assert.strictEqual(message.toString(), JSON.stringify(message.body.payload) + "-VAA");
+    assert.strictEqual(message.encode(), JSON.stringify(message.body.payload) + "-VAA");
   });
 
   test("Should create message with non-keri protocol", () => {
     const message = new Message({
-      payload: {
-        data: "value",
-      },
-      version: {
-        protocol: "ACDC",
-        legacy: true,
-      },
+      v: VersionString.ACDC_LEGACY,
+      data: "value",
     });
 
     assert.strictEqual(message.body.version.protocol, "ACDC");
@@ -33,8 +26,8 @@ test.describe(basename(import.meta.url), () => {
 
   test("Should allow setting attachments", () => {
     const message = new Message({
-      payload: { test: "data" },
-      version: VersionString.KERI_LEGACY,
+      v: VersionString.KERI_LEGACY,
+      test: "data",
     });
 
     message.attachments = new Attachments({
@@ -48,8 +41,8 @@ test.describe(basename(import.meta.url), () => {
   test("Should create message with attachments from constructor", () => {
     const message = new Message(
       {
-        payload: { test: "data" },
-        version: VersionString.KERI_LEGACY,
+        v: VersionString.KERI_LEGACY,
+        test: "data",
       },
       {
         ControllerIdxSigs: ["AAtest", "ABtest"],
