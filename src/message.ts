@@ -1,15 +1,28 @@
 import { Attachments, type AttachmentsInit } from "./attachments.ts";
 import { MessageBody, type MessageBodyInit } from "./message-body.ts";
+import type { VersionString } from "./version-string.ts";
 
 const customInspectSymbol = Symbol.for("nodejs.util.inspect.custom");
 
-export class Message<T extends Record<string, unknown> = Record<string, unknown>> {
+export class Message<T extends Record<string, unknown> = Record<string, unknown>> implements MessageBodyInit {
   #attachments: Attachments;
   readonly #body: MessageBody<T>;
 
-  constructor(body: MessageBodyInit<T> | MessageBody<T>, attachments?: Attachments | AttachmentsInit) {
-    this.#body = body instanceof MessageBody ? body : new MessageBody(body);
+  constructor(body: MessageBodyInit<T>, attachments?: AttachmentsInit) {
+    this.#body = new MessageBody(body);
     this.#attachments = new Attachments(attachments ?? {});
+  }
+
+  get payload(): T {
+    return this.#body.payload;
+  }
+
+  get version(): VersionString {
+    return this.#body.version;
+  }
+
+  get protocol(): string {
+    return this.#body.version.protocol;
   }
 
   get body(): MessageBody<T> {

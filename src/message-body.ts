@@ -5,7 +5,7 @@ const customInspectSymbol = Symbol.for("nodejs.util.inspect.custom");
 
 export interface MessageBodyInit<T extends Record<string, unknown> = Record<string, unknown>> {
   payload: T;
-  version?: VersionStringInit | VersionString;
+  version?: VersionStringInit;
 }
 
 function encode(init: MessageBodyInit): [VersionString, Uint8Array] {
