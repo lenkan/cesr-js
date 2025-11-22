@@ -1,13 +1,12 @@
-import { createReadStream } from "fs";
 import assert from "node:assert/strict";
-import { describe, test } from "node:test";
+import test from "node:test";
+import { basename } from "node:path";
+import { createReadStream } from "node:fs";
 import { readFile } from "node:fs/promises";
 import { parse } from "./parse.ts";
-import { encodeUtf8 } from "./encoding-utf8.ts";
-import { MessageBody } from "./message-body.ts";
+import { decodeUtf8, encodeUtf8 } from "./encoding-utf8.ts";
 import { concat } from "./array-utils.ts";
 import { encodeGenus, encodeIndexer } from "./encoding.ts";
-import path from "node:path";
 import { Message } from "./message.ts";
 import { IndexCode } from "./codes.ts";
 import { VersionString } from "./version-string.ts";
@@ -38,22 +37,23 @@ async function collect<T>(iterator: AsyncIterable<T>): Promise<T[]> {
   return result;
 }
 
-describe(path.parse(import.meta.filename).base, () => {
-  describe("parsing complete messages", () => {
+test.describe(basename(import.meta.url), () => {
+  test.describe("parsing complete messages", () => {
     test("should parse from string", async () => {
-      const input = new MessageBody({ v: VersionString.KERI_LEGACY, t: "icp" }).text;
+      const message = new Message({ v: VersionString.KERI_LEGACY, t: "icp" });
+      const input = decodeUtf8(message.raw);
       const result = await collect(parse(input));
       assert.equal(result.length, 1);
     });
 
     test("should parse from Uint8Array", async () => {
-      const input = MessageBody.encode({ v: VersionString.KERI_LEGACY, t: "icp" });
-      const result = await collect(parse(input));
+      const input = new Message({ v: VersionString.KERI_LEGACY, t: "icp" });
+      const result = await collect(parse(input.raw));
       assert.equal(result.length, 1);
     });
 
     test("should parse from Response", async () => {
-      const input = new Response(new MessageBody({ v: VersionString.KERI_LEGACY, t: "icp" }).text);
+      const input = new Response(new Message({ v: VersionString.KERI_LEGACY, t: "icp" }).text);
       assert(input.body);
 
       const result = await collect(parse(input.body));
@@ -61,11 +61,11 @@ describe(path.parse(import.meta.filename).base, () => {
     });
 
     test("should parse message with payload only", async () => {
-      const input = MessageBody.encode({ v: VersionString.KERI_LEGACY, t: "icp" });
-      const result = await collect(parse(input));
+      const input = new Message({ v: VersionString.KERI_LEGACY, t: "icp" });
+      const result = await collect(parse(input.raw));
 
       assert.equal(result.length, 1);
-      assert.deepEqual(result[0].body.payload, { v: "KERI10JSON000023_", t: "icp" });
+      assert.deepEqual(result[0].body, { v: "KERI10JSON000023_", t: "icp" });
     });
 
     test("should parse message with attachments", async () => {
@@ -77,15 +77,15 @@ describe(path.parse(import.meta.filename).base, () => {
     });
 
     test("should parse multiple messages in sequence", async () => {
-      const msg1 = new MessageBody({ v: VersionString.KERI_LEGACY, t: "icp", i: "prefix1" });
-      const msg2 = new MessageBody({ v: VersionString.KERI_LEGACY, t: "rot", i: "prefix2" });
+      const msg1 = new Message({ v: VersionString.KERI_LEGACY, t: "icp", i: "prefix1" });
+      const msg2 = new Message({ v: VersionString.KERI_LEGACY, t: "rot", i: "prefix2" });
       const input = msg1.text + msg2.text;
 
       const messages = await collect(parse(input));
 
       assert.strictEqual(messages.length, 2);
-      assert.strictEqual(messages[0].body.payload.t, "icp");
-      assert.strictEqual(messages[1].body.payload.t, "rot");
+      assert.strictEqual(messages[0].body.t, "icp");
+      assert.strictEqual(messages[1].body.t, "rot");
     });
 
     test("should parse TransIdxSigGroups correctly", async () => {
@@ -111,14 +111,14 @@ describe(path.parse(import.meta.filename).base, () => {
     });
   });
 
-  describe("version handling", () => {
+  test.describe("version handling", () => {
     test("should detect version 1 from message body", async () => {
       const message = new Message({ v: VersionString.KERI_LEGACY, t: "icp" });
       const messages = await collect(parse(message.encode()));
 
       assert.strictEqual(messages.length, 1);
-      assert.strictEqual(messages[0].body.version.major, 1);
-      assert.strictEqual(messages[0].body.version.minor, 0);
+      assert.strictEqual(messages[0].version.major, 1);
+      assert.strictEqual(messages[0].version.minor, 0);
     });
 
     test("should detect version 2 from genus counter", async () => {
@@ -128,7 +128,7 @@ describe(path.parse(import.meta.filename).base, () => {
       const result = await collect(parse(input, { version: 1 }));
 
       assert.equal(result.length, 2);
-      assert.equal(result[0].body.payload.v, "KERICAAJSONAAEq.");
+      assert.equal(result[0].body.v, "KERICAAJSONAAEq.");
     });
 
     test("should use version for attachment parsing", async () => {
@@ -136,12 +136,12 @@ describe(path.parse(import.meta.filename).base, () => {
       const result = await collect(parse(input, { version: 2 }));
 
       assert.equal(result.length, 2);
-      assert.equal(result[0].body.payload.t, "icp");
+      assert.equal(result[0].body.t, "icp");
       assert.equal(result[0].attachments.ControllerIdxSigs.length, 1);
     });
   });
 
-  describe("streaming behavior", () => {
+  test.describe("streaming behavior", () => {
     test("should handle message split across multiple chunks", async () => {
       const message = new Message({ v: VersionString.KERI_LEGACY, t: "icp" }, { ControllerIdxSigs: [sig0, sig1] });
       const full = encodeUtf8(message.encode());
@@ -181,28 +181,28 @@ describe(path.parse(import.meta.filename).base, () => {
     });
   });
 
-  describe("incomplete data handling", () => {
+  test.describe("incomplete data handling", () => {
     test("should throw for incomplete message body", async () => {
-      const message = new MessageBody({ v: VersionString.KERI_LEGACY, t: "icp" });
+      const message = new Message({ v: VersionString.KERI_LEGACY, t: "icp" });
       const input = message.text.slice(0, -10);
 
       await assert.rejects(async () => await collect(parse(input)), /Unexpected end of stream/);
     });
 
     test("should throw on incomplete stream with partial data", async () => {
-      const message = new MessageBody({ v: VersionString.KERI_LEGACY, t: "icp" });
+      const message = new Message({ v: VersionString.KERI_LEGACY, t: "icp" });
       const input = message.text.slice(0, -10);
 
       await assert.rejects(async () => await collect(parse(input)), /Unexpected end of stream/);
     });
 
     test("should throw on unfinished JSON without full version string", async () => {
-      const input = new MessageBody({ v: VersionString.KERI_LEGACY, t: "icp" }).text.slice(0, 20);
+      const input = new Message({ v: VersionString.KERI_LEGACY, t: "icp" }).text.slice(0, 20);
       await assert.rejects(() => collect(parse(input)), new Error("Unexpected end of stream"));
     });
   });
 
-  describe("edge cases", () => {
+  test.describe("edge cases", () => {
     test("should handle empty input", async () => {
       const messages = await collect(parse(""));
       assert.strictEqual(messages.length, 0);
@@ -214,12 +214,12 @@ describe(path.parse(import.meta.filename).base, () => {
     });
   });
 
-  describe("fixtures", () => {
+  test.describe("fixtures", () => {
     test("should parse alice fixture", { timeout: 100 }, async () => {
       const result = await collect(parse(createReadStream("./fixtures/alice.cesr", {})));
 
       assert.equal(result.length, 2);
-      assert.equal(result[0].body.payload.t, "icp");
+      assert.equal(result[0].body.t, "icp");
 
       assert.equal(result[0].attachments.ControllerIdxSigs.length, 1);
       assert.equal(
@@ -239,7 +239,7 @@ describe(path.parse(import.meta.filename).base, () => {
       assert.equal(result[0].attachments.FirstSeenReplayCouples[0].fnu, "0");
       assert.equal(result[0].attachments.FirstSeenReplayCouples[0].dt.toISOString(), "2025-02-01T12:03:46.247Z");
 
-      assert.equal(result[1].body.payload.t, "ixn");
+      assert.equal(result[1].body.t, "ixn");
       assert.equal(result[1].attachments.ControllerIdxSigs.length, 1);
       assert.equal(
         result[1].attachments.ControllerIdxSigs[0],
@@ -265,8 +265,8 @@ describe(path.parse(import.meta.filename).base, () => {
       const result = await collect(parse(stream));
 
       assert.equal(result.length, 3);
-      assert.equal(result[0].body.payload.t, "icp");
-      assert.equal(result[1].body.payload.t, "rpy");
+      assert.equal(result[0].body.t, "icp");
+      assert.equal(result[1].body.t, "rpy");
     });
 
     test("should parse GEDA fixture", async () => {
@@ -274,9 +274,9 @@ describe(path.parse(import.meta.filename).base, () => {
       const events = await collect(parse(stream));
 
       assert.equal(events.length, 17);
-      assert.equal(events[0].body.payload.t, "icp");
-      assert.equal(events[1].body.payload.t, "rot");
-      assert.equal(events[2].body.payload.t, "rot");
+      assert.equal(events[0].body.t, "icp");
+      assert.equal(events[1].body.t, "rot");
+      assert.equal(events[2].body.t, "rot");
     });
 
     test("should parse credential fixture", async () => {
@@ -284,12 +284,12 @@ describe(path.parse(import.meta.filename).base, () => {
       const events = await collect(parse(stream));
 
       assert.equal(events.length, 6);
-      assert.equal(events[0].body.payload.t, "icp");
-      assert.equal(events[1].body.payload.t, "ixn");
-      assert.equal(events[2].body.payload.t, "ixn");
-      assert.equal(events[3].body.payload.t, "vcp");
-      assert.equal(events[4].body.payload.t, "iss");
-      assert.match(events[5].body.payload.v as string, /^ACDC/);
+      assert.equal(events[0].body.t, "icp");
+      assert.equal(events[1].body.t, "ixn");
+      assert.equal(events[2].body.t, "ixn");
+      assert.equal(events[3].body.t, "vcp");
+      assert.equal(events[4].body.t, "iss");
+      assert.match(events[5].body.v as string, /^ACDC/);
     });
 
     test("should parse CESR 2.0 fixture", async () => {
@@ -297,15 +297,15 @@ describe(path.parse(import.meta.filename).base, () => {
       const result = await collect(parse(input, { version: 2 }));
 
       assert.equal(result.length, 2);
-      assert.equal(result[0].body.payload.t, "icp");
-      assert.equal(result[0].body.payload.v, "KERICAAJSONAAEq.");
+      assert.equal(result[0].body.t, "icp");
+      assert.equal(result[0].body.v, "KERICAAJSONAAEq.");
       assert.equal(result[0].attachments.ControllerIdxSigs.length, 1);
       assert.equal(
         result[0].attachments.ControllerIdxSigs[0],
         "AACME000QcZDeDtgMwJC6b0qhWckJBL-U9Ls9dhYKO9mcaIdffYYO_gi6tFl1xvKMwre886T8ODYLLVrMqlc3TcN",
       );
-      assert.equal(result[1].body.payload.t, "ixn");
-      assert.equal(result[1].body.payload.v, "KERICAAJSONAADK.");
+      assert.equal(result[1].body.t, "ixn");
+      assert.equal(result[1].body.v, "KERICAAJSONAADK.");
       assert.equal(result[1].attachments.ControllerIdxSigs.length, 1);
       assert.equal(
         result[1].attachments.ControllerIdxSigs[0],
@@ -317,10 +317,10 @@ describe(path.parse(import.meta.filename).base, () => {
       const result = await collect(parse(createReadStream("./fixtures/mailbox.cesr", {})));
 
       assert.equal(result.length, 4);
-      assert.equal(result[0].body.payload.t, "icp");
-      assert.equal(result[1].body.payload.t, "rpy");
-      assert.equal(result[2].body.payload.t, "rpy");
-      assert.equal(result[3].body.payload.t, "rpy");
+      assert.equal(result[0].body.t, "icp");
+      assert.equal(result[1].body.t, "rpy");
+      assert.equal(result[2].body.t, "rpy");
+      assert.equal(result[3].body.t, "rpy");
 
       assert.equal(result[3].attachments.TransIdxSigGroups.length, 1);
       assert.equal(result[3].attachments.TransIdxSigGroups[0].prefix, "EL8vpSig7NmSxLJ44QSJozcTVYSqPUHVQWPZtyVmPUO_");

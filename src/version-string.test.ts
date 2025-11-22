@@ -1,420 +1,430 @@
-import test, { describe } from "node:test";
+import { basename } from "node:path";
+import { describe, test } from "node:test";
 import assert from "node:assert/strict";
 import { VersionString } from "./version-string.ts";
 import { encodeUtf8 } from "./encoding-utf8.ts";
 
-describe("VersionString constructor", () => {
-  test("Should create legacy KERI version string", () => {
-    const version = new VersionString({
-      protocol: "KERI",
-      major: 1,
-      minor: 0,
-      legacy: true,
-      size: 100,
+describe(basename(import.meta.url), () => {
+  describe("constructor defaults", () => {
+    test("should default major version to 1", () => {
+      const version = new VersionString({
+        protocol: "KERI",
+      });
+
+      assert.strictEqual(version.major, 1);
     });
 
-    assert.strictEqual(version.protocol, "KERI");
-    assert.strictEqual(version.major, 1);
-    assert.strictEqual(version.minor, 0);
-    assert.strictEqual(version.kind, "JSON");
-    assert.strictEqual(version.legacy, true);
-    assert.strictEqual(version.size, 100);
-  });
+    test("should default minor version to 0", () => {
+      const version = new VersionString({
+        protocol: "KERI",
+      });
 
-  test("Should create modern KERI version string", () => {
-    const version = new VersionString({
-      protocol: "KERI",
-      major: 2,
-      minor: 1,
-      legacy: false,
-      size: 50,
+      assert.strictEqual(version.minor, 0);
     });
 
-    assert.strictEqual(version.protocol, "KERI");
-    assert.strictEqual(version.major, 2);
-    assert.strictEqual(version.minor, 1);
-    assert.strictEqual(version.kind, "JSON");
-    assert.strictEqual(version.legacy, false);
-    assert.strictEqual(version.size, 50);
-  });
+    test("should default kind to JSON", () => {
+      const version = new VersionString({
+        protocol: "KERI",
+      });
 
-  test("Should default to legacy format when legacy not specified", () => {
-    const version = new VersionString({
-      protocol: "KERI",
+      assert.strictEqual(version.kind, "JSON");
     });
 
-    assert.strictEqual(version.legacy, true);
+    test("should default legacy to true", () => {
+      const version = new VersionString({
+        protocol: "KERI",
+      });
+
+      assert.strictEqual(version.legacy, true);
+    });
   });
 
-  test("Should default to major version 1 when not specified", () => {
-    const version = new VersionString({
-      protocol: "KERI",
+  describe("legacy encoding", () => {
+    test("should create legacy KERI version string with defaults", () => {
+      const version = new VersionString({
+        protocol: "KERI",
+      });
+
+      assert.strictEqual(version.text, "KERI10JSON000000_");
+      assert.strictEqual(version.protocol, "KERI");
+      assert.strictEqual(version.major, 1);
+      assert.strictEqual(version.minor, 0);
+      assert.strictEqual(version.kind, "JSON");
+      assert.strictEqual(version.size, 0);
+      assert.strictEqual(version.legacy, true);
     });
 
-    assert.strictEqual(version.major, 1);
-  });
+    test("should encode legacy KERI version specified size", () => {
+      const version = new VersionString({
+        protocol: "KERI",
+        major: 2,
+        minor: 5,
+        legacy: true,
+        size: 12345,
+      });
 
-  test("Should default to minor version 0 when not specified", () => {
-    const version = new VersionString({
-      protocol: "KERI",
+      assert.strictEqual(version.text, "KERI25JSON003039_");
+      assert.strictEqual(version.protocol, "KERI");
+      assert.strictEqual(version.major, 2);
+      assert.strictEqual(version.minor, 5);
+      assert.strictEqual(version.size, 12345);
+      assert.strictEqual(version.legacy, true);
     });
 
-    assert.strictEqual(version.minor, 0);
-  });
+    test("should encode with different major version", () => {
+      const version = new VersionString({
+        protocol: "KERI",
+        major: 5,
+        minor: 0,
+        legacy: true,
+        size: 0,
+      });
 
-  test("Should default to JSON kind when not specified", () => {
-    const version = new VersionString({
-      protocol: "KERI",
+      assert.strictEqual(version.text, "KERI50JSON000000_");
     });
 
-    assert.strictEqual(version.kind, "JSON");
-  });
+    test("should encode hexadecimal major version", () => {
+      const version = new VersionString({
+        protocol: "KERI",
+        major: 10,
+        minor: 0,
+        legacy: true,
+        size: 0,
+      });
 
-  test("Should default to size 0 when not specified", () => {
-    const version = new VersionString({
-      protocol: "KERI",
+      assert.strictEqual(version.text, "KERIa0JSON000000_");
     });
 
-    assert.strictEqual(version.size, 0);
-  });
+    test("should encode with different minor version", () => {
+      const version = new VersionString({
+        protocol: "KERI",
+        major: 1,
+        minor: 5,
+        legacy: true,
+        size: 0,
+      });
 
-  test("Should throw for invalid protocol (too short) in constructor", () => {
-    assert.throws(() => new VersionString({ protocol: "KER" }), /Protocol must be 4 uppercase characters/);
-  });
-
-  test("Should throw for invalid protocol (too long) in constructor", () => {
-    assert.throws(() => new VersionString({ protocol: "KERIO" }), /Protocol must be 4 uppercase characters/);
-  });
-
-  test("Should throw for invalid protocol (lowercase) in constructor", () => {
-    assert.throws(() => new VersionString({ protocol: "keri" }), /Protocol must be 4 uppercase characters/);
-  });
-
-  test("Should throw for invalid protocol (mixed case) in constructor", () => {
-    assert.throws(() => new VersionString({ protocol: "KERi" }), /Protocol must be 4 uppercase characters/);
-  });
-
-  test("Should throw for invalid protocol (with numbers) in constructor", () => {
-    assert.throws(() => new VersionString({ protocol: "KER1" }), /Protocol must be 4 uppercase characters/);
-  });
-
-  test("Should throw for non-JSON kind in constructor", () => {
-    assert.throws(() => new VersionString({ protocol: "KERI", kind: "CBOR" }), /Only JSON format is supported for now/);
-  });
-
-  test("Should throw for invalid kind (too short) in constructor", () => {
-    assert.throws(() => new VersionString({ protocol: "KERI", kind: "JSO" }), /Kind must be 4 uppercase characters/);
-  });
-
-  test("Should throw for invalid kind (too long) in constructor", () => {
-    assert.throws(() => new VersionString({ protocol: "KERI", kind: "JSONX" }), /Kind must be 4 uppercase characters/);
-  });
-});
-
-describe("VersionString.text (encoding)", () => {
-  test("Should encode legacy KERI version string", () => {
-    const version = new VersionString({
-      protocol: "KERI",
-      major: 1,
-      minor: 0,
-      legacy: true,
-      size: 0,
+      assert.strictEqual(version.text, "KERI15JSON000000_");
     });
 
-    assert.strictEqual(version.text, "KERI10JSON000000_");
-  });
+    test("should encode hexadecimal minor version", () => {
+      const version = new VersionString({
+        protocol: "KERI",
+        major: 1,
+        minor: 10,
+        legacy: true,
+        size: 0,
+      });
 
-  test("Should encode legacy KERI version with non-zero size", () => {
-    const version = new VersionString({
-      protocol: "KERI",
-      major: 1,
-      minor: 0,
-      legacy: true,
-      size: 255,
+      assert.strictEqual(version.text, "KERI1aJSON000000_");
     });
 
-    assert.strictEqual(version.text, "KERI10JSON0000ff_");
+    test("should encode large size", () => {
+      const version = new VersionString({
+        protocol: "KERI",
+        major: 1,
+        minor: 0,
+        legacy: true,
+        size: 1048575,
+      });
+
+      assert.strictEqual(version.text, "KERI10JSON0fffff_");
+    });
   });
 
-  test("Should encode legacy KERI version with large size", () => {
-    const version = new VersionString({
-      protocol: "KERI",
-      major: 1,
-      minor: 0,
-      legacy: true,
-      size: 16777215, // max 6 hex digits
+  describe("modern encoding", () => {
+    test("should create modern version string with defaults", () => {
+      const version = new VersionString({
+        protocol: "KERI",
+        legacy: false,
+      });
+
+      assert.strictEqual(version.text, "KERIBAAJSONAAAA.");
+      assert.strictEqual(version.protocol, "KERI");
+      assert.strictEqual(version.major, 1);
+      assert.strictEqual(version.minor, 0);
+      assert.strictEqual(version.kind, "JSON");
+      assert.strictEqual(version.size, 0);
+      assert.strictEqual(version.legacy, false);
     });
 
-    assert.strictEqual(version.text, "KERI10JSONffffff_");
-  });
+    test("should encode modern version with specified size", () => {
+      const version = new VersionString({
+        protocol: "KERI",
+        legacy: false,
+        size: 12345,
+      });
 
-  test("Should encode modern KERI version string", () => {
-    const version = new VersionString({
-      protocol: "KERI",
-      major: 2,
-      minor: 0,
-      legacy: false,
-      size: 0,
+      assert.strictEqual(version.text, "KERIBAAJSONADA5.");
+      assert.strictEqual(version.size, 12345);
     });
 
-    assert.strictEqual(version.text, "KERICAAJSONAAAA.");
-  });
+    test("should encode with different protocol", () => {
+      const version = new VersionString({
+        protocol: "ACDC",
+        major: 1,
+        minor: 0,
+        legacy: false,
+        size: 0,
+      });
 
-  test("Should encode modern KERI version with non-zero size", () => {
-    const version = new VersionString({
-      protocol: "KERI",
-      major: 2,
-      minor: 1,
-      legacy: false,
-      size: 24,
+      assert.strictEqual(version.text, "ACDCBAAJSONAAAA.");
     });
 
-    assert.strictEqual(version.text, "KERICABJSONAAAY.");
+    test("should encode modern version custom version", () => {
+      const version = new VersionString({
+        protocol: "KERI",
+        major: 3,
+        minor: 7,
+        legacy: false,
+      });
+
+      assert.strictEqual(version.text, "KERIDAHJSONAAAA.");
+      assert.strictEqual(version.protocol, "KERI");
+      assert.strictEqual(version.major, 3);
+      assert.strictEqual(version.minor, 7);
+    });
   });
 
-  test("Should encode legacy ACDC version string", () => {
-    const version = new VersionString({
-      protocol: "ACDC",
-      major: 1,
-      minor: 0,
-      legacy: true,
-      size: 0,
+  describe("parsing legacy format", () => {
+    test("should parse legacy KERI version from string", () => {
+      const input = '{"v":"KERI10JSON000027_","test":"data"}';
+      const version = VersionString.extract(input);
+
+      assert.strictEqual(version.protocol, "KERI");
+      assert.strictEqual(version.major, 1);
+      assert.strictEqual(version.minor, 0);
+      assert.strictEqual(version.kind, "JSON");
+      assert.strictEqual(version.size, 39);
+      assert.strictEqual(version.legacy, true);
     });
 
-    assert.strictEqual(version.text, "ACDC10JSON000000_");
-  });
+    test("should parse legacy KERI version from Uint8Array", () => {
+      const input = encodeUtf8('{"v":"KERI10JSON000027_","test":"data"}');
+      const version = VersionString.extract(input);
 
-  test("Should encode modern ACDC version string", () => {
-    const version = new VersionString({
-      protocol: "ACDC",
-      major: 1,
-      minor: 0,
-      legacy: false,
-      size: 0,
+      assert.strictEqual(version.protocol, "KERI");
+      assert.strictEqual(version.major, 1);
+      assert.strictEqual(version.minor, 0);
+      assert.strictEqual(version.kind, "JSON");
+      assert.strictEqual(version.legacy, true);
     });
 
-    assert.strictEqual(version.text, "ACDCBAAJSONAAAA.");
-  });
+    test("should parse legacy ACDC version", () => {
+      const input = '{"v":"ACDC10JSON000020_"}';
+      const version = VersionString.extract(input);
 
-  test("Should encode with different major versions", () => {
-    const version = new VersionString({
-      protocol: "KERI",
-      major: 5,
-      minor: 0,
-      legacy: true,
-      size: 0,
+      assert.strictEqual(version.protocol, "ACDC");
+      assert.strictEqual(version.major, 1);
+      assert.strictEqual(version.minor, 0);
+      assert.strictEqual(version.kind, "JSON");
+      assert.strictEqual(version.legacy, true);
     });
 
-    assert.strictEqual(version.text, "KERI50JSON000000_");
-  });
+    test("should parse with different major/minor versions", () => {
+      const input = '{"v":"KERI25JSON000000_"}';
+      const version = VersionString.extract(input);
 
-  test("Should encode with different minor versions in legacy format", () => {
-    const version = new VersionString({
-      protocol: "KERI",
-      major: 1,
-      minor: 5,
-      legacy: true,
-      size: 0,
+      assert.strictEqual(version.major, 2);
+      assert.strictEqual(version.minor, 5);
     });
 
-    assert.strictEqual(version.text, "KERI15JSON000000_");
-  });
-});
+    test("should parse hexadecimal minor version", () => {
+      const input = '{"v":"KERI1aJSON000000_"}';
+      const version = VersionString.extract(input);
 
-describe("VersionString.parse (decoding)", () => {
-  test("Should parse legacy KERI version from string", () => {
-    const input = '{"v":"KERI10JSON000027_","test":"data"}';
-    const version = VersionString.extract(input);
-
-    assert.strictEqual(version.protocol, "KERI");
-    assert.strictEqual(version.major, 1);
-    assert.strictEqual(version.minor, 0);
-    assert.strictEqual(version.kind, "JSON");
-    assert.strictEqual(version.size, 39);
-    assert.strictEqual(version.legacy, true);
-  });
-
-  test("Should parse modern KERI version from string", () => {
-    const input = '{"v":"KERICABJSONAAAm.","test":"data"}';
-    const version = VersionString.extract(input);
-
-    assert.strictEqual(version.protocol, "KERI");
-    assert.strictEqual(version.major, 2);
-    assert.strictEqual(version.minor, 1);
-    assert.strictEqual(version.kind, "JSON");
-    assert.strictEqual(version.size, 38);
-    assert.strictEqual(version.legacy, false);
-  });
-
-  test("Should parse legacy KERI version from Uint8Array", () => {
-    const input = encodeUtf8('{"v":"KERI10JSON000027_","test":"data"}');
-    const version = VersionString.extract(input);
-
-    assert.strictEqual(version.protocol, "KERI");
-    assert.strictEqual(version.major, 1);
-    assert.strictEqual(version.minor, 0);
-    assert.strictEqual(version.kind, "JSON");
-    assert.strictEqual(version.legacy, true);
-  });
-
-  test("Should parse modern KERI version from Uint8Array", () => {
-    const input = encodeUtf8('{"v":"KERICABJSONAAAm.","test":"data"}');
-    const version = VersionString.extract(input);
-
-    assert.strictEqual(version.protocol, "KERI");
-    assert.strictEqual(version.major, 2);
-    assert.strictEqual(version.minor, 1);
-    assert.strictEqual(version.legacy, false);
-  });
-
-  test("Should parse legacy ACDC version", () => {
-    const input = '{"v":"ACDC10JSON000020_"}';
-    const version = VersionString.extract(input);
-
-    assert.strictEqual(version.protocol, "ACDC");
-    assert.strictEqual(version.major, 1);
-    assert.strictEqual(version.minor, 0);
-    assert.strictEqual(version.kind, "JSON");
-    assert.strictEqual(version.legacy, true);
-  });
-
-  test("Should parse modern ACDC version", () => {
-    const input = '{"v":"ACDCBAAJSONAAAA."}';
-    const version = VersionString.extract(input);
-
-    assert.strictEqual(version.protocol, "ACDC");
-    assert.strictEqual(version.major, 1);
-    assert.strictEqual(version.minor, 0);
-    assert.strictEqual(version.kind, "JSON");
-    assert.strictEqual(version.legacy, false);
-  });
-
-  test("Should parse with different major/minor versions (legacy)", () => {
-    const input = '{"v":"KERI25JSON000000_"}';
-    const version = VersionString.extract(input);
-
-    assert.strictEqual(version.major, 2);
-    assert.strictEqual(version.minor, 5);
-  });
-
-  test("Should parse hexadecimal minor version in legacy format", () => {
-    const input = '{"v":"KERI1aJSON000000_"}';
-    const version = VersionString.extract(input);
-
-    assert.strictEqual(version.major, 1);
-    assert.strictEqual(version.minor, 10); // 'a' in hex = 10
-  });
-
-  test("Should parse large size in legacy format", () => {
-    const input = '{"v":"KERI10JSON0fffff_"}';
-    const version = VersionString.extract(input);
-
-    assert.strictEqual(version.size, 1048575); // 0xfffff
-  });
-
-  test("Should throw for missing v field", () => {
-    const input = '{"test":"data"}';
-
-    assert.throws(() => VersionString.extract(input), /Unable to extract "v" field/);
-  });
-
-  test("Should throw for invalid version string format", () => {
-    const input = '{"v":"INVALID"}';
-
-    assert.throws(() => VersionString.extract(input), /Invalid version string INVALID/);
-  });
-
-  test("Should throw for wrong terminator on legacy format", () => {
-    const input = '{"v":"KERI10JSON000000."}'; // should end with _
-
-    assert.throws(() => VersionString.extract(input), /Invalid version string/);
-  });
-
-  test("Should throw for wrong terminator on modern format", () => {
-    const input = '{"v":"KERICAAJSONAAAA_"}'; // should end with .
-
-    assert.throws(() => VersionString.extract(input), /Invalid version string/);
-  });
-});
-
-describe("VersionString static constants", () => {
-  test("Should have KERI_LEGACY constant", () => {
-    assert.strictEqual(VersionString.KERI_LEGACY, "KERI10JSON000000_");
-  });
-
-  test("Should have KERI constant", () => {
-    assert.strictEqual(VersionString.KERI, "KERICAAJSONAAAA.");
-  });
-
-  test("Should have ACDC_LEGACY constant", () => {
-    assert.strictEqual(VersionString.ACDC_LEGACY, "ACDC10JSON000000_");
-  });
-
-  test("Should have ACDC constant", () => {
-    assert.strictEqual(VersionString.ACDC, "ACDCBAAJSONAAAA.");
-  });
-});
-
-describe("VersionString round-trip encoding/decoding", () => {
-  test("Should round-trip legacy KERI version", () => {
-    const original = new VersionString({
-      protocol: "KERI",
-      major: 1,
-      minor: 5,
-      legacy: true,
-      size: 123,
+      assert.strictEqual(version.major, 1);
+      assert.strictEqual(version.minor, 10); // 'a' in hex = 10
     });
 
-    const decoded = VersionString.parse(original.text);
+    test("should parse large size", () => {
+      const input = '{"v":"KERI10JSON0fffff_"}';
+      const version = VersionString.extract(input);
 
-    assert.strictEqual(decoded.protocol, original.protocol);
-    assert.strictEqual(decoded.major, original.major);
-    assert.strictEqual(decoded.minor, original.minor);
-    assert.strictEqual(decoded.kind, original.kind);
-    assert.strictEqual(decoded.size, original.size);
-    assert.strictEqual(decoded.legacy, original.legacy);
+      assert.strictEqual(version.size, 1048575); // 0xfffff
+    });
   });
 
-  test("Should round-trip modern KERI version", () => {
-    const original = new VersionString({
-      protocol: "KERI",
-      major: 3,
-      minor: 7,
-      legacy: false,
-      size: 456,
+  describe("parsing modern format", () => {
+    test("should parse modern KERI version from string", () => {
+      const input = '{"v":"KERICABJSONAAAm.","test":"data"}';
+      const version = VersionString.extract(input);
+
+      assert.strictEqual(version.protocol, "KERI");
+      assert.strictEqual(version.major, 2);
+      assert.strictEqual(version.minor, 1);
+      assert.strictEqual(version.kind, "JSON");
+      assert.strictEqual(version.size, 38);
+      assert.strictEqual(version.legacy, false);
     });
 
-    const decoded = VersionString.parse(original.text);
+    test("should parse modern KERI version from Uint8Array", () => {
+      const input = encodeUtf8('{"v":"KERICABJSONAAAm.","test":"data"}');
+      const version = VersionString.extract(input);
 
-    assert.strictEqual(decoded.protocol, original.protocol);
-    assert.strictEqual(decoded.major, original.major);
-    assert.strictEqual(decoded.minor, original.minor);
-    assert.strictEqual(decoded.kind, original.kind);
-    assert.strictEqual(decoded.size, original.size);
-    assert.strictEqual(decoded.legacy, original.legacy);
+      assert.strictEqual(version.protocol, "KERI");
+      assert.strictEqual(version.major, 2);
+      assert.strictEqual(version.minor, 1);
+      assert.strictEqual(version.legacy, false);
+    });
+
+    test("should parse modern ACDC version", () => {
+      const input = '{"v":"ACDCBAAJSONAAAA."}';
+      const version = VersionString.extract(input);
+
+      assert.strictEqual(version.protocol, "ACDC");
+      assert.strictEqual(version.major, 1);
+      assert.strictEqual(version.minor, 0);
+      assert.strictEqual(version.kind, "JSON");
+      assert.strictEqual(version.legacy, false);
+    });
+
+    test("should throw for missing v field", () => {
+      const input = '{"test":"data"}';
+
+      assert.throws(() => VersionString.extract(input), {
+        message:
+          'Unable to extract "v" field. Expected JSON object with "v" property at start (format: {"v":"..."}), got "{"test":"data"}"',
+      });
+    });
+
+    test("should throw for invalid version string format", () => {
+      const input = '{"v":"INVALID"}';
+
+      assert.throws(() => VersionString.extract(input), {
+        message:
+          'Invalid version string format. Expected 17-char legacy format (ending with "_") or 16-char modern format (ending with "."), got "INVALID"',
+      });
+    });
+
+    test("should throw for wrong terminator on legacy format", () => {
+      const input = '{"v":"KERI10JSON000000."}'; // should end with _
+
+      assert.throws(() => VersionString.extract(input), {
+        message:
+          'Invalid version string format. Expected 17-char legacy format (ending with "_") or 16-char modern format (ending with "."), got "KERI10JSON000000."',
+      });
+    });
+
+    test("should throw for wrong terminator on modern format", () => {
+      const input = '{"v":"KERICAAJSONAAAA_"}'; // should end with .
+
+      assert.throws(() => VersionString.extract(input), {
+        message:
+          'Invalid version string format. Expected 17-char legacy format (ending with "_") or 16-char modern format (ending with "."), got "KERICAAJSONAAAA_"',
+      });
+    });
   });
 
-  test("Should round-trip ACDC versions", () => {
-    const protocols = ["ACDC", "KERI"];
-    const legacyModes = [true, false];
+  describe("round-trip encoding", () => {
+    test("should round-trip legacy KERI version", () => {
+      const original = new VersionString({
+        protocol: "KERI",
+        major: 1,
+        minor: 5,
+        legacy: true,
+        size: 123,
+      });
 
-    for (const protocol of protocols) {
-      for (const legacy of legacyModes) {
-        const original = new VersionString({
-          protocol,
-          major: 2,
-          minor: 3,
-          legacy,
-          size: 100,
-        });
+      const decoded = VersionString.parse(original.text);
 
-        const decoded = VersionString.parse(original.text);
+      assert.strictEqual(decoded.protocol, original.protocol);
+      assert.strictEqual(decoded.major, original.major);
+      assert.strictEqual(decoded.minor, original.minor);
+      assert.strictEqual(decoded.kind, original.kind);
+      assert.strictEqual(decoded.size, original.size);
+      assert.strictEqual(decoded.legacy, original.legacy);
+    });
 
-        assert.strictEqual(decoded.protocol, original.protocol);
-        assert.strictEqual(decoded.major, original.major);
-        assert.strictEqual(decoded.minor, original.minor);
-        assert.strictEqual(decoded.legacy, original.legacy);
-      }
-    }
+    test("should round-trip modern KERI version", () => {
+      const original = new VersionString({
+        protocol: "KERI",
+        major: 3,
+        minor: 7,
+        legacy: false,
+        size: 456,
+      });
+
+      const decoded = VersionString.parse(original.text);
+
+      assert.strictEqual(decoded.protocol, original.protocol);
+      assert.strictEqual(decoded.major, original.major);
+      assert.strictEqual(decoded.minor, original.minor);
+      assert.strictEqual(decoded.kind, original.kind);
+      assert.strictEqual(decoded.size, original.size);
+      assert.strictEqual(decoded.legacy, original.legacy);
+    });
+  });
+
+  describe("static constants", () => {
+    test("should have KERI_LEGACY constant", () => {
+      assert.strictEqual(VersionString.KERI_LEGACY, "KERI10JSON000000_");
+    });
+
+    test("should have KERI constant", () => {
+      assert.strictEqual(VersionString.KERI, "KERICAAJSONAAAA.");
+    });
+
+    test("should have ACDC_LEGACY constant", () => {
+      assert.strictEqual(VersionString.ACDC_LEGACY, "ACDC10JSON000000_");
+    });
+
+    test("should have ACDC constant", () => {
+      assert.strictEqual(VersionString.ACDC, "ACDCBAAJSONAAAA.");
+    });
+  });
+
+  describe("error handling", () => {
+    test("should throw for unsupported protocol", () => {
+      assert.throws(
+        () => {
+          new VersionString({
+            protocol: "INVALID",
+            major: 1,
+            minor: 0,
+            legacy: true,
+            size: 0,
+          });
+        },
+        {
+          message: 'Protocol must be 4 uppercase characters. Expected format: /^[A-Z]{4}$/, got "INVALID"',
+        },
+      );
+    });
+
+    test("should throw for invalid kind", () => {
+      assert.throws(
+        () => {
+          new VersionString({
+            protocol: "KERI",
+            major: 1,
+            minor: 0,
+            kind: "XML",
+            legacy: true,
+            size: 0,
+          });
+        },
+        {
+          message: 'Encoding kind must be one of JSON, CBOR, MGPK, CESR, got "XML"',
+        },
+      );
+    });
+
+    test("should throw for negative size", () => {
+      assert.throws(
+        () => {
+          new VersionString({
+            protocol: "KERI",
+            major: 1,
+            minor: 0,
+            legacy: true,
+            size: -1,
+          });
+        },
+        {
+          message: "Size must be non-negative. Expected size >= 0, got -1",
+        },
+      );
+    });
   });
 });

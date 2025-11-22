@@ -4,7 +4,6 @@ import { type Attachments } from "./attachments.ts";
 import { CountCode_10, CountCode_20 } from "./codes.ts";
 import { encodeUtf8 } from "./encoding-utf8.ts";
 import { decodeGenus, readCounter } from "./encoding.ts";
-import { MessageBody } from "./message-body.ts";
 import { Message } from "./message.ts";
 
 export type ParseInput = Uint8Array | string | AsyncIterable<Uint8Array>;
@@ -45,7 +44,7 @@ export interface ParseOptions {
  * @returns An async iterable of {@link Message} objects
  */
 export async function* parse(input: ParseInput, options?: ParseOptions): AsyncIterableIterator<Message> {
-  let body: MessageBody | null = null;
+  let message: Message | null = null;
   let attachments: Attachments | null = null;
   let buffer: Uint8Array = new Uint8Array(0);
 
@@ -63,25 +62,25 @@ export async function* parse(input: ParseInput, options?: ParseOptions): AsyncIt
       const start = String.fromCharCode(buffer[0]);
 
       if (start === "{") {
-        if (body) {
-          yield new Message(body.payload, attachments ?? undefined);
-          body = null;
+        if (message) {
+          yield new Message(message.body, attachments ?? undefined);
+          message = null;
           attachments = null;
         }
 
-        body = MessageBody.parse(buffer);
+        message = Message.parse(buffer);
 
-        if (!body) {
+        if (!message) {
           break;
         }
 
-        if (body.version.legacy === false) {
+        if (message.version.legacy === false) {
           // Update version for group parsing if the JSON body
           // is encoded using the new Version String format
           version = 2;
         }
 
-        buffer = buffer.slice(body.raw.length);
+        buffer = buffer.slice(message.raw.length);
       } else if (start === "-") {
         const counter = readCounter(buffer);
 
@@ -125,8 +124,8 @@ export async function* parse(input: ParseInput, options?: ParseOptions): AsyncIt
     }
   }
 
-  if (body) {
-    yield new Message(body.payload, attachments ?? undefined);
+  if (message) {
+    yield new Message(message.body, attachments ?? undefined);
   }
 
   if (buffer.length > 0) {

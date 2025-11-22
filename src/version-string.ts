@@ -2,12 +2,22 @@ import { decodeBase64Int, encodeBase64Int } from "./encoding-base64.ts";
 import { decodeUtf8 } from "./encoding-utf8.ts";
 
 const REGEX_VERSION_STRING_PROTOCOL = /^[A-Z]{4}$/;
-const REGEX_VERSION_STRING_KIND = /^[A-Z]{4}$/;
 const REGEX_VERSION_JSON = /^\{"v":"(.*?)".*$/;
+
+const Kind = {
+  JSON: "JSON",
+  CBOR: "CBOR",
+  MSGPACK: "MGPK",
+  CESR: "CESR",
+} as const;
+type Kind = (typeof Kind)[keyof typeof Kind];
+const KIND_VALUES = new Set<Kind>(Object.values(Kind));
 
 function encodeHexInt(value: number, length: number) {
   if (value >= 16 ** length) {
-    throw new Error(`value ${value} too big for hex length ${length}`);
+    throw new Error(
+      `Value exceeds maximum for hex encoding. Expected value < ${16 ** length} for length ${length}, got ${value}`,
+    );
   }
 
   return value.toString(16).padStart(length, "0");
@@ -32,16 +42,21 @@ export class VersionString {
 
   constructor(init: VersionStringInit) {
     if (!REGEX_VERSION_STRING_PROTOCOL.test(init.protocol)) {
-      throw new Error("Protocol must be 4 uppercase characters");
+      throw new Error(`Protocol must be 4 uppercase characters. Expected format: /^[A-Z]{4}$/, got "${init.protocol}"`);
     }
 
     const kind = init.kind ?? "JSON";
-    if (!REGEX_VERSION_STRING_KIND.test(kind)) {
-      throw new Error("Kind must be 4 uppercase characters");
+    if (!KIND_VALUES.has(kind as Kind)) {
+      throw new Error(`Encoding kind must be one of ${Array.from(KIND_VALUES).join(", ")}, got "${kind}"`);
     }
 
+    // TODO: Remove when other kinds are supported
     if (kind !== "JSON") {
-      throw new Error("Only JSON format is supported for now");
+      throw new Error(`Unsupported encoding kind "${kind}", only JSON format is supported for now`);
+    }
+
+    if (init.size !== undefined && init.size < 0) {
+      throw new Error(`Size must be non-negative. Expected size >= 0, got ${init.size}`);
     }
 
     this.protocol = init.protocol;
@@ -67,7 +82,10 @@ export class VersionString {
 
     const match = input.match(REGEX_VERSION_JSON);
     if (!match) {
-      throw new Error(`Unable to extract "v" field from ${input}`);
+      const preview = typeof input === "string" ? input.slice(0, 50) : String(input).slice(0, 50);
+      throw new Error(
+        `Unable to extract "v" field. Expected JSON object with "v" property at start (format: {"v":"..."}), got "${preview}${input.length > 50 ? "..." : ""}"`,
+      );
     }
 
     return VersionString.parse(match[1]);
@@ -114,7 +132,9 @@ export class VersionString {
       });
     }
 
-    throw new Error(`Invalid version string ${input}`);
+    throw new Error(
+      `Invalid version string format. Expected 17-char legacy format (ending with "_") or 16-char modern format (ending with "."), got "${input}"`,
+    );
   }
 
   static encode(init: VersionStringInit): string {
