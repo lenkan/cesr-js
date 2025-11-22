@@ -11,7 +11,7 @@ import {
   encodeMatter,
   type FrameData,
   IndexTable,
-} from "./encoding.ts";
+} from "../src/encoding.ts";
 import path from "node:path";
 
 type TestEntry = (typeof vectors)[number];
