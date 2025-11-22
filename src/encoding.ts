@@ -36,7 +36,6 @@ export interface CounterInit {
 }
 
 export interface Counter extends CounterInit {
-  type: "counter";
   text: string;
 }
 
@@ -58,7 +57,6 @@ export interface IndexerInit {
 }
 
 export interface Indexer extends IndexerInit {
-  type: "indexer";
   text: string;
 }
 
@@ -68,7 +66,6 @@ export interface MatterInit {
 }
 
 export interface Matter extends MatterInit {
-  type: "matter";
   code: string;
   text: string;
 }
@@ -346,7 +343,6 @@ export function readMatter(input: Uint8Array): ReadResult<Matter> {
 
   return {
     frame: {
-      type: "matter",
       code: result.frame.code,
       raw: result.frame.raw,
       text: result.frame.text,
@@ -366,7 +362,6 @@ export function readIndexer(input: Uint8Array): ReadResult<Indexer> {
   }
   return {
     frame: {
-      type: "indexer",
       code: result.frame.code,
       raw: result.frame.raw,
       text: result.frame.text,
@@ -392,7 +387,6 @@ export function readCounter(input: Uint8Array): ReadResult<Counter> {
 
   return {
     frame: {
-      type: "counter",
       code: result.frame.code.replace(/^--/, "-"),
       count: result.frame.count,
       text: result.frame.text,
