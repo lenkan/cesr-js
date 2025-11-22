@@ -77,7 +77,8 @@ function padNumber(num: number, length: number) {
 }
 
 export function encodeMatter(raw: MatterInit): string {
-  return decodeUtf8(encode(raw, MatterTable));
+  const entry = MatterTable.lookup(raw.code);
+  return decodeUtf8(encode(raw, entry));
 }
 
 export function encodeMap(data: Record<string, unknown>): string {
@@ -297,7 +298,8 @@ export function encodeCounter(raw: CounterInit): string {
 }
 
 export function encodeIndexer(frame: IndexerInit): string {
-  return decodeUtf8(encode(frame, IndexTable));
+  const entry = IndexTable.lookup(frame.code);
+  return decodeUtf8(encode(frame, entry));
 }
 
 export function decodeGenus(input: string): Genus {
@@ -472,20 +474,7 @@ export function encodeBinary(frame: FrameData, table: CodeTable = MatterTable): 
   return result;
 }
 
-function isCodeSize(obj: unknown): obj is CodeTableEntry {
-  if (typeof obj !== "object" || obj === null) {
-    return false;
-  }
-
-  const size = obj as CodeTableEntry;
-  return typeof size.hs === "number";
-}
-
-function encode(frame: FrameData, size: CodeTable | CodeTableEntry = MatterTable): Uint8Array {
-  if (!isCodeSize(size)) {
-    return encode(frame, size.lookup(frame.code));
-  }
-
+function encode(frame: FrameData, size: CodeTableEntry): Uint8Array {
   if (frame.code.length !== size.hs) {
     throw new Error(`Frame code ${frame.code} length ${frame.code.length} does not match expected size ${size.hs}`);
   }
