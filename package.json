@@ -26,6 +26,7 @@
     "build": "tsc -p tsconfig.build.json",
     "dev": "tsc -p tsconfig.build.json --watch",
     "test": "node scripts/run-test.ts",
+    "test:coverage": "node --experimental-test-coverage --test --test-reporter=lcov --test-reporter-destination=.coverage.lcov src/**/*.test.ts",
     "test:vector": "node --test 'test-vectors/**/*.test.ts'",
     "test:example": "./test_examples.sh",
     "lint": "eslint",

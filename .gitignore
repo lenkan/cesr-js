@@ -3,3 +3,4 @@ dist/
 docs/
 .venv
 .vscode
+.coverage.lcov

@@ -3,6 +3,7 @@
 [![NPM Version](https://img.shields.io/npm/v/cesr.svg?style=flat)](https://www.npmjs.com/package/cesr)
 [![NPM License](https://img.shields.io/npm/l/cesr.svg?style=flat)](https://github.com/lenkan/cesr-js/blob/main/LICENSE)
 [![CI](https://github.com/lenkan/cesr-js/actions/workflows/ci.yaml/badge.svg)](https://github.com/lenkan/cesr-js/actions/workflows/ci.yaml)
+[![codecov](https://codecov.io/gh/lenkan/cesr-js/branch/main/graph/badge.svg)](https://codecov.io/gh/lenkan/cesr-js)
 [![Documentation](https://img.shields.io/badge/documentation-green)](https://lenkan.dev/cesr-js)
 
 A JavaScript/TypeScript implementation of [Composable Event Stream Representation (CESR)](https://github.com/trustoverip/tswg-cesr-specification) for parsing and processing cryptographic event streams.
