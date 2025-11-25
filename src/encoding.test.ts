@@ -119,6 +119,12 @@ describe(basename(import.meta.url), () => {
       assert.strictEqual(decodeString(expected), value);
     });
 
+    test("should encode/decode large string", () => {
+      const value = "a".repeat(100000);
+
+      assert.match(encodeString(value), /^7AAA/);
+    });
+
     test("should encode/decode 'Foobar'", () => {
       const value = "Foobar";
       const expected = "5AACAAFoobar";

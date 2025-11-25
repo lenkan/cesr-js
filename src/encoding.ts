@@ -169,36 +169,72 @@ export function encodeTag(tag: string): string {
 
 export function encodeString(txt: string): string {
   if (REGEX_BASE64_CHARACTER.test(txt) && !txt.startsWith("A")) {
-    const textsize = txt.length % 4;
-    const padsize = (4 - textsize) % 4;
-    const leadsize = (3 - textsize) % 3;
-    const raw = decodeBase64Url("A".repeat(padsize) + txt).slice(leadsize);
+    const raw = encodeBase64Raw(txt);
 
-    switch (leadsize) {
+    return encodeVariableSize(MatterCode.StrB64_L0, raw);
+  }
+
+  const raw = encodeUtf8(txt);
+  return encodeVariableSize(MatterCode.Bytes_L0, raw);
+}
+
+function encodeBase64Raw(txt: string) {
+  if (!REGEX_BASE64_CHARACTER.test(txt)) {
+    throw new Error(`Invalid base64url string: ${txt}`);
+  }
+
+  if (txt.startsWith("A")) {
+    throw new Error(`Base64url string must not start with 'A'`);
+  }
+
+  const textsize = txt.length % 4;
+  const padsize = (4 - textsize) % 4;
+  const leadsize = (3 - textsize) % 3;
+  const raw = decodeBase64Url("A".repeat(padsize) + txt).slice(leadsize);
+  return raw;
+}
+
+/**
+ * Resolves the lead character(s) for variable size encoding
+ *
+ * For example, if one lead byte is required, the lead character will be "5" or "8AA"
+ * depending on the size of the raw data
+ *
+ * @param raw The raw data to encode
+ * @returns The lead character(s) for the variable size encoding
+ */
+function resolveLeadCharacter(raw: Uint8Array): string {
+  const leadSize = (3 - (raw.byteLength % 3)) % 3;
+
+  if (raw.length > 64 ** 2) {
+    switch (leadSize) {
       case 0:
-        return encodeMatter({ code: MatterCode.StrB64_L0, raw });
+        return "7AA";
       case 1:
-        return encodeMatter({ code: MatterCode.StrB64_L1, raw });
+        return "8AA";
       case 2:
-        return encodeMatter({ code: MatterCode.StrB64_L2, raw });
+        return "9AA";
       default:
         throw new Error(`Could not determine lead size`);
     }
   }
 
-  const raw = encodeUtf8(txt);
-  const leadSize = (3 - (raw.byteLength % 3)) % 3;
-
   switch (leadSize) {
     case 0:
-      return encodeMatter({ code: MatterCode.Bytes_L0, raw });
+      return "4";
     case 1:
-      return encodeMatter({ code: MatterCode.Bytes_L1, raw });
+      return "5";
     case 2:
-      return encodeMatter({ code: MatterCode.Bytes_L2, raw });
+      return "6";
     default:
       throw new Error(`Could not determine lead size`);
   }
+}
+
+function encodeVariableSize(code: string, raw: Uint8Array): string {
+  const type = code.charAt(code.length - 1);
+  const lead = resolveLeadCharacter(raw);
+  return encodeMatter({ code: `${lead}${type}`, raw });
 }
 
 export function decodeString(input: string | Uint8Array): string {
@@ -239,22 +275,8 @@ export function encodeInt(value: number): string {
 }
 
 export function encodeNumber(value: number): string {
-  const txt = value.toString().replace(".", "p");
-  const textsize = txt.length % 4;
-  const padsize = (4 - textsize) % 4;
-  const leadsize = (3 - textsize) % 3;
-  const raw = decodeBase64Url("A".repeat(padsize) + txt).slice(leadsize);
-
-  switch (leadsize) {
-    case 0:
-      return encodeMatter({ code: MatterCode.Decimal_L0, raw });
-    case 1:
-      return encodeMatter({ code: MatterCode.Decimal_L1, raw });
-    case 2:
-      return encodeMatter({ code: MatterCode.Decimal_L2, raw });
-    default:
-      throw new Error(`Could not determine lead size for decimal ${value}`);
-  }
+  const raw = encodeBase64Raw(value.toString().replace(".", "p"));
+  return encodeVariableSize(MatterCode.Decimal_L0, raw);
 }
 
 export function encodeGenus(genus: GenusInit): string {
@@ -424,7 +446,7 @@ export function decodeIndexer(input: string | Uint8Array): Indexer {
   return result.frame;
 }
 
-function read(input: Uint8Array, entry: CodeTableEntry): { n: number; frame?: Required<FrameData> } {
+export function read(input: Uint8Array, entry: CodeTableEntry): { n: number; frame?: Required<FrameData> } {
   const ss = entry.ss ?? 0;
   const cs = entry.hs + ss;
   if (input.length < cs) {
@@ -474,7 +496,7 @@ export function encodeBinary(frame: FrameData, table: CodeTable = MatterTable): 
   return result;
 }
 
-function encode(frame: FrameData, size: CodeTableEntry): Uint8Array {
+export function encode(frame: FrameData, size: CodeTableEntry): Uint8Array {
   if (frame.code.length !== size.hs) {
     throw new Error(`Frame code ${frame.code} length ${frame.code.length} does not match expected size ${size.hs}`);
   }
