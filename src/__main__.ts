@@ -1,7 +1,10 @@
-export { parse } from "./parse.ts";
-export type { ParseInput, ParseOptions } from "./parse.ts";
-export type { FrameData, Counter, Indexer, Matter } from "./encoding.ts";
+export { parse, type ParseInput, type ParseOptions } from "./parse.ts";
 export { Message, type MessageBody } from "./message.ts";
-export * from "./attachments.ts";
-export { VersionString } from "./version-string.ts";
-export type { VersionStringInit } from "./version-string.ts";
+export { Attachments, type AttachmentsInit } from "./attachments.ts";
+export { VersionString, type VersionStringInit } from "./version-string.ts";
+export { Frame, type FrameInit, type ReadResult } from "./frame.ts";
+export { Indexer, type IndexerInit } from "./indexer.ts";
+export { Counter, type CounterInit } from "./counter.ts";
+export { Matter, type MatterInit } from "./matter.ts";
+export { CodeTable, type CodeTableEntry } from "./code-table.ts";
+export { Genus, type GenusInit } from "./genus.ts";

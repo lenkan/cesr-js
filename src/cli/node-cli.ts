@@ -35,6 +35,8 @@ try {
     read: resolveInputStream,
   });
 } catch (error) {
-  console.error(error.message);
+  if (error instanceof Error) {
+    console.error(error.message);
+  }
   process.exit(1);
 }

@@ -5,17 +5,9 @@ import {
   type PathedMaterialCouple,
 } from "./attachments.ts";
 import { CountCode_10, CountCode_20 } from "./codes.ts";
-import {
-  type Counter,
-  decodeDate,
-  decodeHexNumber,
-  decodeString,
-  type Indexer,
-  type Matter,
-  readCounter,
-  readIndexer,
-  readMatter,
-} from "./encoding.ts";
+import { Counter } from "./counter.ts";
+import { Indexer } from "./indexer.ts";
+import { Matter } from "./matter.ts";
 
 export interface AttachmentsReaderOptions {
   version?: number;
@@ -50,18 +42,17 @@ export class AttachmentsReader {
   }
 
   #readMatter(): Matter {
-    const result = readMatter(this.#buffer);
-
+    const result = Matter.peek(this.#buffer, Matter.Table.lookup(this.#buffer));
     if (!result.frame) {
       throw new Error("Failed to read matter, not enough data");
     }
 
     this.#readBytes(result.n);
-    return result.frame;
+    return Matter.from(result.frame);
   }
 
   #readIndexer(): Indexer {
-    const result = readIndexer(this.#buffer);
+    const result = Indexer.peek(this.#buffer);
 
     if (!result.frame) {
       throw new Error("Failed to read indexer, not enough data");
@@ -71,18 +62,8 @@ export class AttachmentsReader {
     return result.frame;
   }
 
-  #peekCounter(): Counter | null {
-    const result = readCounter(this.#buffer);
-
-    if (!result.frame) {
-      return null;
-    }
-
-    return result.frame;
-  }
-
   #readCounter(): Counter {
-    const result = readCounter(this.#buffer);
+    const result = Counter.peek(this.#buffer);
 
     if (!result.frame) {
       throw new Error("Failed to read counter, not enough data");
@@ -95,23 +76,27 @@ export class AttachmentsReader {
   /**
    * Read count couples (pairs) of matter primitives
    */
-  *#readCouples(count: number): IterableIterator<[string, string]> {
-    for (let i = 0; i < count; i++) {
-      const couple0 = this.#readMatter();
-      const couple1 = this.#readMatter();
-      yield [couple0.text, couple1.text];
+  *#readCouples(counter: Counter): IterableIterator<[Matter, Matter]> {
+    for (let i = 0; i < counter.count; i++) {
+      try {
+        const couple0 = this.#readMatter();
+        const couple1 = this.#readMatter();
+        yield [couple0, couple1];
+      } catch (error) {
+        throw new Error(`Failed to read counter ${counter.code} at index ${i} of ${counter.count}: ${error}`);
+      }
     }
   }
 
   /**
    * Read count triples of matter primitives
    */
-  *#readTriples(count: number): IterableIterator<[string, string, string]> {
+  *#readTriples(count: number): IterableIterator<[Matter, Matter, Matter]> {
     for (let i = 0; i < count; i++) {
       const triple0 = this.#readMatter();
       const triple1 = this.#readMatter();
       const triple2 = this.#readMatter();
-      yield [triple0.text, triple1.text, triple2.text];
+      yield [triple0, triple1, triple2];
     }
   }
 
@@ -119,10 +104,10 @@ export class AttachmentsReader {
    * Read count indexed signatures
    * Behavior differs based on version (v1 counts signatures, v2 counts quadlets)
    */
-  *#readIndexedSignatures(count: number): IterableIterator<string> {
+  *#readIndexedSignatures(count: number): IterableIterator<Indexer> {
     if (this.#version === 1) {
       for (let n = 0; n < count; n++) {
-        yield this.#readIndexer().text;
+        yield this.#readIndexer();
       }
       return;
     }
@@ -130,8 +115,8 @@ export class AttachmentsReader {
     let counted = 0;
     while (counted < count) {
       const frame = this.#readIndexer();
-      yield frame.text;
-      counted += frame.text.length / 4;
+      yield frame;
+      counted += frame.text().length / 4;
     }
   }
 
@@ -140,15 +125,15 @@ export class AttachmentsReader {
       const pre = this.#readMatter();
       const group = this.#readCounter();
 
-      if (group.code !== CountCode_10.ControllerIdxSigs) {
+      if (group.type !== CountCode_10.ControllerIdxSigs) {
         throw new Error(`Expected ControllerIdxSigs count code, got ${group.code}`);
       }
 
       const sigs = Array.from(this.#readIndexedSignatures(group.count));
 
       yield {
-        prefix: pre.text,
-        ControllerIdxSigs: sigs,
+        prefix: pre.text(),
+        ControllerIdxSigs: sigs.map((sig) => sig.text()),
       };
     }
   }
@@ -160,17 +145,17 @@ export class AttachmentsReader {
       const dig = this.#readMatter();
       const group = this.#readCounter();
 
-      if (group.code !== CountCode_10.ControllerIdxSigs) {
+      if (group.type !== CountCode_10.ControllerIdxSigs) {
         throw new Error(`Expected ControllerIdxSigs count code, got ${group.code}`);
       }
 
       const sigs = Array.from(this.#readIndexedSignatures(group.count));
 
       yield {
-        prefix: pre.text,
-        snu: decodeHexNumber(snu.text),
-        digest: dig.text,
-        ControllerIdxSigs: sigs,
+        prefix: pre.text(),
+        snu: snu.decode.hex(),
+        digest: dig.text(),
+        ControllerIdxSigs: sigs.map((sig) => sig.text()),
       };
     }
   }
@@ -178,7 +163,7 @@ export class AttachmentsReader {
   #readPathedAttachments(size: number): PathedMaterialCouple {
     const chunk = this.#readBytes(size * 4);
     const reader = new AttachmentsReader(chunk, { version: this.#version });
-    const path = decodeString(reader.#readMatter().text);
+    const path = reader.#readMatter().decode.string();
     const pathAttachments = reader.readAttachments();
 
     if (!pathAttachments) {
@@ -196,30 +181,32 @@ export class AttachmentsReader {
       return null;
     }
 
-    const counter = this.#peekCounter();
+    const result = Counter.peek(this.#buffer);
 
-    if (counter === null) {
+    if (!result.frame) {
       return null;
     }
 
     let end = 0;
     let grouped = false;
 
-    if (this.#version === 1 && counter.code === CountCode_10.AttachmentGroup) {
-      if (this.#buffer.length < counter.count * 4) {
+    if (this.#version === 1 && result.frame.type === CountCode_10.AttachmentGroup) {
+      const requiredLength = result.frame.count * 4 + result.frame.n * 4;
+      if (this.#buffer.length < requiredLength) {
         return null;
       }
 
-      this.#readBytes(counter.text.length);
-      end = this.#buffer.length - counter.count * 4;
+      this.#readBytes(result.n);
+      end = this.#buffer.length - result.frame.count * 4;
       grouped = true;
-    } else if (this.#version === 2 && counter.code === CountCode_20.AttachmentGroup) {
-      if (this.#buffer.length < counter.count * 4) {
+    } else if (this.#version === 2 && result.frame.type === CountCode_20.AttachmentGroup) {
+      const requiredLength = result.frame.count * 4 + result.frame.n * 4;
+      if (this.#buffer.length < requiredLength) {
         return null;
       }
 
-      this.#readBytes(counter.text.length);
-      end = this.#buffer.length - counter.count * 4;
+      this.#readBytes(result.n);
+      end = this.#buffer.length - result.frame.count * 4;
       grouped = true;
     }
 
@@ -230,44 +217,50 @@ export class AttachmentsReader {
 
       switch (this.#version) {
         case 1:
-          switch (counter.code) {
-            case CountCode_10.ControllerIdxSigs:
-              attachments.ControllerIdxSigs.push(...this.#readIndexedSignatures(counter.count));
+          switch (counter.type) {
+            case CountCode_10.ControllerIdxSigs: {
+              for (const sig of this.#readIndexedSignatures(counter.count)) {
+                attachments.ControllerIdxSigs.push(sig.text());
+              }
               break;
-            case CountCode_10.WitnessIdxSigs:
-              attachments.WitnessIdxSigs.push(...this.#readIndexedSignatures(counter.count));
+            }
+            case CountCode_10.WitnessIdxSigs: {
+              for (const sig of this.#readIndexedSignatures(counter.count)) {
+                attachments.WitnessIdxSigs.push(sig.text());
+              }
               break;
+            }
             case CountCode_10.FirstSeenReplayCouples: {
-              for (const [fnu, dt] of this.#readCouples(counter.count)) {
+              for (const [fnu, dt] of this.#readCouples(counter)) {
                 attachments.FirstSeenReplayCouples.push({
-                  fnu: decodeHexNumber(fnu),
-                  dt: decodeDate(dt),
+                  fnu: fnu.decode.hex(),
+                  dt: dt.decode.date(),
                 });
               }
               break;
             }
             case CountCode_10.SealSourceCouples:
-              for (const [snu, dig] of this.#readCouples(counter.count)) {
+              for (const [snu, dig] of this.#readCouples(counter)) {
                 attachments.SealSourceCouples.push({
-                  snu: decodeHexNumber(snu),
-                  digest: dig,
+                  snu: snu.decode.hex(),
+                  digest: dig.text(),
                 });
               }
               break;
             case CountCode_10.SealSourceTriples:
               for (const [pre, snu, dig] of this.#readTriples(counter.count)) {
                 attachments.SealSourceTriples.push({
-                  prefix: pre,
-                  snu: decodeHexNumber(snu),
-                  digest: dig,
+                  prefix: pre.text(),
+                  snu: snu.decode.hex(),
+                  digest: dig.text(),
                 });
               }
               break;
             case CountCode_10.NonTransReceiptCouples:
-              for (const [pre, sig] of this.#readCouples(counter.count)) {
+              for (const [pre, sig] of this.#readCouples(counter)) {
                 attachments.NonTransReceiptCouples.push({
-                  prefix: pre,
-                  sig,
+                  prefix: pre.text(),
+                  sig: sig.text(),
                 });
               }
               break;
@@ -293,13 +286,20 @@ export class AttachmentsReader {
           }
           break;
         case 2:
-          switch (counter.code) {
-            case CountCode_20.ControllerIdxSigs:
-              attachments.ControllerIdxSigs.push(...this.#readIndexedSignatures(counter.count));
+          switch (counter.type) {
+            case CountCode_20.ControllerIdxSigs: {
+              for (const sig of this.#readIndexedSignatures(counter.count)) {
+                attachments.ControllerIdxSigs.push(sig.text());
+              }
               break;
-            case CountCode_20.WitnessIdxSigs:
-              attachments.WitnessIdxSigs.push(...this.#readIndexedSignatures(counter.count));
+            }
+
+            case CountCode_20.WitnessIdxSigs: {
+              for (const sig of this.#readIndexedSignatures(counter.count)) {
+                attachments.WitnessIdxSigs.push(sig.text());
+              }
               break;
+            }
             default:
               this.#readBytes(counter.count * 4);
               break;

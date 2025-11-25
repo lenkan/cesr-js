@@ -88,16 +88,16 @@ export async function execute(cli: CommandLineInterface) {
     if (app.options["--pretty"]) {
       console.dir(
         {
-          payload: message.body.payload,
-          attachments: message.attachments.frames(),
+          payload: message.body,
+          attachments: message.attachments.frames().map((frame) => frame.text()),
         },
         { depth: 100, colors: true },
       );
     } else {
       console.log(
         JSON.stringify({
-          payload: message.body.payload,
-          attachments: message.attachments.frames(),
+          payload: message.body,
+          attachments: message.attachments.frames().map((frame) => frame.text()),
         }),
       );
     }

@@ -2,8 +2,8 @@ import { basename } from "node:path";
 import { describe, test } from "node:test";
 import assert from "node:assert";
 import { Attachments } from "./attachments.ts";
-import { encodeHexNumber, encodeMatter } from "./encoding.ts";
 import { MatterCode } from "./codes.ts";
+import { Matter } from "./matter.ts";
 
 describe(basename(import.meta.url), () => {
   describe("serialization", () => {
@@ -17,7 +17,7 @@ describe(basename(import.meta.url), () => {
       });
 
       assert.deepStrictEqual(
-        attachments.toString(),
+        attachments.text(),
         [
           "-AAC",
           "AACo9sQ34vV5dvKDn9_XT7aqXjYrQUcIXsciy84D8LslsvJTYA5X0czckvo30fSgbleGeSYRjWoDuPIyizJpOPUP",
@@ -31,9 +31,9 @@ describe(basename(import.meta.url), () => {
         grouped: false,
         TransIdxSigGroups: [
           {
-            prefix: encodeMatter({ code: MatterCode.Blake3_256, raw: new Uint8Array(32) }),
+            prefix: Matter.create.blake3_256(new Uint8Array(32)).text(),
             snu: "3",
-            digest: encodeMatter({ code: MatterCode.Blake3_256, raw: new Uint8Array(32) }),
+            digest: Matter.create.blake3_256(new Uint8Array(32)).text(),
             ControllerIdxSigs: [
               "AACo9sQ34vV5dvKDn9_XT7aqXjYrQUcIXsciy84D8LslsvJTYA5X0czckvo30fSgbleGeSYRjWoDuPIyizJpOPUP",
               "ABCOpOupeb-jKCZ5geaN-qDAE0I-nNb5QWxN0UonZdpjluAQMLgWzSErlP8dE2MqzL_ScIl885AjgHN_FLSN3xgD",
@@ -43,12 +43,12 @@ describe(basename(import.meta.url), () => {
       });
 
       assert.deepStrictEqual(
-        attachments.toString(),
+        attachments.text(),
         [
           "-FAB",
-          encodeMatter({ code: MatterCode.Blake3_256, raw: new Uint8Array(32) }),
-          encodeHexNumber("3"),
-          encodeMatter({ code: MatterCode.Blake3_256, raw: new Uint8Array(32) }),
+          Matter.from(MatterCode.Blake3_256, new Uint8Array(32)).text(),
+          Matter.create.hex("3").text(),
+          Matter.from(MatterCode.Blake3_256, new Uint8Array(32)).text(),
           "-AAC",
           "AACo9sQ34vV5dvKDn9_XT7aqXjYrQUcIXsciy84D8LslsvJTYA5X0czckvo30fSgbleGeSYRjWoDuPIyizJpOPUP",
           "ABCOpOupeb-jKCZ5geaN-qDAE0I-nNb5QWxN0UonZdpjluAQMLgWzSErlP8dE2MqzL_ScIl885AjgHN_FLSN3xgD",
@@ -61,7 +61,7 @@ describe(basename(import.meta.url), () => {
         grouped: false,
         TransLastIdxSigGroups: [
           {
-            prefix: encodeMatter({ code: MatterCode.Blake3_256, raw: new Uint8Array(32) }),
+            prefix: Matter.from(MatterCode.Blake3_256, new Uint8Array(32)).text(),
             ControllerIdxSigs: [
               "AACo9sQ34vV5dvKDn9_XT7aqXjYrQUcIXsciy84D8LslsvJTYA5X0czckvo30fSgbleGeSYRjWoDuPIyizJpOPUP",
               "ABCOpOupeb-jKCZ5geaN-qDAE0I-nNb5QWxN0UonZdpjluAQMLgWzSErlP8dE2MqzL_ScIl885AjgHN_FLSN3xgD",
@@ -71,10 +71,10 @@ describe(basename(import.meta.url), () => {
       });
 
       assert.deepStrictEqual(
-        attachments.toString(),
+        attachments.text(),
         [
           "-HAB",
-          encodeMatter({ code: MatterCode.Blake3_256, raw: new Uint8Array(32) }),
+          Matter.create.blake3_256(new Uint8Array(32)).text(),
           "-AAC",
           "AACo9sQ34vV5dvKDn9_XT7aqXjYrQUcIXsciy84D8LslsvJTYA5X0czckvo30fSgbleGeSYRjWoDuPIyizJpOPUP",
           "ABCOpOupeb-jKCZ5geaN-qDAE0I-nNb5QWxN0UonZdpjluAQMLgWzSErlP8dE2MqzL_ScIl885AjgHN_FLSN3xgD",
@@ -92,7 +92,7 @@ describe(basename(import.meta.url), () => {
       });
 
       assert.deepStrictEqual(
-        attachments.toString(),
+        attachments.text(),
         [
           "-BAC",
           "AACo9sQ34vV5dvKDn9_XT7aqXjYrQUcIXsciy84D8LslsvJTYA5X0czckvo30fSgbleGeSYRjWoDuPIyizJpOPUP",
@@ -113,7 +113,7 @@ describe(basename(import.meta.url), () => {
       });
 
       assert.deepStrictEqual(
-        attachments.toString(),
+        attachments.text(),
         [
           "-CAB",
           "BEZbsFd5_-IEwhnvsaqKvPuTSm9sa9crR_ip7PU1BryR",
@@ -139,7 +139,7 @@ describe(basename(import.meta.url), () => {
       });
 
       assert.deepStrictEqual(
-        attachments.toString(),
+        attachments.text(),
         [
           "-LAa",
           "6AACAAA-a-bc",
@@ -175,7 +175,7 @@ describe(basename(import.meta.url), () => {
       });
 
       assert.deepStrictEqual(
-        attachments.toString(),
+        attachments.text(),
         [
           "-LAa",
           "6AACAAA-a-bc",

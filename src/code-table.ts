@@ -29,7 +29,7 @@ export interface CodeTableOptions {
   indexer?: CodeTableInit;
 }
 
-function resolveSize(init: CodeTableEntryInit): CodeTableEntry {
+export function resolveEntry(init: CodeTableEntryInit): CodeTableEntry {
   return {
     hs: init.hs,
     fs: init.fs ?? 0,
@@ -47,7 +47,7 @@ export class CodeTable {
   constructor(table: CodeTableInit) {
     for (const [key, value] of Object.entries(table)) {
       this.#hards[key.slice(0, 1)] = value.hs;
-      this.#table[key] = resolveSize(value);
+      this.#table[key] = resolveEntry(value);
     }
   }
 
@@ -58,6 +58,10 @@ export class CodeTable {
   lookup(input: string | Uint8Array): CodeTableEntry {
     if (typeof input !== "string") {
       input = decodeUtf8(input.slice(0, 4));
+    }
+
+    if (input.length === 0) {
+      throw new Error("Received empty input code for lookup");
     }
 
     const hs = this.#hards[input.slice(0, 1)];
@@ -81,11 +85,11 @@ export function lookupCounterSize(input: Uint8Array | string): CodeTableEntry {
     case "-":
       switch (input.charAt(1)) {
         case "-":
-          return resolveSize({ hs: 3, ss: 5, fs: 8 });
+          return resolveEntry({ hs: 3, ss: 5, fs: 8 });
         case "_":
-          return resolveSize({ hs: 5, ss: 3, fs: 8 });
+          return resolveEntry({ hs: 5, ss: 3, fs: 8 });
         default:
-          return resolveSize({ hs: 2, ss: 2, fs: 4 });
+          return resolveEntry({ hs: 2, ss: 2, fs: 4 });
       }
   }
 

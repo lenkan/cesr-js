@@ -6,14 +6,14 @@ import { readFile } from "node:fs/promises";
 import { parse } from "./parse.ts";
 import { decodeUtf8, encodeUtf8 } from "./encoding-utf8.ts";
 import { concat } from "./array-utils.ts";
-import { encodeGenus, encodeIndexer } from "./encoding.ts";
 import { Message } from "./message.ts";
-import { IndexCode } from "./codes.ts";
 import { VersionString } from "./version-string.ts";
+import { Indexer } from "./indexer.ts";
+import { Genus } from "./genus.ts";
 
 const [sig0, sig1] = [
-  encodeIndexer({ code: IndexCode.Ed25519_Sig, raw: crypto.getRandomValues(new Uint8Array(64)), index: 0 }),
-  encodeIndexer({ code: IndexCode.Ed25519_Sig, raw: crypto.getRandomValues(new Uint8Array(64)), index: 1 }),
+  Indexer.ed25519_sig(crypto.getRandomValues(new Uint8Array(64)), 0).text(),
+  Indexer.ed25519_sig(crypto.getRandomValues(new Uint8Array(64)), 1).text(),
 ];
 
 async function* chunk(filename: string, size = 100): AsyncIterable<Uint8Array> {
@@ -53,7 +53,7 @@ describe(basename(import.meta.url), () => {
     });
 
     test("should parse from Response", async () => {
-      const input = new Response(new Message({ v: VersionString.KERI_LEGACY, t: "icp" }).text);
+      const input = new Response(new Message({ v: VersionString.KERI_LEGACY, t: "icp" }).text());
       assert(input.body);
 
       const result = await collect(parse(input.body));
@@ -70,7 +70,8 @@ describe(basename(import.meta.url), () => {
 
     test("should parse message with attachments", async () => {
       const message = new Message({ v: VersionString.KERI_LEGACY, t: "icp" }, { ControllerIdxSigs: [sig0, sig1] });
-      const result = await collect(parse(message.encode()));
+      const input = encodeUtf8(message.text() + message.attachments.text());
+      const result = await collect(parse(input));
 
       assert.strictEqual(result.length, 1);
       assert.strictEqual(result[0].attachments.ControllerIdxSigs.length, 2);
@@ -79,7 +80,7 @@ describe(basename(import.meta.url), () => {
     test("should parse multiple messages in sequence", async () => {
       const msg1 = new Message({ v: VersionString.KERI_LEGACY, t: "icp", i: "prefix1" });
       const msg2 = new Message({ v: VersionString.KERI_LEGACY, t: "rot", i: "prefix2" });
-      const input = msg1.text + msg2.text;
+      const input = msg1.text() + msg2.text();
 
       const messages = await collect(parse(input));
 
@@ -103,7 +104,7 @@ describe(basename(import.meta.url), () => {
         },
       );
 
-      const messages = await collect(parse(message.encode()));
+      const messages = await collect(parse(message.text() + message.attachments.text()));
 
       assert.strictEqual(messages.length, 1);
       assert.strictEqual(messages[0].attachments.TransIdxSigGroups?.length, 1);
@@ -114,7 +115,7 @@ describe(basename(import.meta.url), () => {
   describe("version handling", () => {
     test("should detect version 1 from message body", async () => {
       const message = new Message({ v: VersionString.KERI_LEGACY, t: "icp" });
-      const messages = await collect(parse(message.encode()));
+      const messages = await collect(parse(message.text()));
 
       assert.strictEqual(messages.length, 1);
       assert.strictEqual(messages[0].version.major, 1);
@@ -123,7 +124,7 @@ describe(basename(import.meta.url), () => {
 
     test("should detect version 2 from genus counter", async () => {
       const input0 = await readFile("./fixtures/cesr_20.cesr");
-      const input = concat(encodeUtf8(encodeGenus({ genus: "AAA", major: 2, minor: 0 })), input0);
+      const input = concat(encodeUtf8(Genus.KERIACDC_20.text()), input0);
 
       const result = await collect(parse(input, { version: 1 }));
 
@@ -144,7 +145,7 @@ describe(basename(import.meta.url), () => {
   describe("streaming behavior", () => {
     test("should handle message split across multiple chunks", async () => {
       const message = new Message({ v: VersionString.KERI_LEGACY, t: "icp" }, { ControllerIdxSigs: [sig0, sig1] });
-      const full = encodeUtf8(message.encode());
+      const full = encodeUtf8(message.text() + message.attachments.text());
 
       // Split into multiple chunks
       async function* chunks() {
@@ -161,7 +162,7 @@ describe(basename(import.meta.url), () => {
 
     test("should buffer incomplete data", async () => {
       const message = new Message({ v: VersionString.KERI_LEGACY, t: "icp" });
-      const full = encodeUtf8(message.encode());
+      const full = encodeUtf8(message.text());
 
       async function* chunks() {
         yield full.slice(0, 30);
@@ -184,20 +185,20 @@ describe(basename(import.meta.url), () => {
   describe("incomplete data handling", () => {
     test("should throw for incomplete message body", async () => {
       const message = new Message({ v: VersionString.KERI_LEGACY, t: "icp" });
-      const input = message.text.slice(0, -10);
+      const input = message.text().slice(0, -10);
 
       await assert.rejects(async () => await collect(parse(input)), /Unexpected end of stream/);
     });
 
     test("should throw on incomplete stream with partial data", async () => {
       const message = new Message({ v: VersionString.KERI_LEGACY, t: "icp" });
-      const input = message.text.slice(0, -10);
+      const input = message.text().slice(0, -10);
 
       await assert.rejects(async () => await collect(parse(input)), /Unexpected end of stream/);
     });
 
     test("should throw on unfinished JSON without full version string", async () => {
-      const input = new Message({ v: VersionString.KERI_LEGACY, t: "icp" }).text.slice(0, 20);
+      const input = new Message({ v: VersionString.KERI_LEGACY, t: "icp" }).text().slice(0, 20);
       await assert.rejects(() => collect(parse(input)), new Error("Unexpected end of stream"));
     });
   });

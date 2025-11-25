@@ -77,7 +77,7 @@ export class Message<T extends MessageBody = MessageBody> {
     this.#attachments = new Attachments(attachments ?? {});
   }
 
-  get text(): string {
+  text(): string {
     return decodeUtf8(this.#raw);
   }
 
@@ -94,7 +94,7 @@ export class Message<T extends MessageBody = MessageBody> {
   }
 
   get body(): T {
-    return JSON.parse(decodeUtf8(this.#raw));
+    return JSON.parse(this.text());
   }
 
   get attachments(): Attachments {
@@ -103,10 +103,6 @@ export class Message<T extends MessageBody = MessageBody> {
 
   set attachments(value: AttachmentsInit) {
     this.#attachments = new Attachments(value);
-  }
-
-  encode(): string {
-    return decodeUtf8(this.#raw) + this.#attachments.toString();
   }
 
   /**
