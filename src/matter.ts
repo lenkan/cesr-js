@@ -111,9 +111,97 @@ export interface MatterInit {
   soft?: number;
 }
 
-export class Matter extends Frame implements MatterInit {
-  size: CodeTableEntry;
+const CryptoMatter = {
+  ed25519_seed: createRaw(MatterCode.Ed25519_Seed),
+  ed25519: createRaw(MatterCode.Ed25519),
+  ed25519N: createRaw(MatterCode.Ed25519N),
+  ed25519_sig: createRaw(MatterCode.Ed25519_Sig),
+  x25519: createRaw(MatterCode.X25519),
+  blake3_256: createRaw(MatterCode.Blake3_256),
+  blake2b_256: createRaw(MatterCode.Blake2b_256),
+  blake2s_256: createRaw(MatterCode.Blake2s_256),
+  sha3_256: createRaw(MatterCode.SHA3_256),
+  sha2_256: createRaw(MatterCode.SHA2_256),
+  ecdsa_256k1Seed: createRaw(MatterCode.ECDSA_256k1_Seed),
+  ed448_seed: createRaw(MatterCode.Ed448_Seed),
+  x448: createRaw(MatterCode.X448),
+  x25519_private: createRaw(MatterCode.X25519_Private),
+  x25519_cipher_Seed: createRaw(MatterCode.X25519_Cipher_Seed),
+};
 
+export type CryptoMatter = Readonly<typeof CryptoMatter>;
+
+const PrimitiveMatter = {
+  tag(input: string): Matter {
+    switch (input.length) {
+      case 1:
+        return new Matter({
+          code: Matter.Code.Tag1,
+          raw: new Uint8Array(0),
+          soft: decodeBase64Int(input.padStart(2, "_")),
+        });
+      case 2:
+        return new Matter({
+          code: Matter.Code.Tag2,
+          raw: new Uint8Array(0),
+          soft: decodeBase64Int(input),
+        });
+      default:
+        throw new Error(`Unsupported tag length: ${input.length} for tag "${input}"`);
+    }
+  },
+
+  string(input: string): Matter {
+    if (REGEX_BASE64_CHARACTER.test(input) && !input.startsWith("A")) {
+      const raw = encodeBase64Raw(input);
+      const code = resolveVariableSizeCode(Matter.Code.StrB64_L0, raw);
+      return new Matter({ code, raw });
+    }
+
+    const raw = encodeUtf8(input);
+    const code = resolveVariableSizeCode(Matter.Code.Bytes_L0, raw);
+    return new Matter({ code, raw });
+  },
+
+  decimal(input: number): Matter {
+    const raw = encodeBase64Raw(input.toString().replace(".", "p"));
+    const code = resolveVariableSizeCode(Matter.Code.Decimal_L0, raw);
+    return new Matter({ code, raw });
+  },
+
+  hex(input: string): Matter {
+    // TODO: Choose smaller/bigger size based on input
+    const entry = Matter.Table.lookup(Matter.Code.Salt_128);
+    const raw = encodeHexRaw(input, entry);
+    return new Matter({ code: Matter.Code.Salt_128, raw });
+  },
+
+  integer(input: number): Matter {
+    const raw = encodeBase64Raw(input.toString());
+    return new Matter({ code: Matter.Code.Short, raw });
+  },
+
+  date(date: Date): Matter {
+    if (date.toString() === "Invalid Date") {
+      throw new Error("Invalid date");
+    }
+
+    const YYYY = date.getFullYear();
+    const MM = padNumber(date.getUTCMonth() + 1, 2);
+    const dd = padNumber(date.getUTCDate(), 2);
+    const hh = padNumber(date.getUTCHours(), 2);
+    const mm = padNumber(date.getUTCMinutes(), 2);
+    const ss = padNumber(date.getUTCSeconds(), 2);
+    const ms = padNumber(date.getUTCMilliseconds(), 3);
+
+    const raw = decodeBase64Url(`${YYYY}-${MM}-${dd}T${hh}c${mm}c${ss}d${ms}000p00c00`);
+    return new Matter({ code: Matter.Code.DateTime, raw });
+  },
+};
+
+export type PrimitiveMatter = Readonly<typeof PrimitiveMatter>;
+
+export class Matter extends Frame implements MatterInit {
   constructor(init: MatterInit) {
     super({
       code: init.code,
@@ -121,7 +209,6 @@ export class Matter extends Frame implements MatterInit {
       soft: init.soft,
       size: Table.lookup(init.code),
     });
-    this.size = Table.lookup(this.code);
   }
 
   static readonly Table = Table;
@@ -141,89 +228,15 @@ export class Matter extends Frame implements MatterInit {
     });
   }
 
-  static create = {
-    ed25519_seed: createRaw(Matter.Code.Ed25519_Seed),
-    ed25519: createRaw(Matter.Code.Ed25519),
-    ed25519N: createRaw(Matter.Code.Ed25519N),
-    ed25519_sig: createRaw(Matter.Code.Ed25519_Sig),
-    X25519: createRaw(Matter.Code.X25519),
-    blake3_256: createRaw(Matter.Code.Blake3_256),
-    blake2b_256: createRaw(Matter.Code.Blake2b_256),
-    blake2s_256: createRaw(Matter.Code.Blake2s_256),
-    sha3_256: createRaw(Matter.Code.SHA3_256),
-    sha2_256: createRaw(Matter.Code.SHA2_256),
-    ecdsa_256k1Seed: createRaw(Matter.Code.ECDSA_256k1_Seed),
-    ed448_seed: createRaw(Matter.Code.Ed448_Seed),
-    x448: createRaw(Matter.Code.X448),
-    x25519_private: createRaw(Matter.Code.X25519_Private),
-    x25519_cipher_Seed: createRaw(Matter.Code.X25519_Cipher_Seed),
+  /**
+   * Predefined Matter creators for common crypto types
+   */
+  static readonly crypto: CryptoMatter = CryptoMatter;
 
-    tag(input: string): Matter {
-      switch (input.length) {
-        case 1:
-          return new Matter({
-            code: Matter.Code.Tag1,
-            raw: new Uint8Array(0),
-            soft: decodeBase64Int(input.padStart(2, "_")),
-          });
-        case 2:
-          return new Matter({
-            code: Matter.Code.Tag2,
-            raw: new Uint8Array(0),
-            soft: decodeBase64Int(input),
-          });
-        default:
-          throw new Error(`Unsupported tag length: ${input.length} for tag "${input}"`);
-      }
-    },
-
-    string(input: string): Matter {
-      if (REGEX_BASE64_CHARACTER.test(input) && !input.startsWith("A")) {
-        const raw = encodeBase64Raw(input);
-        const code = resolveVariableSizeCode(Matter.Code.StrB64_L0, raw);
-        return new Matter({ code, raw });
-      }
-
-      const raw = encodeUtf8(input);
-      const code = resolveVariableSizeCode(Matter.Code.Bytes_L0, raw);
-      return new Matter({ code, raw });
-    },
-
-    decimal(input: number): Matter {
-      const raw = encodeBase64Raw(input.toString().replace(".", "p"));
-      const code = resolveVariableSizeCode(Matter.Code.Decimal_L0, raw);
-      return new Matter({ code, raw });
-    },
-
-    hex(input: string): Matter {
-      // TODO: Choose smaller/bigger size based on input
-      const entry = Matter.Table.lookup(Matter.Code.Salt_128);
-      const raw = encodeHexRaw(input, entry);
-      return new Matter({ code: Matter.Code.Salt_128, raw });
-    },
-
-    integer(input: number): Matter {
-      const raw = encodeBase64Raw(input.toString());
-      return new Matter({ code: Matter.Code.Short, raw });
-    },
-
-    date(date: Date): Matter {
-      if (date.toString() === "Invalid Date") {
-        throw new Error("Invalid date");
-      }
-
-      const YYYY = date.getFullYear();
-      const MM = padNumber(date.getUTCMonth() + 1, 2);
-      const dd = padNumber(date.getUTCDate(), 2);
-      const hh = padNumber(date.getUTCHours(), 2);
-      const mm = padNumber(date.getUTCMinutes(), 2);
-      const ss = padNumber(date.getUTCSeconds(), 2);
-      const ms = padNumber(date.getUTCMilliseconds(), 3);
-
-      const raw = decodeBase64Url(`${YYYY}-${MM}-${dd}T${hh}c${mm}c${ss}d${ms}000p00c00`);
-      return new Matter({ code: Matter.Code.DateTime, raw });
-    },
-  };
+  /**
+   * Predefined Matter creators for common value types
+   */
+  static readonly primitive: PrimitiveMatter = PrimitiveMatter;
 
   readonly decode = {
     hex: (): string => {
@@ -272,7 +285,7 @@ export class Matter extends Frame implements MatterInit {
         case Matter.Code.Bytes_Big_L2:
           return decodeUtf8(this.raw);
         default:
-          throw new Error(`Cannot decode matter of code ${this.code} as a string`);
+          throw new Error(`Cannot decode ${this.code} as a string`);
       }
     },
   };

@@ -29,14 +29,14 @@ export class Frame {
   readonly #raw: Uint8Array;
   readonly #soft?: number;
   readonly #other?: number;
-  readonly #size: CodeTableEntry;
+  readonly size: CodeTableEntry;
 
   constructor(init: FrameInit) {
     this.#code = init.code;
     this.#raw = init.raw || new Uint8Array();
     this.#soft = init.soft;
     this.#other = init.other;
-    this.#size = init.size;
+    this.size = init.size;
   }
 
   get soft(): number | undefined {
@@ -59,26 +59,26 @@ export class Frame {
    * Gets the number of quadlets/triplets in this frame
    */
   get n(): number {
-    if (this.#size.fs > 0) {
-      return this.#size.fs / 4;
+    if (this.size.fs > 0) {
+      return this.size.fs / 4;
     }
 
-    const ps = (3 - ((this.#raw.byteLength + this.#size.ls) % 3)) % 3;
-    const fs = this.#raw.byteLength + ps + this.#size.ls;
-    const cs = this.#size.hs + this.#size.ss;
+    const ps = (3 - ((this.#raw.byteLength + this.size.ls) % 3)) % 3;
+    const fs = this.#raw.byteLength + ps + this.size.ls;
+    const cs = this.size.hs + this.size.ss;
     return cs / 4 + fs / 3;
   }
 
   text(): string {
-    if (this.#code.length !== this.#size.hs) {
+    if (this.#code.length !== this.size.hs) {
       throw new Error(
-        `Frame code ${this.#code} length ${this.#code.length} does not match expected size ${this.#size.hs}`,
+        `Frame code ${this.#code} length ${this.#code.length} does not match expected size ${this.size.hs}`,
       );
     }
 
-    const ls = this.#size.ls ?? 0;
-    const ms = (this.#size.ss ?? 0) - (this.#size.os ?? 0);
-    const os = this.#size.os ?? 0;
+    const ls = this.size.ls ?? 0;
+    const ms = (this.size.ss ?? 0) - (this.size.os ?? 0);
+    const os = this.size.os ?? 0;
 
     const raw = this.#raw ?? new Uint8Array(0);
 
@@ -90,8 +90,8 @@ export class Frame {
 
     const result = `${this.#code}${soft}${other}${encodeBase64Url(padded).slice(padSize)}`;
 
-    if (this.#size.fs !== undefined && this.#size.fs > 0 && result.length < this.#size.fs) {
-      throw new Error(`Encoded size ${result.length} does not match expected size ${this.#size.fs}`);
+    if (this.size.fs !== undefined && this.size.fs > 0 && result.length < this.size.fs) {
+      throw new Error(`Encoded size ${result.length} does not match expected size ${this.size.fs}`);
     }
 
     return result;
@@ -101,7 +101,7 @@ export class Frame {
     const raw = this.#raw ?? new Uint8Array(0);
 
     // TODO: xs
-    const size = this.#size;
+    const size = this.size;
     const cs = size.hs + size.ss;
     const ms = size.ss - size.os;
     const os = size.os;

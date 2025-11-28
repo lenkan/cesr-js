@@ -21,21 +21,21 @@ describe(basename(import.meta.url), () => {
   test("should parse genus", () => {
     const result = Genus.parse(`-_AAADTX`);
 
-    assert.deepEqual(result, { protocol: "AAA", major: 3, minor: 1239 });
+    assert.partialDeepStrictEqual(result, { protocol: "AAA", major: 3, minor: 1239 });
     assert.strictEqual(result.text(), `-_AAADTX`);
   });
 
   test("should have KERIACDC_10 genus", () => {
     const result = Genus.KERIACDC_10;
 
-    assert.deepEqual(result, { protocol: "AAA", major: 1, minor: 0 });
+    assert.partialDeepStrictEqual(result, { protocol: "AAA", major: 1, minor: 0 });
     assert.strictEqual(result.text(), `-_AAABAA`);
   });
 
   test("should have KERIACDC_20 genus", () => {
     const result = Genus.KERIACDC_20;
 
-    assert.deepEqual(result, { protocol: "AAA", major: 2, minor: 0 });
+    assert.partialDeepStrictEqual(result, { protocol: "AAA", major: 2, minor: 0 });
     assert.strictEqual(result.text(), `-_AAACAA`);
   });
 });

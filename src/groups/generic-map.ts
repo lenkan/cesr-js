@@ -19,14 +19,14 @@ export class GenericMapGroup {
     const frames: Frame[] = [];
 
     for (const [key, value] of this.#map.entries()) {
-      frames.push(Matter.create.tag(key));
+      frames.push(Matter.primitive.tag(key));
 
       switch (typeof value) {
         case "string":
-          frames.push(Matter.create.string(value));
+          frames.push(Matter.primitive.string(value));
           break;
         case "number":
-          frames.push(Matter.create.decimal(value));
+          frames.push(Matter.primitive.decimal(value));
           break;
         case "boolean":
           if (value) {

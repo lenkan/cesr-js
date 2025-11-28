@@ -2,7 +2,6 @@ import { basename } from "node:path";
 import { describe, test } from "node:test";
 import assert from "node:assert";
 import { Attachments } from "./attachments.ts";
-import { MatterCode } from "./codes.ts";
 import { Matter } from "./matter.ts";
 
 describe(basename(import.meta.url), () => {
@@ -31,9 +30,9 @@ describe(basename(import.meta.url), () => {
         grouped: false,
         TransIdxSigGroups: [
           {
-            prefix: Matter.create.blake3_256(new Uint8Array(32)).text(),
+            prefix: Matter.crypto.blake3_256(new Uint8Array(32)).text(),
             snu: "3",
-            digest: Matter.create.blake3_256(new Uint8Array(32)).text(),
+            digest: Matter.crypto.blake3_256(new Uint8Array(32)).text(),
             ControllerIdxSigs: [
               "AACo9sQ34vV5dvKDn9_XT7aqXjYrQUcIXsciy84D8LslsvJTYA5X0czckvo30fSgbleGeSYRjWoDuPIyizJpOPUP",
               "ABCOpOupeb-jKCZ5geaN-qDAE0I-nNb5QWxN0UonZdpjluAQMLgWzSErlP8dE2MqzL_ScIl885AjgHN_FLSN3xgD",
@@ -46,9 +45,9 @@ describe(basename(import.meta.url), () => {
         attachments.text(),
         [
           "-FAB",
-          Matter.from(MatterCode.Blake3_256, new Uint8Array(32)).text(),
-          Matter.create.hex("3").text(),
-          Matter.from(MatterCode.Blake3_256, new Uint8Array(32)).text(),
+          Matter.crypto.blake3_256(new Uint8Array(32)).text(),
+          Matter.primitive.hex("3").text(),
+          Matter.crypto.blake3_256(new Uint8Array(32)).text(),
           "-AAC",
           "AACo9sQ34vV5dvKDn9_XT7aqXjYrQUcIXsciy84D8LslsvJTYA5X0czckvo30fSgbleGeSYRjWoDuPIyizJpOPUP",
           "ABCOpOupeb-jKCZ5geaN-qDAE0I-nNb5QWxN0UonZdpjluAQMLgWzSErlP8dE2MqzL_ScIl885AjgHN_FLSN3xgD",
@@ -61,7 +60,7 @@ describe(basename(import.meta.url), () => {
         grouped: false,
         TransLastIdxSigGroups: [
           {
-            prefix: Matter.from(MatterCode.Blake3_256, new Uint8Array(32)).text(),
+            prefix: Matter.crypto.blake3_256(new Uint8Array(32)).text(),
             ControllerIdxSigs: [
               "AACo9sQ34vV5dvKDn9_XT7aqXjYrQUcIXsciy84D8LslsvJTYA5X0czckvo30fSgbleGeSYRjWoDuPIyizJpOPUP",
               "ABCOpOupeb-jKCZ5geaN-qDAE0I-nNb5QWxN0UonZdpjluAQMLgWzSErlP8dE2MqzL_ScIl885AjgHN_FLSN3xgD",
@@ -74,7 +73,7 @@ describe(basename(import.meta.url), () => {
         attachments.text(),
         [
           "-HAB",
-          Matter.create.blake3_256(new Uint8Array(32)).text(),
+          Matter.crypto.blake3_256(new Uint8Array(32)).text(),
           "-AAC",
           "AACo9sQ34vV5dvKDn9_XT7aqXjYrQUcIXsciy84D8LslsvJTYA5X0czckvo30fSgbleGeSYRjWoDuPIyizJpOPUP",
           "ABCOpOupeb-jKCZ5geaN-qDAE0I-nNb5QWxN0UonZdpjluAQMLgWzSErlP8dE2MqzL_ScIl885AjgHN_FLSN3xgD",

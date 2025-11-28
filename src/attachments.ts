@@ -119,7 +119,7 @@ export class Attachments implements AttachmentsInit {
       for (const group of this.TransIdxSigGroups) {
         frames.push(
           Matter.parse(group.prefix),
-          Matter.create.hex(group.snu),
+          Matter.primitive.hex(group.snu),
           Matter.parse(group.digest),
           Counter.v1.ControllerIdxSigs(group.ControllerIdxSigs.length),
           ...group.ControllerIdxSigs.map((sig) => Indexer.parse(sig)),
@@ -143,7 +143,7 @@ export class Attachments implements AttachmentsInit {
       frames.push(Counter.v1.SealSourceTriples(this.SealSourceTriples.length));
 
       for (const triple of this.SealSourceTriples) {
-        const snu = Matter.create.hex(triple.snu);
+        const snu = Matter.primitive.hex(triple.snu);
         const prefix = Matter.parse(triple.prefix);
         const digest = Matter.parse(triple.digest);
         frames.push(prefix, snu, digest);
@@ -154,7 +154,7 @@ export class Attachments implements AttachmentsInit {
       frames.push(Counter.v1.SealSourceCouples(this.SealSourceCouples.length));
 
       for (const couple of this.SealSourceCouples) {
-        const snu = Matter.create.hex(couple.snu);
+        const snu = Matter.primitive.hex(couple.snu);
         frames.push(snu, Matter.parse(couple.digest));
       }
     }
@@ -177,7 +177,7 @@ export class Attachments implements AttachmentsInit {
 
     for (const couple of this.PathedMaterialCouples) {
       const nested: Frame[] = [];
-      const path = Matter.create.string(couple.path);
+      const path = Matter.primitive.string(couple.path);
       nested.push(path, ...couple.attachments.frames());
 
       const size = nested.reduce((acc, frame) => acc + frame.n, 0);
@@ -193,8 +193,8 @@ export class Attachments implements AttachmentsInit {
       frames.push(Counter.v1.FirstSeenReplayCouples(this.FirstSeenReplayCouples.length));
 
       for (const couple of this.FirstSeenReplayCouples) {
-        const fnu = Matter.create.hex(couple.fnu);
-        const dt = Matter.create.date(couple.dt);
+        const fnu = Matter.primitive.hex(couple.fnu);
+        const dt = Matter.primitive.date(couple.dt);
         frames.push(fnu);
         frames.push(dt);
       }

@@ -63,13 +63,16 @@ function createEncoder<T extends Record<string, string>>(codes: T): CounterEncod
 }
 
 export class Counter extends Frame implements CounterInit {
-  readonly count: number;
-  readonly type: string;
-
   constructor(init: CounterInit) {
     super(resolveFrameInit(init));
-    this.count = init.count;
-    this.type = init.type;
+  }
+
+  get type() {
+    return this.code.replace(/^-+/, "");
+  }
+
+  get count() {
+    return this.soft ?? 0;
   }
 
   static peek(input: string | Uint8Array): ReadResult<Counter> {

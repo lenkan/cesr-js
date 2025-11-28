@@ -12,8 +12,8 @@ import { Indexer } from "./indexer.ts";
 import { Genus } from "./genus.ts";
 
 const [sig0, sig1] = [
-  Indexer.ed25519_sig(crypto.getRandomValues(new Uint8Array(64)), 0).text(),
-  Indexer.ed25519_sig(crypto.getRandomValues(new Uint8Array(64)), 1).text(),
+  Indexer.crypto.ed25519_sig(crypto.getRandomValues(new Uint8Array(64)), 0).text(),
+  Indexer.crypto.ed25519_sig(crypto.getRandomValues(new Uint8Array(64)), 1).text(),
 ];
 
 async function* chunk(filename: string, size = 100): AsyncIterable<Uint8Array> {

@@ -1,4 +1,4 @@
-import { CodeTable, type CodeTableEntry } from "./code-table.ts";
+import { CodeTable } from "./code-table.ts";
 import { IndexCode, IndexTableInit } from "./codes.ts";
 import { Frame, type ReadResult } from "./frame.ts";
 
@@ -9,11 +9,20 @@ export interface IndexerInit {
   ondex?: number;
 }
 
-export class Indexer extends Frame implements IndexerInit {
-  readonly index: number;
-  readonly ondex?: number;
-  readonly size: CodeTableEntry;
+function createCryptoIndexer(code: string) {
+  return (raw: Uint8Array, index: number, ondex?: number): Indexer => {
+    return new Indexer({ code, raw, index, ondex });
+  };
+}
 
+const CryptoIndexer = {
+  ed25519_sig: createCryptoIndexer(IndexCode.Ed25519_Sig),
+  ed448_sig: createCryptoIndexer(IndexCode.Ed448_Sig),
+};
+
+export type CryptoIndexer = typeof CryptoIndexer;
+
+export class Indexer extends Frame implements IndexerInit {
   constructor(init: IndexerInit) {
     super({
       code: init.code,
@@ -22,9 +31,14 @@ export class Indexer extends Frame implements IndexerInit {
       other: init.ondex,
       size: Indexer.Table.lookup(init.code),
     });
-    this.index = init.index;
-    this.ondex = init.ondex;
-    this.size = Indexer.Table.lookup(this.code);
+  }
+
+  get index() {
+    return this.soft ?? 0;
+  }
+
+  get ondex() {
+    return this.other ?? undefined;
   }
 
   static readonly Table = new CodeTable(IndexTableInit);
@@ -39,7 +53,7 @@ export class Indexer extends Frame implements IndexerInit {
     }
 
     return {
-      frame: Indexer.from({
+      frame: new Indexer({
         code: result.frame.code,
         raw: result.frame.raw,
         index: result.frame.soft ?? 0,
@@ -53,7 +67,7 @@ export class Indexer extends Frame implements IndexerInit {
     const entry = Indexer.Table.lookup(input);
     const frame = Frame.parse(input, entry);
 
-    return Indexer.from({
+    return new Indexer({
       code: frame.code,
       raw: frame.raw,
       index: frame.soft ?? 0,
@@ -61,20 +75,9 @@ export class Indexer extends Frame implements IndexerInit {
     });
   }
 
-  static from(init: IndexerInit): Indexer;
-  static from(code: string, raw: Uint8Array, index: number, ondex?: number): Indexer;
-  static from(init: IndexerInit | string, raw?: Uint8Array, index?: number, ondex?: number): Indexer {
-    if (typeof init === "string") {
-      if (raw === undefined || index === undefined) {
-        throw new Error("Raw and index must be provided when using code string");
-      }
-      return new Indexer({ code: init, raw, index, ondex });
-    }
-
-    return new Indexer(init);
+  static from(code: string, raw: Uint8Array, index: number, ondex?: number): Indexer {
+    return new Indexer({ code, raw, index, ondex });
   }
 
-  static ed25519_sig(raw: Uint8Array, index: number, ondex?: number): Indexer {
-    return Indexer.from(Indexer.Code.Ed25519_Sig, raw, index, ondex);
-  }
+  static readonly crypto = CryptoIndexer;
 }
