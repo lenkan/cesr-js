@@ -99,6 +99,12 @@ function resolveVariableSizeCode(code: string, raw: Uint8Array): string {
   return `${lead}${type}`;
 }
 
+function createRaw(code: string): (raw: Uint8Array) => Matter {
+  return (raw: Uint8Array): Matter => {
+    return new Matter({ code, raw });
+  };
+}
+
 export interface MatterInit {
   code: string;
   raw: Uint8Array;
@@ -108,7 +114,7 @@ export interface MatterInit {
 export class Matter extends Frame implements MatterInit {
   size: CodeTableEntry;
 
-  private constructor(init: MatterInit) {
+  constructor(init: MatterInit) {
     super({
       code: init.code,
       raw: init.raw,
@@ -121,30 +127,14 @@ export class Matter extends Frame implements MatterInit {
   static readonly Table = Table;
   static readonly Code = MatterCode;
 
-  private static creator(code: string): (raw: Uint8Array) => Matter {
-    return (raw: Uint8Array): Matter => {
-      return new Matter({ code, raw });
-    };
-  }
-
-  static from(init: MatterInit): Matter;
-  static from(code: string, raw: Uint8Array): Matter;
-  static from(init: string | MatterInit, raw?: Uint8Array): Matter {
-    if (typeof init === "string") {
-      if (!raw) {
-        throw new Error("Raw data must be provided when using code string");
-      }
-
-      return new Matter({ code: init, raw });
-    }
-
-    return new Matter(init);
+  static from(code: string, raw: Uint8Array): Matter {
+    return new Matter({ code, raw });
   }
 
   static parse(input: string | Uint8Array): Matter {
     const entry = Table.lookup(input);
     const frame = Frame.parse(input, entry);
-    return Matter.from({
+    return new Matter({
       code: frame.code,
       raw: frame.raw,
       soft: frame.soft,
@@ -152,33 +142,33 @@ export class Matter extends Frame implements MatterInit {
   }
 
   static create = {
-    ed25519_seed: Matter.creator(MatterCode.Ed25519_Seed),
-    ed25519: Matter.creator(MatterCode.Ed25519),
-    ed25519N: Matter.creator(MatterCode.Ed25519N),
-    ed25519_sig: Matter.creator(MatterCode.Ed25519_Sig),
-    X25519: Matter.creator(MatterCode.X25519),
-    blake3_256: Matter.creator(MatterCode.Blake3_256),
-    blake2b_256: Matter.creator(MatterCode.Blake2b_256),
-    blake2s_256: Matter.creator(MatterCode.Blake2s_256),
-    sha3_256: Matter.creator(MatterCode.SHA3_256),
-    sha2_256: Matter.creator(MatterCode.SHA2_256),
-    ecdsa_256k1Seed: Matter.creator(MatterCode.ECDSA_256k1_Seed),
-    ed448_seed: Matter.creator(MatterCode.Ed448_Seed),
-    x448: Matter.creator(MatterCode.X448),
-    x25519_private: Matter.creator(MatterCode.X25519_Private),
-    x25519_cipher_Seed: Matter.creator(MatterCode.X25519_Cipher_Seed),
+    ed25519_seed: createRaw(Matter.Code.Ed25519_Seed),
+    ed25519: createRaw(Matter.Code.Ed25519),
+    ed25519N: createRaw(Matter.Code.Ed25519N),
+    ed25519_sig: createRaw(Matter.Code.Ed25519_Sig),
+    X25519: createRaw(Matter.Code.X25519),
+    blake3_256: createRaw(Matter.Code.Blake3_256),
+    blake2b_256: createRaw(Matter.Code.Blake2b_256),
+    blake2s_256: createRaw(Matter.Code.Blake2s_256),
+    sha3_256: createRaw(Matter.Code.SHA3_256),
+    sha2_256: createRaw(Matter.Code.SHA2_256),
+    ecdsa_256k1Seed: createRaw(Matter.Code.ECDSA_256k1_Seed),
+    ed448_seed: createRaw(Matter.Code.Ed448_Seed),
+    x448: createRaw(Matter.Code.X448),
+    x25519_private: createRaw(Matter.Code.X25519_Private),
+    x25519_cipher_Seed: createRaw(Matter.Code.X25519_Cipher_Seed),
 
     tag(input: string): Matter {
       switch (input.length) {
         case 1:
-          return Matter.from({
-            code: MatterCode.Tag1,
+          return new Matter({
+            code: Matter.Code.Tag1,
             raw: new Uint8Array(0),
             soft: decodeBase64Int(input.padStart(2, "_")),
           });
         case 2:
-          return Matter.from({
-            code: MatterCode.Tag2,
+          return new Matter({
+            code: Matter.Code.Tag2,
             raw: new Uint8Array(0),
             soft: decodeBase64Int(input),
           });
@@ -190,31 +180,31 @@ export class Matter extends Frame implements MatterInit {
     string(input: string): Matter {
       if (REGEX_BASE64_CHARACTER.test(input) && !input.startsWith("A")) {
         const raw = encodeBase64Raw(input);
-        const code = resolveVariableSizeCode(MatterCode.StrB64_L0, raw);
+        const code = resolveVariableSizeCode(Matter.Code.StrB64_L0, raw);
         return new Matter({ code, raw });
       }
 
       const raw = encodeUtf8(input);
-      const code = resolveVariableSizeCode(MatterCode.Bytes_L0, raw);
+      const code = resolveVariableSizeCode(Matter.Code.Bytes_L0, raw);
       return new Matter({ code, raw });
     },
 
     decimal(input: number): Matter {
       const raw = encodeBase64Raw(input.toString().replace(".", "p"));
-      const code = resolveVariableSizeCode(MatterCode.Decimal_L0, raw);
+      const code = resolveVariableSizeCode(Matter.Code.Decimal_L0, raw);
       return new Matter({ code, raw });
     },
 
     hex(input: string): Matter {
       // TODO: Choose smaller/bigger size based on input
-      const entry = Matter.Table.lookup(MatterCode.Salt_128);
+      const entry = Matter.Table.lookup(Matter.Code.Salt_128);
       const raw = encodeHexRaw(input, entry);
-      return new Matter({ code: MatterCode.Salt_128, raw });
+      return new Matter({ code: Matter.Code.Salt_128, raw });
     },
 
     integer(input: number): Matter {
       const raw = encodeBase64Raw(input.toString());
-      return new Matter({ code: MatterCode.Short, raw });
+      return new Matter({ code: Matter.Code.Short, raw });
     },
 
     date(date: Date): Matter {
@@ -231,7 +221,7 @@ export class Matter extends Frame implements MatterInit {
       const ms = padNumber(date.getUTCMilliseconds(), 3);
 
       const raw = decodeBase64Url(`${YYYY}-${MM}-${dd}T${hh}c${mm}c${ss}d${ms}000p00c00`);
-      return new Matter({ code: MatterCode.DateTime, raw });
+      return new Matter({ code: Matter.Code.DateTime, raw });
     },
   };
 
@@ -240,7 +230,7 @@ export class Matter extends Frame implements MatterInit {
       return decodeHexRaw(this.raw);
     },
     date: (): Date => {
-      if (this.code !== MatterCode.DateTime) {
+      if (this.code !== Matter.Code.DateTime) {
         throw new Error(`Cannot decode ${this.code} as a Date`);
       }
 
@@ -256,12 +246,12 @@ export class Matter extends Frame implements MatterInit {
     },
     string: (): string => {
       switch (this.code) {
-        case MatterCode.StrB64_L0:
-        case MatterCode.StrB64_L1:
-        case MatterCode.StrB64_L2:
-        case MatterCode.StrB64_Big_L0:
-        case MatterCode.StrB64_Big_L1:
-        case MatterCode.StrB64_Big_L2: {
+        case Matter.Code.StrB64_L0:
+        case Matter.Code.StrB64_L1:
+        case Matter.Code.StrB64_L2:
+        case Matter.Code.StrB64_Big_L0:
+        case Matter.Code.StrB64_Big_L1:
+        case Matter.Code.StrB64_Big_L2: {
           const bext = encodeBase64Url(concat(new Uint8Array(this.size.ls), this.raw));
 
           if (this.size.ls === 0 && bext) {
@@ -274,12 +264,12 @@ export class Matter extends Frame implements MatterInit {
 
           return bext.slice((this.size.ls + 1) % 4);
         }
-        case MatterCode.Bytes_L0:
-        case MatterCode.Bytes_L1:
-        case MatterCode.Bytes_L2:
-        case MatterCode.Bytes_Big_L0:
-        case MatterCode.Bytes_Big_L1:
-        case MatterCode.Bytes_Big_L2:
+        case Matter.Code.Bytes_L0:
+        case Matter.Code.Bytes_L1:
+        case Matter.Code.Bytes_L2:
+        case Matter.Code.Bytes_Big_L0:
+        case Matter.Code.Bytes_Big_L1:
+        case Matter.Code.Bytes_Big_L2:
           return decodeUtf8(this.raw);
         default:
           throw new Error(`Cannot decode matter of code ${this.code} as a string`);

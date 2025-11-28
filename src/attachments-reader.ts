@@ -48,7 +48,11 @@ export class AttachmentsReader {
     }
 
     this.#readBytes(result.n);
-    return Matter.from(result.frame);
+    return new Matter({
+      code: result.frame.code,
+      raw: result.frame.raw,
+      soft: result.frame.soft,
+    });
   }
 
   #readIndexer(): Indexer {
