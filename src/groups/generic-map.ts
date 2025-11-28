@@ -15,7 +15,7 @@ export class GenericMapGroup {
     this.#map = new Map<string, unknown>(Object.entries(init));
   }
 
-  frames(): Frame[] {
+  #frames(): Frame[] {
     const frames: Frame[] = [];
 
     for (const [key, value] of this.#map.entries()) {
@@ -37,7 +37,7 @@ export class GenericMapGroup {
           break;
         case "object": {
           if (!Array.isArray(value) && value !== null && !(value instanceof Date)) {
-            frames.push(...new GenericMapGroup({ ...value }).frames());
+            frames.push(...new GenericMapGroup({ ...value }).#frames());
           } else {
             throw new Error(`Unsupported object type for key ${key}: ${JSON.stringify(value)}`);
           }
@@ -53,11 +53,11 @@ export class GenericMapGroup {
   }
 
   text(): string {
-    return this.frames().reduce((acc, frame) => acc + frame.text(), "");
+    return this.#frames().reduce((acc, frame) => acc + frame.text(), "");
   }
 
   binary(): Uint8Array {
-    return this.frames().reduce<Uint8Array>((acc, frame) => {
+    return this.#frames().reduce<Uint8Array>((acc, frame) => {
       return concat(acc, frame.binary());
     }, new Uint8Array());
   }
