@@ -1,7 +1,9 @@
-import { encodeCounter, encodeDate, encodeHexNumber, encodeString, type Genus } from "./encoding.ts";
-import { CountCode_10 } from "./codes.ts";
 import { encodeUtf8 } from "./encoding-utf8.ts";
 import { AttachmentsReader } from "./attachments-reader.ts";
+import { Matter } from "./matter.ts";
+import { Counter } from "./counter.ts";
+import type { Frame } from "./frame.ts";
+import { Indexer } from "./indexer.ts";
 
 export interface NonTransReceiptCouple {
   prefix: string;
@@ -47,7 +49,6 @@ export interface PathedMaterialCoupleInit {
 }
 
 export interface AttachmentsInit {
-  genus?: Genus;
   grouped?: boolean;
   ControllerIdxSigs?: string[];
   WitnessIdxSigs?: string[];
@@ -102,141 +103,100 @@ export class Attachments implements AttachmentsInit {
     return attachments;
   }
 
-  frames(): string[] {
-    const frames: string[] = [];
+  frames(): Frame[] {
+    const frames: Frame[] = [];
 
     if (this.ControllerIdxSigs.length > 0) {
       frames.push(
-        encodeCounter({
-          code: CountCode_10.ControllerIdxSigs,
-          count: this.ControllerIdxSigs.length,
-        }),
-        ...this.ControllerIdxSigs,
+        Counter.v1.ControllerIdxSigs(this.ControllerIdxSigs.length),
+        ...this.ControllerIdxSigs.map((sig) => Indexer.parse(sig)),
       );
     }
 
     if (this.TransIdxSigGroups.length > 0) {
-      frames.push(
-        encodeCounter({
-          code: CountCode_10.TransIdxSigGroups,
-          count: this.TransIdxSigGroups.length,
-        }),
-      );
+      frames.push(Counter.v1.TransIdxSigGroups(this.TransIdxSigGroups.length));
 
       for (const group of this.TransIdxSigGroups) {
         frames.push(
-          group.prefix,
-          encodeHexNumber(group.snu),
-          group.digest,
-          encodeCounter({
-            code: CountCode_10.ControllerIdxSigs,
-            count: group.ControllerIdxSigs.length,
-          }),
-          ...group.ControllerIdxSigs,
+          Matter.parse(group.prefix),
+          Matter.primitive.hex(group.snu),
+          Matter.parse(group.digest),
+          Counter.v1.ControllerIdxSigs(group.ControllerIdxSigs.length),
+          ...group.ControllerIdxSigs.map((sig) => Indexer.parse(sig)),
         );
       }
     }
 
     if (this.TransLastIdxSigGroups.length > 0) {
-      frames.push(
-        encodeCounter({
-          code: CountCode_10.TransLastIdxSigGroups,
-          count: this.TransLastIdxSigGroups.length,
-        }),
-      );
+      frames.push(Counter.v1.TransLastIdxSigGroups(this.TransLastIdxSigGroups.length));
 
       for (const group of this.TransLastIdxSigGroups) {
         frames.push(
-          group.prefix,
-          encodeCounter({
-            code: CountCode_10.ControllerIdxSigs,
-            count: group.ControllerIdxSigs.length,
-          }),
-          ...group.ControllerIdxSigs,
+          Matter.parse(group.prefix),
+          Counter.v1.ControllerIdxSigs(group.ControllerIdxSigs.length),
+          ...group.ControllerIdxSigs.map((sig) => Indexer.parse(sig)),
         );
       }
     }
 
     if (this.SealSourceTriples.length > 0) {
-      frames.push(
-        encodeCounter({
-          code: CountCode_10.SealSourceTriples,
-          count: this.SealSourceTriples.length,
-        }),
-      );
+      frames.push(Counter.v1.SealSourceTriples(this.SealSourceTriples.length));
 
       for (const triple of this.SealSourceTriples) {
-        frames.push(triple.prefix, encodeHexNumber(triple.snu), triple.digest);
+        const snu = Matter.primitive.hex(triple.snu);
+        const prefix = Matter.parse(triple.prefix);
+        const digest = Matter.parse(triple.digest);
+        frames.push(prefix, snu, digest);
       }
     }
 
     if (this.SealSourceCouples.length > 0) {
-      frames.push(
-        encodeCounter({
-          code: CountCode_10.SealSourceCouples,
-          count: this.SealSourceCouples.length,
-        }),
-      );
+      frames.push(Counter.v1.SealSourceCouples(this.SealSourceCouples.length));
 
       for (const couple of this.SealSourceCouples) {
-        frames.push(encodeHexNumber(couple.snu), couple.digest);
+        const snu = Matter.primitive.hex(couple.snu);
+        frames.push(snu, Matter.parse(couple.digest));
       }
     }
 
     if (this.NonTransReceiptCouples && this.NonTransReceiptCouples.length > 0) {
       frames.push(
-        encodeCounter({
-          code: CountCode_10.NonTransReceiptCouples,
-          count: this.NonTransReceiptCouples.length,
-        }),
+        Counter.v1.NonTransReceiptCouples(this.NonTransReceiptCouples.length),
         ...this.NonTransReceiptCouples.flatMap((receipt) => {
-          return [receipt.prefix, receipt.sig];
+          return [Matter.parse(receipt.prefix), Matter.parse(receipt.sig)];
         }),
       );
     }
 
     if (this.WitnessIdxSigs && this.WitnessIdxSigs.length > 0) {
       frames.push(
-        encodeCounter({
-          code: CountCode_10.WitnessIdxSigs,
-          count: this.WitnessIdxSigs.length,
-        }),
-        ...this.WitnessIdxSigs,
+        Counter.v1.WitnessIdxSigs(this.WitnessIdxSigs.length),
+        ...this.WitnessIdxSigs.map((sig) => Indexer.parse(sig)),
       );
     }
 
     for (const couple of this.PathedMaterialCouples) {
-      const nested: string[] = [];
-      nested.push(encodeString(couple.path), ...couple.attachments.frames());
-      const size = nested.reduce((acc, frame) => acc + frame.length, 0);
-      if (size % 4 !== 0) {
-        throw new Error("PathedMaterialCouple encoding resulted in non-aligned length");
-      }
+      const nested: Frame[] = [];
+      const path = Matter.primitive.string(couple.path);
+      nested.push(path, ...couple.attachments.frames());
+
+      const size = nested.reduce((acc, frame) => acc + frame.n, 0);
 
       // SIC! For PathedMaterialCouples, keripy does not encode
       // multiple "couples" under the same group. Instead each group
-      // contains exactly one couple, and the count is size / 4.
+      // contains exactly one couple, and the count is number of quadlets per couple.
       // Ref https://github.com/WebOfTrust/keripy/blob/fcec5085ef67a0e0bf6bcbca567a9ac9395bfb5f/src/keri/peer/exchanging.py#L461-L480
-      frames.push(
-        encodeCounter({
-          code: CountCode_10.PathedMaterialCouples,
-          count: size / 4,
-        }),
-        ...nested,
-      );
+      frames.push(Counter.v1.PathedMaterialCouples(size), ...nested);
     }
 
     if (this.FirstSeenReplayCouples.length > 0) {
-      frames.push(
-        encodeCounter({
-          code: CountCode_10.FirstSeenReplayCouples,
-          count: this.FirstSeenReplayCouples.length,
-        }),
-      );
+      frames.push(Counter.v1.FirstSeenReplayCouples(this.FirstSeenReplayCouples.length));
 
       for (const couple of this.FirstSeenReplayCouples) {
-        frames.push(encodeHexNumber(couple.fnu));
-        frames.push(encodeDate(couple.dt));
+        const fnu = Matter.primitive.hex(couple.fnu);
+        const dt = Matter.primitive.date(couple.dt);
+        frames.push(fnu);
+        frames.push(dt);
       }
     }
 
@@ -244,26 +204,27 @@ export class Attachments implements AttachmentsInit {
       return frames;
     }
 
-    const size = frames.reduce((acc, frame) => acc + frame.length, 0);
-    if (size % 4 !== 0) {
-      throw new Error("Attachments encoding resulted in non-aligned length");
+    const size = frames.reduce((acc, frame) => acc + frame.n, 0);
+    return [Counter.v1.AttachmentGroup(size), ...frames];
+  }
+
+  encode(domain: "text" | "binary" = "text"): Uint8Array {
+    const frames = this.frames();
+    if (domain === "binary") {
+      return frames.reduce((acc, frame) => {
+        const bin = frame.binary();
+        const combined = new Uint8Array(acc.length + bin.length);
+        combined.set(acc, 0);
+        combined.set(bin, acc.length);
+        return combined;
+      }, new Uint8Array());
     }
 
-    const count = size / 4;
-    return [
-      encodeCounter({
-        code: CountCode_10.AttachmentGroup,
-        count,
-      }),
-      ...frames,
-    ];
+    return encodeUtf8(frames.reduce((acc, frame) => acc + frame.text(), ""));
   }
 
-  encode(): Uint8Array {
-    return encodeUtf8(this.toString());
-  }
-
-  toString(): string {
-    return this.frames().join("");
+  text(): string {
+    const frames = this.frames();
+    return frames.reduce((acc, frame) => acc + frame.text(), "");
   }
 }

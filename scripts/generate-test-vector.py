@@ -20,7 +20,7 @@ def append(matter: Matter | Indexer | Counter):
         elif matter.version == Vrsn_2_0:
             type = "counter_20"
         else:
-            raise ValueError(f"Unknown counter version: {matter.gvrsn}")
+            raise ValueError(f"Unknown counter version: {matter.version}")
 
     cases.append(
         {
@@ -101,15 +101,15 @@ for key in dir(CtrDex_1_0):
     size = Counter.Sizes.get(1).get(0).get(code)
     min_count = 0 if size.ss <= 2 else 64**2
 
-    append(Counter(code=code, count=min_count, gvrsn=Vrsn_1_0))
+    append(Counter(code=code, count=min_count, version=Vrsn_1_0))
     append(
         Counter(
             code=code,
             count=random.randint(min_count, 64**size.ss - 1),
-            gvrsn=Vrsn_1_0,
+            version=Vrsn_1_0,
         )
     )
-    append(Counter(code=code, count=64**size.ss - 1, gvrsn=Vrsn_1_0))
+    append(Counter(code=code, count=64**size.ss - 1, version=Vrsn_1_0))
 
 random.seed(0)
 for key in dir(CtrDex_2_0):
@@ -124,13 +124,15 @@ for key in dir(CtrDex_2_0):
     size = Counter.Sizes.get(2).get(0).get(code)
     min_count = 0 if size.ss <= 2 else 64**2
 
-    append(Counter(code=code, count=min_count, gvrsn=Vrsn_2_0))
+    append(Counter(code=code, count=min_count, version=Vrsn_2_0))
     append(
         Counter(
-            code=code, count=random.randint(min_count, 64**size.ss - 1), gvrsn=Vrsn_2_0
+            code=code,
+            count=random.randint(min_count, 64**size.ss - 1),
+            version=Vrsn_2_0,
         )
     )
-    append(Counter(code=code, count=64**size.ss - 1, gvrsn=Vrsn_2_0))
+    append(Counter(code=code, count=64**size.ss - 1, version=Vrsn_2_0))
 
 
 print(json.dumps(cases, indent=2))

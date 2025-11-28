@@ -26,8 +26,19 @@ def format_codes(names: dict[str, str]) -> str:
     result = dict()
 
     for name, code in names.items():
-        if not code.startswith("--") and not code.startswith("__"):
+        if (
+            not code.startswith("-")
+            and not code.startswith("__")
+            and not name.startswith("TBD")
+        ):
             result[name] = code
+
+        if (
+            code.startswith("-")
+            and not code.startswith("--")
+            and not code.startswith("-_")
+        ):
+            result[name] = code.lstrip("-")
 
     return dumps(result)
 
@@ -39,7 +50,7 @@ print("// Use scripts/generate-codec.py to generate this file")
 print(f"export const MatterTableInit = {format_size(Matter.Sizes)}")
 print(f"export const IndexTableInit = {format_size(Indexer.Sizes)}")
 
-print(f"export const MatterCode = {dumps(MtrDex.__dict__)}")
+print(f"export const MatterCode = {format_codes(MtrDex.__dict__)}")
 print(f"export const CountCode_10 = {format_codes(CtrDex_1_0.__dict__)}")
 print(f"export const CountCode_20 = {format_codes(CtrDex_2_0.__dict__)}")
-print(f"export const IndexCode = {dumps(IdrDex.__dict__)}")
+print(f"export const IndexCode = {format_codes(IdrDex.__dict__)}")

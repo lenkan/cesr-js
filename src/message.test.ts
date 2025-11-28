@@ -83,33 +83,6 @@ describe(basename(import.meta.url), () => {
       assert.strictEqual(Object.keys(message.body).length, 1);
     });
 
-    test("should preserve all payload properties", () => {
-      const originalPayload = {
-        v: VersionString.KERI_LEGACY,
-        t: "rot",
-        d: "ELvaU6Z-i0d8JJR2nmwyYAfsv0-dn4lMOgPhQq5VXhE",
-        i: "EAoTNZH3ULvaU6Z-i0d8JJR2nmwyYAfsv0-dn4lMO",
-        s: "1",
-        p: "ELvaU6Z-i0d8JJR2nmwyYAfsv0-dn4lMOgPhQq5VXhE",
-        kt: "1",
-        k: ["DaU6JR2nmwyZ-i0d8JvaU6Z-i0d8JJR2nmwyYAfsv0-dn4lMOgPhQq5VXhE"],
-        nt: "1",
-        n: ["EZ-i0d8JJR2nmwyYAfsv0-dn4lMOgPhQq5VXhEAoTNZH3ULvaU6"],
-        bt: "0",
-        b: [],
-        c: [],
-        a: [],
-      };
-
-      const message = new Message(originalPayload);
-      const { v, ...rest } = message.body;
-
-      assert.strictEqual(v, "KERI10JSON00016f_");
-      for (const [key, value] of Object.entries(rest)) {
-        assert.deepStrictEqual(message.body[key], value, `Property ${key} should be preserved`);
-      }
-    });
-
     test("should recalculate version string size", () => {
       const message = new Message({
         v: "KERI10JSON000042_", // Wrong size
@@ -131,7 +104,7 @@ describe(basename(import.meta.url), () => {
       const message1 = new Message(init);
       const message2 = new Message(init);
 
-      assert.strictEqual(message1.toString(), message2.toString());
+      assert.strictEqual(message1.text(), message2.text());
       assert.deepStrictEqual(message1.body, message2.body);
     });
   });
@@ -174,16 +147,7 @@ describe(basename(import.meta.url), () => {
         foo: "bar",
       });
 
-      assert.strictEqual(message.text, JSON.stringify(message.body));
-    });
-
-    test("should serialize message with attachments", () => {
-      const message = new Message({
-        v: VersionString.KERI_LEGACY,
-        foo: "bar",
-      });
-
-      assert.strictEqual(message.encode(), JSON.stringify(message.body) + "-VAA");
+      assert.strictEqual(message.text(), JSON.stringify(message.body));
     });
 
     test("should provide access to raw bytes", () => {
@@ -206,7 +170,7 @@ describe(basename(import.meta.url), () => {
         a: 1,
       });
 
-      assert.strictEqual(message.text, '{"v":"KERI10JSON00001f_","a":1}');
+      assert.strictEqual(message.text(), '{"v":"KERI10JSON00001f_","a":1}');
     });
 
     test("should encode modern version string correctly", () => {
@@ -215,7 +179,7 @@ describe(basename(import.meta.url), () => {
         a: 1,
       });
 
-      assert.strictEqual(message.text, '{"v":"KERICAAJSONAAAe.","a":1}');
+      assert.strictEqual(message.text(), '{"v":"KERICAAJSONAAAe.","a":1}');
     });
   });
 

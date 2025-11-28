@@ -2,8 +2,9 @@ import { concat } from "./array-utils.ts";
 import { AttachmentsReader } from "./attachments-reader.ts";
 import { type Attachments } from "./attachments.ts";
 import { CountCode_10, CountCode_20 } from "./codes.ts";
+import { Counter } from "./counter.ts";
 import { encodeUtf8 } from "./encoding-utf8.ts";
-import { decodeGenus, readCounter } from "./encoding.ts";
+import { Genus } from "./genus.ts";
 import { Message } from "./message.ts";
 
 export type ParseInput = Uint8Array | string | AsyncIterable<Uint8Array>;
@@ -49,7 +50,11 @@ export async function* parse(input: ParseInput, options?: ParseOptions): AsyncIt
   let buffer: Uint8Array = new Uint8Array(0);
 
   // The version of the spec to use for group parsing
-  let version: number = options?.version ?? 1;
+  let genus: Genus = new Genus({
+    protocol: "AAA",
+    major: options?.version ?? 1,
+    minor: 0,
+  });
 
   for await (const chunk of resolveInput(input)) {
     buffer = concat(buffer, chunk);
@@ -60,6 +65,7 @@ export async function* parse(input: ParseInput, options?: ParseOptions): AsyncIt
       }
 
       const start = String.fromCharCode(buffer[0]);
+      const next = String.fromCharCode(buffer[1]);
 
       if (start === "{") {
         if (message) {
@@ -77,30 +83,34 @@ export async function* parse(input: ParseInput, options?: ParseOptions): AsyncIt
         if (message.version.legacy === false) {
           // Update version for group parsing if the JSON body
           // is encoded using the new Version String format
-          version = 2;
+          genus = new Genus({
+            protocol: genus.protocol,
+            major: 2,
+            minor: 0,
+          });
         }
 
         buffer = buffer.slice(message.raw.length);
+      } else if (start === "-" && next === "_") {
+        genus = Genus.parse(buffer);
+        buffer = buffer.slice(genus.n * 4);
       } else if (start === "-") {
-        const counter = readCounter(buffer);
+        const counter = Counter.peek(buffer);
 
         if (!counter.frame) {
           break;
         }
 
-        if (counter.frame.code.startsWith("-_")) {
-          version = decodeGenus(counter.frame.text).major;
-          buffer = buffer.slice(counter.n);
-        } else if (
-          (version === 1 && counter.frame.code === CountCode_10.AttachmentGroup) ||
-          (version === 2 && counter.frame.code === CountCode_20.AttachmentGroup)
+        if (
+          (genus.major === 1 && counter.frame.code === CountCode_10.AttachmentGroup) ||
+          (genus.major === 2 && counter.frame.code === CountCode_20.AttachmentGroup)
         ) {
           if (buffer.length < counter.n + counter.frame.count * 4) {
             // Not enough data to read the whole attachment group
             break;
           }
 
-          const reader = new AttachmentsReader(buffer, { version });
+          const reader = new AttachmentsReader(buffer, { version: genus.major });
           attachments = reader.readAttachments();
 
           if (!attachments) {
@@ -109,7 +119,7 @@ export async function* parse(input: ParseInput, options?: ParseOptions): AsyncIt
 
           buffer = buffer.slice(reader.bytesRead);
         } else {
-          const reader = new AttachmentsReader(buffer, { version });
+          const reader = new AttachmentsReader(buffer, { version: genus.major });
           attachments = reader.readAttachments();
 
           if (!attachments) {

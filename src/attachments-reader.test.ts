@@ -1,9 +1,10 @@
 import test, { describe } from "node:test";
+import assert from "node:assert";
+import path from "node:path";
+import { encodeUtf8 } from "./encoding-utf8.ts";
+import { concat } from "./array-utils.ts";
 import { Attachments } from "./attachments.ts";
 import { AttachmentsReader } from "./attachments-reader.ts";
-import assert from "node:assert";
-import { encodeUtf8 } from "./encoding-utf8.ts";
-import path from "node:path";
 
 const [sig0, sig1, sig2, sig3] = [
   "AABAMwd_6GLRwk6UYU2CQ_DKakLZ8Qz0KyaZllbOmlU8zAhx5iFCHVdyzgDpffiKDXzfHhOWHZzzcxrzpJDEwSs2",
@@ -30,7 +31,7 @@ describe(path.parse(import.meta.filename).base, () => {
       const result = reader.readAttachments();
 
       assert(result);
-      assert.strictEqual(result.toString(), "-VAA");
+      assert.strictEqual(result.text(), "-VAA");
     });
 
     test("should read ControllerIdxSigs", () => {
@@ -327,7 +328,12 @@ describe(path.parse(import.meta.filename).base, () => {
       });
 
       // Removes the last signature from the encoded attachments
-      const input = encodeUtf8(attachments.frames().slice(0, -1).join(""));
+      const input = encodeUtf8(
+        attachments
+          .frames()
+          .slice(0, -1)
+          .reduce((a, b) => a + b.text(), ""),
+      );
       const reader = new AttachmentsReader(input);
 
       const result = reader.readAttachments();
@@ -342,8 +348,23 @@ describe(path.parse(import.meta.filename).base, () => {
 
       // Remove the signature part of the couple
       const frames = attachments.frames();
-      const input = encodeUtf8(frames.slice(0, -1).join(""));
+      const input = encodeUtf8(frames.slice(0, -1).reduce((a, b) => a + b.text(), ""));
       const reader = new AttachmentsReader(input);
+
+      const result = reader.readAttachments();
+
+      assert.strictEqual(result, null);
+    });
+
+    test("should return null for incomplete FirstSeenReplayCouples", () => {
+      const attachments = new Attachments({
+        FirstSeenReplayCouples: [{ dt: new Date(), fnu: "0" }],
+      });
+
+      // Remove the signature part of the couple
+      const frames = attachments.frames();
+      const input = frames.slice(0, -1).reduce((a, b) => a + b.text(), "");
+      const reader = new AttachmentsReader(encodeUtf8(input));
 
       const result = reader.readAttachments();
 
@@ -364,7 +385,7 @@ describe(path.parse(import.meta.filename).base, () => {
 
       // Remove part of the nested ControllerIdxSigs
       const frames = attachments.frames();
-      const input = encodeUtf8(frames.slice(0, -1).join(""));
+      const input = encodeUtf8(frames.slice(0, -1).reduce((a, b) => a + b.text(), ""));
       const reader = new AttachmentsReader(input);
 
       const result = reader.readAttachments();
@@ -386,7 +407,7 @@ describe(path.parse(import.meta.filename).base, () => {
       const attachments1 = new Attachments({ ControllerIdxSigs: [sig0] });
       const attachments2 = new Attachments({ WitnessIdxSigs: [sig1] });
 
-      const combined = encodeUtf8(attachments1.toString() + attachments2.toString());
+      const combined = concat(attachments1.encode(), attachments2.encode());
       const reader = new AttachmentsReader(combined);
 
       const result1 = reader.readAttachments();
