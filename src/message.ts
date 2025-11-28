@@ -142,5 +142,9 @@ export class Message<T extends MessageBody = MessageBody> {
     return encode(init);
   }
 
+  static from<T extends MessageBody = MessageBody>(body: T): Message<T> {
+    return new Message<T>(body);
+  }
+
   readonly [Symbol.toStringTag] = "Message";
 }

@@ -3,7 +3,7 @@ import { Counter } from "../counter.ts";
 import type { Frame } from "../frame.ts";
 import { Matter } from "../matter.ts";
 
-export type GenericMapInit = Record<string, unknown>;
+export type GenericMapGroupInit = Record<string, unknown>;
 
 /**
  * CESR Generic Map
@@ -11,7 +11,7 @@ export type GenericMapInit = Record<string, unknown>;
 export class GenericMapGroup {
   #map: Map<string, unknown>;
 
-  constructor(init: GenericMapInit) {
+  constructor(init: GenericMapGroupInit) {
     this.#map = new Map<string, unknown>(Object.entries(init));
   }
 
@@ -60,5 +60,9 @@ export class GenericMapGroup {
     return this.frames().reduce<Uint8Array>((acc, frame) => {
       return concat(acc, frame.binary());
     }, new Uint8Array());
+  }
+
+  static from(init: GenericMapGroupInit): GenericMapGroup {
+    return new GenericMapGroup(init);
   }
 }
