@@ -203,15 +203,15 @@ describe(path.parse(import.meta.filename).base, () => {
       assert.deepStrictEqual(result.TransLastIdxSigGroups[1].ControllerIdxSigs, [sig2]);
     });
 
-    test("should read PathedMaterialCouples", () => {
+    test("should read grouped PathedMaterialCouples", () => {
       const nestedAttachments = new Attachments({
         ControllerIdxSigs: [sig0],
       });
 
       const attachments = new Attachments({
         PathedMaterialCouples: [
-          { path: "-a-b", attachments: nestedAttachments },
-          { path: "-c", attachments: nestedAttachments },
+          { path: "-a-b", grouped: true, attachments: nestedAttachments },
+          { path: "-c", grouped: true, attachments: nestedAttachments },
         ],
       });
       const input = encodeUtf8(attachments.text());
@@ -222,7 +222,14 @@ describe(path.parse(import.meta.filename).base, () => {
       assert(result);
       assert.strictEqual(result.PathedMaterialCouples?.length, 2);
       assert.strictEqual(result.PathedMaterialCouples[0].path, "-a-b");
+      assert.strictEqual(result.PathedMaterialCouples[0].grouped, true);
       assert.strictEqual(result.PathedMaterialCouples[1].path, "-c");
+      assert.strictEqual(result.PathedMaterialCouples[1].grouped, true);
+
+      assert.deepStrictEqual(
+        result.frames().map((f) => f.text()),
+        ["-VA2", "-LAa", "4AAB-a-b", "-VAX", "-AAB", sig0, "-LAa", "5AABAA-c", "-VAX", "-AAB", sig0],
+      );
     });
 
     test("should read ungrouped PathedMaterialCouples", () => {
@@ -245,8 +252,6 @@ describe(path.parse(import.meta.filename).base, () => {
         ],
       });
 
-      // const
-
       const input = encodeUtf8(attachments.text());
       const reader = new AttachmentsReader(input);
 
@@ -255,7 +260,15 @@ describe(path.parse(import.meta.filename).base, () => {
       assert(result);
       assert.strictEqual(result.PathedMaterialCouples?.length, 2);
       assert.strictEqual(result.PathedMaterialCouples[0].path, "-a-b");
+      assert.strictEqual(result.PathedMaterialCouples[0].grouped, false);
       assert.strictEqual(result.PathedMaterialCouples[1].path, "-c");
+      assert.strictEqual(result.PathedMaterialCouples[1].grouped, false);
+
+      const frames = result.frames();
+      assert.deepStrictEqual(
+        frames.map((f) => f.text()),
+        ["-VA0", "-LAZ", "4AAB-a-b", "-AAB", sig0, "-LAZ", "5AABAA-c", "-AAB", sig0],
+      );
     });
 
     test("should read ungrouped attachment", () => {

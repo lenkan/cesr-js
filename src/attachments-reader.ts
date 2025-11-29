@@ -167,12 +167,14 @@ export class AttachmentsReader {
   #readPathedAttachments(size: number): PathedMaterialCouple {
     const chunk = this.#readBytes(size * 4);
 
-    const result = Counter.peek(this.#buffer);
-    const grouped =
-      result.frame?.type === (this.#version === 1 ? CountCode_10.AttachmentGroup : CountCode_20.AttachmentGroup);
-
     const reader = new AttachmentsReader(chunk, { version: this.#version });
     const path = reader.#readMatter().decode.string();
+
+    const result = Counter.peek(reader.#buffer);
+    const grouped =
+      (result.frame && result.frame.type) ===
+      (this.#version === 1 ? CountCode_10.AttachmentGroup : CountCode_20.AttachmentGroup);
+
     const pathAttachments = reader.readAttachments();
 
     if (!pathAttachments) {
