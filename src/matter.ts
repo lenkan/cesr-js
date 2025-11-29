@@ -129,8 +129,6 @@ const CryptoMatter = {
   x25519_cipher_Seed: createRaw(MatterCode.X25519_Cipher_Seed),
 };
 
-export type CryptoMatter = Readonly<typeof CryptoMatter>;
-
 const PrimitiveMatter = {
   tag(input: string): Matter {
     switch (input.length) {
@@ -199,8 +197,6 @@ const PrimitiveMatter = {
   },
 };
 
-export type PrimitiveMatter = Readonly<typeof PrimitiveMatter>;
-
 export class Matter extends Frame implements MatterInit {
   constructor(init: MatterInit) {
     super({
@@ -231,12 +227,12 @@ export class Matter extends Frame implements MatterInit {
   /**
    * Predefined Matter creators for common crypto types
    */
-  static readonly crypto: CryptoMatter = CryptoMatter;
+  static readonly crypto = CryptoMatter;
 
   /**
    * Predefined Matter creators for common value types
    */
-  static readonly primitive: PrimitiveMatter = PrimitiveMatter;
+  static readonly primitive = PrimitiveMatter;
 
   readonly decode = {
     hex: (): string => {

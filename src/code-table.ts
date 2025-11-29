@@ -20,15 +20,6 @@ export interface CodeTableEntry {
   xs: number;
 }
 
-export interface CodeTableOptions {
-  /**
-   * Strict lookup rules - throws if codes are not in the provided table
-   */
-  strict?: boolean;
-  matter?: CodeTableInit;
-  indexer?: CodeTableInit;
-}
-
 export function resolveEntry(init: CodeTableEntryInit): CodeTableEntry {
   return {
     hs: init.hs,
@@ -74,24 +65,4 @@ export class CodeTable {
 
     return entry;
   }
-}
-
-export function lookupCounterSize(input: Uint8Array | string): CodeTableEntry {
-  if (typeof input !== "string") {
-    input = decodeUtf8(input.slice(0, 4));
-  }
-
-  switch (input.charAt(0)) {
-    case "-":
-      switch (input.charAt(1)) {
-        case "-":
-          return resolveEntry({ hs: 3, ss: 5, fs: 8 });
-        case "_":
-          return resolveEntry({ hs: 5, ss: 3, fs: 8 });
-        default:
-          return resolveEntry({ hs: 2, ss: 2, fs: 4 });
-      }
-  }
-
-  throw new Error(`Unknown code ${input.slice(0, 4)}`);
 }

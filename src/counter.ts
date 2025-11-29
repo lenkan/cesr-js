@@ -45,21 +45,14 @@ function lookupCounterSize(input: Uint8Array | string): CodeTableEntry {
   throw new Error(`Unknown code ${input.slice(0, 4)}`);
 }
 
-export type CounterEncoder<T extends Record<string, string>> = {
-  [key in keyof T]: (count: number) => Counter;
-};
-
-export type CountCode_10 = typeof CountCode_10;
-export type CountCode_20 = typeof CountCode_20;
-
-export type CountEncoder_10 = CounterEncoder<CountCode_10>;
-export type CountEncoder_20 = CounterEncoder<CountCode_20>;
-
-function createEncoder<T extends Record<string, string>>(codes: T): CounterEncoder<T> {
-  return Object.entries(codes).reduce((acc, [key, code]) => {
-    acc[key as keyof T] = (count: number): Counter => new Counter({ type: code, count });
-    return acc;
-  }, {} as CounterEncoder<T>);
+function createEncoder<T extends Record<string, string>>(types: T): { [key in keyof T]: (count: number) => Counter } {
+  return Object.entries(types).reduce(
+    (acc, [key, type]) => {
+      acc[key as keyof T] = (count) => new Counter({ type, count });
+      return acc;
+    },
+    {} as { [key in keyof T]: (count: number) => Counter },
+  );
 }
 
 export class Counter extends Frame implements CounterInit {
@@ -106,11 +99,11 @@ export class Counter extends Frame implements CounterInit {
     });
   }
 
-  static readonly Code = Object.freeze({
+  static readonly Code = {
     v1: CountCode_10,
     v2: CountCode_20,
-  });
+  };
 
-  static readonly v1: CountEncoder_10 = createEncoder(CountCode_10);
-  static readonly v2: CountEncoder_20 = createEncoder(CountCode_20);
+  static readonly v1 = createEncoder(CountCode_10);
+  static readonly v2 = createEncoder(CountCode_20);
 }
