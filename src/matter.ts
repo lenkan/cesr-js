@@ -234,7 +234,12 @@ export class Matter extends Frame implements MatterInit {
    */
   static readonly primitive = PrimitiveMatter;
 
-  readonly decode = {
+  get decode() {
+    // To ensure its not enumerable, clutters the object view
+    return this.#decode;
+  }
+
+  readonly #decode = {
     hex: (): string => {
       return decodeHexRaw(this.raw);
     },

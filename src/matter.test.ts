@@ -2,6 +2,7 @@ import assert from "node:assert";
 import { basename } from "node:path";
 import test, { describe } from "node:test";
 import { Matter } from "./matter.ts";
+import { inspect } from "node:util";
 
 describe(basename(import.meta.url), () => {
   describe("encoding matter primitives", () => {
@@ -313,6 +314,25 @@ describe(basename(import.meta.url), () => {
       const decoded = matter.decode.date();
 
       assert.strictEqual(decoded.toISOString(), leapDay.toISOString());
+    });
+  });
+
+  describe("inspect", () => {
+    test("should display code and raw", () => {
+      const matter = Matter.crypto.blake3_256(new Uint8Array(32));
+      assert.deepStrictEqual(inspect(matter, { colors: false }).split("\n"), [
+        `Matter {`,
+        `  code: '${matter.code}',`,
+        "  soft: undefined,",
+        "  other: undefined,",
+        "  raw: Uint8Array(32) [",
+        `    0, 0, 0, 0, 0, 0, 0, 0, 0,`,
+        `    0, 0, 0, 0, 0, 0, 0, 0, 0,`,
+        `    0, 0, 0, 0, 0, 0, 0, 0, 0,`,
+        `    0, 0, 0, 0, 0`,
+        `  ]`,
+        `}`,
+      ]);
     });
   });
 });

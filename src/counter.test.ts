@@ -2,6 +2,7 @@ import { basename } from "node:path";
 import test, { describe } from "node:test";
 import { Counter } from "./counter.ts";
 import assert from "node:assert";
+import { inspect } from "node:util";
 
 describe(basename(import.meta.url), () => {
   test("should encode counter", () => {
@@ -55,6 +56,20 @@ describe(basename(import.meta.url), () => {
       assert.strictEqual(counter.code, "-V");
       assert.strictEqual(counter.count, 3);
       assert.strictEqual(counter.text(), "-VAD");
+    });
+  });
+
+  describe("inspect", () => {
+    test("should display code and raw", () => {
+      const counter = Counter.v1.ControllerIdxSigs(32);
+      assert.deepStrictEqual(inspect(counter, { colors: false }).split("\n"), [
+        `Counter {`,
+        `  code: '${counter.code}',`,
+        "  soft: 32,",
+        "  other: undefined,",
+        "  raw: Uint8Array(0) []",
+        `}`,
+      ]);
     });
   });
 });

@@ -25,34 +25,22 @@ export interface FrameInit {
 }
 
 export class Frame {
-  readonly #code: string;
-  readonly #raw: Uint8Array;
-  readonly #soft?: number;
-  readonly #other?: number;
-  readonly size: CodeTableEntry;
+  readonly code: string;
+  readonly soft?: number;
+  readonly other?: number;
+  readonly raw: Uint8Array;
+  readonly #size: CodeTableEntry;
 
   constructor(init: FrameInit) {
-    this.#code = init.code;
-    this.#raw = init.raw || new Uint8Array();
-    this.#soft = init.soft;
-    this.#other = init.other;
-    this.size = init.size;
+    this.code = init.code;
+    this.soft = init.soft;
+    this.other = init.other;
+    this.raw = init.raw || new Uint8Array();
+    this.#size = init.size;
   }
 
-  get soft(): number | undefined {
-    return this.#soft;
-  }
-
-  get other(): number | undefined {
-    return this.#other;
-  }
-
-  get code(): string {
-    return this.#code;
-  }
-
-  get raw(): Uint8Array {
-    return this.#raw;
+  get size() {
+    return this.#size;
   }
 
   /**
@@ -63,16 +51,16 @@ export class Frame {
       return this.size.fs / 4;
     }
 
-    const ps = (3 - ((this.#raw.byteLength + this.size.ls) % 3)) % 3;
-    const fs = this.#raw.byteLength + ps + this.size.ls;
+    const ps = (3 - ((this.raw.byteLength + this.size.ls) % 3)) % 3;
+    const fs = this.raw.byteLength + ps + this.size.ls;
     const cs = this.size.hs + this.size.ss;
     return cs / 4 + fs / 3;
   }
 
   text(): string {
-    if (this.#code.length !== this.size.hs) {
+    if (this.code.length !== this.size.hs) {
       throw new Error(
-        `Frame code ${this.#code} length ${this.#code.length} does not match expected size ${this.size.hs}`,
+        `Frame code ${this.code} length ${this.code.length} does not match expected size ${this.size.hs}`,
       );
     }
 
@@ -80,15 +68,15 @@ export class Frame {
     const ms = (this.size.ss ?? 0) - (this.size.os ?? 0);
     const os = this.size.os ?? 0;
 
-    const raw = this.#raw ?? new Uint8Array(0);
+    const raw = this.raw ?? new Uint8Array(0);
 
     const padSize = (3 - ((raw.byteLength + ls) % 3)) % 3;
     const padded = prepad(raw, padSize + ls);
 
-    const soft = ms ? encodeBase64Int(this.#soft ?? padded.byteLength / 3, ms) : "";
-    const other = os ? encodeBase64Int(this.#other ?? 0, os ?? 0) : "";
+    const soft = ms ? encodeBase64Int(this.soft ?? padded.byteLength / 3, ms) : "";
+    const other = os ? encodeBase64Int(this.other ?? 0, os ?? 0) : "";
 
-    const result = `${this.#code}${soft}${other}${encodeBase64Url(padded).slice(padSize)}`;
+    const result = `${this.code}${soft}${other}${encodeBase64Url(padded).slice(padSize)}`;
 
     if (this.size.fs !== undefined && this.size.fs > 0 && result.length < this.size.fs) {
       throw new Error(`Encoded size ${result.length} does not match expected size ${this.size.fs}`);
@@ -98,7 +86,7 @@ export class Frame {
   }
 
   binary(): Uint8Array {
-    const raw = this.#raw ?? new Uint8Array(0);
+    const raw = this.raw ?? new Uint8Array(0);
 
     // TODO: xs
     const size = this.size;
@@ -106,11 +94,11 @@ export class Frame {
     const ms = size.ss - size.os;
     const os = size.os;
     const n = Math.ceil((cs * 3) / 4);
-    const soft = ms ? encodeBase64Int(this.#soft ?? (size.ls + raw.length) / 3, ms) : "";
-    const other = os ? encodeBase64Int(this.#other ?? 0, os ?? 0) : "";
+    const soft = ms ? encodeBase64Int(this.soft ?? (size.ls + raw.length) / 3, ms) : "";
+    const other = os ? encodeBase64Int(this.other ?? 0, os ?? 0) : "";
     const padding = 2 * (cs % 4);
 
-    const bcode = toArray(lshift(decodeBase64Int(this.#code + soft + other), padding), n);
+    const bcode = toArray(lshift(decodeBase64Int(this.code + soft + other), padding), n);
     const result = new Uint8Array(bcode.length + size.ls + raw.length);
     result.set(bcode, 0);
     result.set(raw, bcode.length + size.ls);
