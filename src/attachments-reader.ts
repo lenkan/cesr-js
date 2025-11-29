@@ -166,6 +166,11 @@ export class AttachmentsReader {
 
   #readPathedAttachments(size: number): PathedMaterialCouple {
     const chunk = this.#readBytes(size * 4);
+
+    const result = Counter.peek(this.#buffer);
+    const grouped =
+      result.frame?.type === (this.#version === 1 ? CountCode_10.AttachmentGroup : CountCode_20.AttachmentGroup);
+
     const reader = new AttachmentsReader(chunk, { version: this.#version });
     const path = reader.#readMatter().decode.string();
     const pathAttachments = reader.readAttachments();
@@ -176,6 +181,7 @@ export class AttachmentsReader {
 
     return {
       path,
+      grouped,
       attachments: pathAttachments ?? new Attachments({}),
     };
   }
@@ -192,7 +198,6 @@ export class AttachmentsReader {
     }
 
     let end = 0;
-    let grouped = false;
 
     if (this.#version === 1 && result.frame.type === CountCode_10.AttachmentGroup) {
       const requiredLength = result.frame.count * 4 + result.frame.n * 4;
@@ -202,7 +207,6 @@ export class AttachmentsReader {
 
       this.#readBytes(result.n);
       end = this.#buffer.length - result.frame.count * 4;
-      grouped = true;
     } else if (this.#version === 2 && result.frame.type === CountCode_20.AttachmentGroup) {
       const requiredLength = result.frame.count * 4 + result.frame.n * 4;
       if (this.#buffer.length < requiredLength) {
@@ -211,10 +215,9 @@ export class AttachmentsReader {
 
       this.#readBytes(result.n);
       end = this.#buffer.length - result.frame.count * 4;
-      grouped = true;
     }
 
-    const attachments = new Attachments({ grouped });
+    const attachments = new Attachments();
 
     while (this.#buffer.length > end) {
       const counter = this.#readCounter();

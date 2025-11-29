@@ -40,16 +40,20 @@ export interface SealSourceCouple {
 
 export interface PathedMaterialCouple {
   path: string;
+  grouped: boolean;
   attachments: Attachments;
 }
 
 export interface PathedMaterialCoupleInit {
   path: string;
-  attachments: Attachments | AttachmentsInit;
+  /**
+   * Determines whether to wrap this couple in an attachment group frame
+   */
+  grouped?: boolean;
+  attachments: AttachmentsInit;
 }
 
 export interface AttachmentsInit {
-  grouped?: boolean;
   ControllerIdxSigs?: string[];
   WitnessIdxSigs?: string[];
   TransIdxSigGroups?: TransIdxSigGroup[];
@@ -58,7 +62,7 @@ export interface AttachmentsInit {
   SealSourceCouples?: SealSourceCouple[];
   NonTransReceiptCouples?: NonTransReceiptCouple[];
   FirstSeenReplayCouples?: FirstSeenReplayCouple[];
-  PathedMaterialCouples?: (PathedMaterialCouple | PathedMaterialCoupleInit)[];
+  PathedMaterialCouples?: PathedMaterialCoupleInit[];
 }
 
 export class Attachments implements AttachmentsInit {
@@ -72,10 +76,7 @@ export class Attachments implements AttachmentsInit {
   readonly SealSourceTriples: SealSourceTriple[] = [];
   readonly SealSourceCouples: SealSourceCouple[] = [];
 
-  grouped = true;
-
   constructor(init?: AttachmentsInit) {
-    this.grouped = init?.grouped ?? this.grouped;
     this.ControllerIdxSigs.push(...(init?.ControllerIdxSigs ?? []));
     this.NonTransReceiptCouples.push(...(init?.NonTransReceiptCouples ?? []));
     this.WitnessIdxSigs.push(...(init?.WitnessIdxSigs ?? []));
@@ -87,6 +88,7 @@ export class Attachments implements AttachmentsInit {
     this.PathedMaterialCouples.push(
       ...(init?.PathedMaterialCouples ?? []).map((p) => ({
         path: p.path,
+        grouped: p.grouped ?? false,
         attachments: new Attachments(p.attachments),
       })),
     );
@@ -176,9 +178,13 @@ export class Attachments implements AttachmentsInit {
     }
 
     for (const couple of this.PathedMaterialCouples) {
-      const nested: Frame[] = [];
-      const path = Matter.primitive.string(couple.path);
-      nested.push(path, ...couple.attachments.frames());
+      const nested: Frame[] = [Matter.primitive.string(couple.path)];
+
+      if (couple.grouped === true) {
+        nested.push(...couple.attachments.frames());
+      } else {
+        nested.push(...couple.attachments.frames().slice(1));
+      }
 
       const size = nested.reduce((acc, frame) => acc + frame.n, 0);
 
@@ -200,26 +206,12 @@ export class Attachments implements AttachmentsInit {
       }
     }
 
-    if (!this.grouped) {
-      return frames;
-    }
-
     const size = frames.reduce((acc, frame) => acc + frame.n, 0);
     return [Counter.v1.AttachmentGroup(size), ...frames];
   }
 
-  encode(domain: "text" | "binary" = "text"): Uint8Array {
+  binary(): Uint8Array {
     const frames = this.frames();
-    if (domain === "binary") {
-      return frames.reduce((acc, frame) => {
-        const bin = frame.binary();
-        const combined = new Uint8Array(acc.length + bin.length);
-        combined.set(acc, 0);
-        combined.set(bin, acc.length);
-        return combined;
-      }, new Uint8Array());
-    }
-
     return encodeUtf8(frames.reduce((acc, frame) => acc + frame.text(), ""));
   }
 

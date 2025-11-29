@@ -5,6 +5,7 @@ import { Message } from "./message.ts";
 import { VersionString } from "./version-string.ts";
 import { Attachments } from "./attachments.ts";
 import { encodeUtf8 } from "./encoding-utf8.ts";
+import { Indexer } from "./indexer.ts";
 
 describe(basename(import.meta.url), () => {
   describe("creating messages", () => {
@@ -117,12 +118,14 @@ describe(basename(import.meta.url), () => {
           test: "data",
         },
         {
-          ControllerIdxSigs: ["AAtest", "ABtest"],
+          ControllerIdxSigs: [
+            Indexer.crypto.ed25519_sig(new Uint8Array(64), 0).text(),
+            Indexer.crypto.ed25519_sig(new Uint8Array(64), 1).text(),
+          ],
         },
       );
 
       assert.strictEqual(message.attachments.ControllerIdxSigs.length, 2);
-      assert.strictEqual(message.attachments.grouped, true);
     });
 
     test("should allow setting attachments after creation", () => {
@@ -131,12 +134,14 @@ describe(basename(import.meta.url), () => {
         test: "data",
       });
 
+      const sig = Indexer.crypto.ed25519_sig(new Uint8Array(64), 0).text();
+
       message.attachments = new Attachments({
-        ControllerIdxSigs: ["AAtest"],
+        ControllerIdxSigs: [sig],
       });
 
       assert.strictEqual(message.attachments.ControllerIdxSigs.length, 1);
-      assert.strictEqual(message.attachments.ControllerIdxSigs[0], "AAtest");
+      assert.strictEqual(message.attachments.ControllerIdxSigs[0], sig);
     });
   });
 

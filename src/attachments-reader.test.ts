@@ -25,7 +25,7 @@ describe(path.parse(import.meta.filename).base, () => {
   describe("reading individual attachment types", () => {
     test("should read empty attachment group", () => {
       const attachments = new Attachments({});
-      const input = attachments.encode();
+      const input = encodeUtf8(attachments.text());
       const reader = new AttachmentsReader(input);
 
       const result = reader.readAttachments();
@@ -38,7 +38,7 @@ describe(path.parse(import.meta.filename).base, () => {
       const attachments = new Attachments({
         ControllerIdxSigs: [sig0, sig1],
       });
-      const input = attachments.encode();
+      const input = encodeUtf8(attachments.text());
       const reader = new AttachmentsReader(input);
 
       const result = reader.readAttachments();
@@ -52,7 +52,7 @@ describe(path.parse(import.meta.filename).base, () => {
       const attachments = new Attachments({
         WitnessIdxSigs: [sig0, sig1],
       });
-      const input = attachments.encode();
+      const input = encodeUtf8(attachments.text());
       const reader = new AttachmentsReader(input);
 
       const result = reader.readAttachments();
@@ -69,7 +69,7 @@ describe(path.parse(import.meta.filename).base, () => {
           { prefix: prefix, sig: nsig1 },
         ],
       });
-      const input = attachments.encode();
+      const input = encodeUtf8(attachments.text());
       const reader = new AttachmentsReader(input);
 
       const result = reader.readAttachments();
@@ -92,7 +92,7 @@ describe(path.parse(import.meta.filename).base, () => {
           { fnu: "2", dt: date2 },
         ],
       });
-      const input = attachments.encode();
+      const input = encodeUtf8(attachments.text());
       const reader = new AttachmentsReader(input);
 
       const result = reader.readAttachments();
@@ -112,7 +112,7 @@ describe(path.parse(import.meta.filename).base, () => {
           { snu: "a", digest: digest },
         ],
       });
-      const input = attachments.encode();
+      const input = encodeUtf8(attachments.text());
       const reader = new AttachmentsReader(input);
 
       const result = reader.readAttachments();
@@ -132,7 +132,7 @@ describe(path.parse(import.meta.filename).base, () => {
           { prefix: prefix, snu: "7", digest: digest },
         ],
       });
-      const input = attachments.encode();
+      const input = encodeUtf8(attachments.text());
       const reader = new AttachmentsReader(input);
 
       const result = reader.readAttachments();
@@ -162,7 +162,7 @@ describe(path.parse(import.meta.filename).base, () => {
           },
         ],
       });
-      const input = attachments.encode();
+      const input = encodeUtf8(attachments.text());
       const reader = new AttachmentsReader(input);
 
       const result = reader.readAttachments();
@@ -190,7 +190,7 @@ describe(path.parse(import.meta.filename).base, () => {
           },
         ],
       });
-      const input = attachments.encode();
+      const input = encodeUtf8(attachments.text());
       const reader = new AttachmentsReader(input);
 
       const result = reader.readAttachments();
@@ -214,7 +214,7 @@ describe(path.parse(import.meta.filename).base, () => {
           { path: "-c", attachments: nestedAttachments },
         ],
       });
-      const input = attachments.encode();
+      const input = encodeUtf8(attachments.text());
       const reader = new AttachmentsReader(input);
 
       const result = reader.readAttachments();
@@ -230,15 +230,24 @@ describe(path.parse(import.meta.filename).base, () => {
         PathedMaterialCouples: [
           {
             path: "-a-b",
+            grouped: false,
             attachments: {
-              grouped: false,
               ControllerIdxSigs: [sig0],
             },
           },
-          { path: "-c", attachments: { grouped: false, ControllerIdxSigs: [sig0] } },
+          {
+            path: "-c",
+            grouped: false,
+            attachments: {
+              ControllerIdxSigs: [sig0],
+            },
+          },
         ],
       });
-      const input = attachments.encode();
+
+      // const
+
+      const input = encodeUtf8(attachments.text());
       const reader = new AttachmentsReader(input);
 
       const result = reader.readAttachments();
@@ -250,15 +259,19 @@ describe(path.parse(import.meta.filename).base, () => {
     });
 
     test("should read ungrouped attachment", () => {
-      const attachments = new Attachments({ grouped: false, ControllerIdxSigs: [sig0] });
-      const input = attachments.encode();
+      const attachments = new Attachments({ ControllerIdxSigs: [sig0] });
+      const input = encodeUtf8(
+        attachments
+          .frames()
+          .slice(1)
+          .reduce((a, b) => a + b.text(), ""),
+      );
       const reader = new AttachmentsReader(input);
 
       const result = reader.readAttachments();
 
       assert(result);
       assert.strictEqual(result.ControllerIdxSigs.length, 1);
-      assert.strictEqual(result.grouped, false);
     });
   });
 
@@ -268,7 +281,7 @@ describe(path.parse(import.meta.filename).base, () => {
         ControllerIdxSigs: [sig0],
         WitnessIdxSigs: [sig1],
       });
-      const input = attachments.encode();
+      const input = encodeUtf8(attachments.text());
       const reader = new AttachmentsReader(input);
 
       const result = reader.readAttachments();
@@ -295,7 +308,7 @@ describe(path.parse(import.meta.filename).base, () => {
           },
         ],
       });
-      const input = attachments.encode();
+      const input = encodeUtf8(attachments.text());
       const reader = new AttachmentsReader(input);
 
       const result = reader.readAttachments();
@@ -314,7 +327,7 @@ describe(path.parse(import.meta.filename).base, () => {
       const attachments = new Attachments({
         ControllerIdxSigs: [sig0, sig1],
       });
-      const input = attachments.encode().slice(0, -5);
+      const input = encodeUtf8(attachments.text()).slice(0, -5);
       const reader = new AttachmentsReader(input);
 
       const result = reader.readAttachments();
@@ -407,7 +420,7 @@ describe(path.parse(import.meta.filename).base, () => {
       const attachments1 = new Attachments({ ControllerIdxSigs: [sig0] });
       const attachments2 = new Attachments({ WitnessIdxSigs: [sig1] });
 
-      const combined = concat(attachments1.encode(), attachments2.encode());
+      const combined = concat(encodeUtf8(attachments1.text()), encodeUtf8(attachments2.text()));
       const reader = new AttachmentsReader(combined);
 
       const result1 = reader.readAttachments();
