@@ -324,7 +324,6 @@ describe(basename(import.meta.url), () => {
         `Matter {`,
         `  code: '${matter.code}',`,
         "  soft: undefined,",
-        "  other: undefined,",
         "  raw: Uint8Array(32) [",
         `    0, 0, 0, 0, 0, 0, 0, 0, 0,`,
         `    0, 0, 0, 0, 0, 0, 0, 0, 0,`,

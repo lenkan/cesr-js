@@ -13,9 +13,8 @@ export {
   type TransLastIdxSigGroup,
 } from "./attachments.ts";
 export { VersionString, type VersionStringInit } from "./version-string.ts";
-export { Frame, type FrameInit, type ReadResult } from "./frame.ts";
+export { Frame, type FrameInit, type FrameSize, type FrameSizeInit, type ReadResult } from "./frame.ts";
 export { Indexer, type IndexerInit } from "./indexer.ts";
 export { Counter, type CounterInit } from "./counter.ts";
 export { Matter, type MatterInit } from "./matter.ts";
-export { CodeTable, type CodeTableEntry, type CodeTableInit, type CodeTableEntryInit } from "./code-table.ts";
 export { Genus, type GenusInit } from "./genus.ts";

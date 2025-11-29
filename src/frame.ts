@@ -1,5 +1,4 @@
 import { prepad, toArray } from "./array-utils.ts";
-import type { CodeTableEntry } from "./code-table.ts";
 import { decodeBase64Int, decodeBase64Url, encodeBase64Int, encodeBase64Url } from "./encoding-base64.ts";
 import { decodeUtf8, encodeUtf8 } from "./encoding-utf8.ts";
 import { lshift } from "./shifting.ts";
@@ -16,27 +15,46 @@ export interface ReadResult<T> {
   n: number;
 }
 
+export interface FrameSizeInit {
+  hs: number;
+  fs?: number;
+  ss?: number;
+  ls?: number;
+  xs?: number;
+}
+
+export interface FrameSize {
+  hs: number;
+  fs: number;
+  ss: number;
+  ls: number;
+  xs: number;
+}
+
 export interface FrameInit {
   code: string;
+  size: FrameSizeInit;
   raw?: Uint8Array;
   soft?: number;
-  other?: number;
-  size: CodeTableEntry;
 }
 
 export class Frame {
   readonly code: string;
   readonly soft?: number;
-  readonly other?: number;
   readonly raw: Uint8Array;
-  readonly #size: CodeTableEntry;
+  readonly #size: FrameSize;
 
   constructor(init: FrameInit) {
     this.code = init.code;
     this.soft = init.soft;
-    this.other = init.other;
     this.raw = init.raw || new Uint8Array();
-    this.#size = init.size;
+    this.#size = {
+      hs: init.size.hs,
+      fs: init.size.fs ?? 0,
+      ss: init.size.ss ?? 0,
+      ls: init.size.ls ?? 0,
+      xs: init.size.xs ?? 0,
+    };
   }
 
   get size() {
@@ -65,18 +83,15 @@ export class Frame {
     }
 
     const ls = this.size.ls ?? 0;
-    const ms = (this.size.ss ?? 0) - (this.size.os ?? 0);
-    const os = this.size.os ?? 0;
 
     const raw = this.raw ?? new Uint8Array(0);
 
     const padSize = (3 - ((raw.byteLength + ls) % 3)) % 3;
     const padded = prepad(raw, padSize + ls);
 
-    const soft = ms ? encodeBase64Int(this.soft ?? padded.byteLength / 3, ms) : "";
-    const other = os ? encodeBase64Int(this.other ?? 0, os ?? 0) : "";
+    const soft = this.size.ss ? encodeBase64Int(this.soft ?? padded.byteLength / 3, this.size.ss) : "";
 
-    const result = `${this.code}${soft}${other}${encodeBase64Url(padded).slice(padSize)}`;
+    const result = `${this.code}${soft}${encodeBase64Url(padded).slice(padSize)}`;
 
     if (this.size.fs !== undefined && this.size.fs > 0 && result.length < this.size.fs) {
       throw new Error(`Encoded size ${result.length} does not match expected size ${this.size.fs}`);
@@ -91,14 +106,14 @@ export class Frame {
     // TODO: xs
     const size = this.size;
     const cs = size.hs + size.ss;
-    const ms = size.ss - size.os;
-    const os = size.os;
+    // const ms = size.ss - size.os;
+    // const os = size.os;
     const n = Math.ceil((cs * 3) / 4);
-    const soft = ms ? encodeBase64Int(this.soft ?? (size.ls + raw.length) / 3, ms) : "";
-    const other = os ? encodeBase64Int(this.other ?? 0, os ?? 0) : "";
+    const soft = size.ss ? encodeBase64Int(this.soft ?? (size.ls + raw.length) / 3, size.ss) : "";
+    // const other = os ? encodeBase64Int(this.other ?? 0, os ?? 0) : "";
     const padding = 2 * (cs % 4);
 
-    const bcode = toArray(lshift(decodeBase64Int(this.code + soft + other), padding), n);
+    const bcode = toArray(lshift(decodeBase64Int(this.code + soft), padding), n);
     const result = new Uint8Array(bcode.length + size.ls + raw.length);
     result.set(bcode, 0);
     result.set(raw, bcode.length + size.ls);
@@ -106,7 +121,7 @@ export class Frame {
     return result;
   }
 
-  static peek(input: string | Uint8Array, entry: CodeTableEntry): ReadResult<Frame> {
+  static peek(input: string | Uint8Array, entry: FrameSizeInit): ReadResult<Frame> {
     if (typeof input === "string") {
       input = encodeUtf8(input);
     }
@@ -123,11 +138,8 @@ export class Frame {
 
     const ls = entry.ls ?? 0;
     const ps = (entry.hs + ss) % 4;
-    const ms = ss - (entry.os ?? 0);
-    const os = entry.os ?? 0;
     const hard = decodeUtf8(input.slice(0, entry.hs));
-    const soft0 = decodeBase64Int(decodeUtf8(input.slice(entry.hs, entry.hs + ms)));
-    const soft1 = decodeBase64Int(decodeUtf8(input.slice(entry.hs + ms, entry.hs + ms + os)));
+    const soft0 = decodeBase64Int(decodeUtf8(input.slice(entry.hs, entry.hs + ss)));
 
     const fs = entry.fs !== undefined && entry.fs > 0 ? entry.fs : cs + soft0 * 4;
 
@@ -141,10 +153,10 @@ export class Frame {
 
     const raw = decodeBase64Url(rawtext).slice(ps + ls);
 
-    return { frame: new Frame({ code: hard, soft: soft0, other: soft1, raw, size: entry }), n: fs };
+    return { frame: new Frame({ code: hard, soft: soft0, raw, size: entry }), n: fs };
   }
 
-  static parse(input: string | Uint8Array, entry: CodeTableEntry): Frame {
+  static parse(input: string | Uint8Array, entry: FrameSizeInit): Frame {
     const result = Frame.peek(input, entry);
 
     if (!result.frame) {

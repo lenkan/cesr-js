@@ -1,4 +1,3 @@
-import { resolveEntry } from "./code-table.ts";
 import { decodeBase64Int, encodeBase64Int } from "./encoding-base64.ts";
 import { decodeUtf8 } from "./encoding-utf8.ts";
 import { Frame, type FrameInit } from "./frame.ts";
@@ -22,10 +21,10 @@ function resolveGenusFrame(genus: GenusInit): FrameInit {
   return {
     code: `-_${genus.protocol}`,
     soft: decodeBase64Int(`${encodeBase64Int(genus.major, 1)}${encodeBase64Int(minor, 2)}`),
-    size: resolveEntry({
+    size: {
       hs: 5,
       ss: 3,
-    }),
+    },
   };
 }
 

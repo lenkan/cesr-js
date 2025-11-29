@@ -42,7 +42,7 @@ export class AttachmentsReader {
   }
 
   #readMatter(): Matter {
-    const result = Matter.peek(this.#buffer, Matter.Table.lookup(this.#buffer));
+    const result = Matter.peek(this.#buffer);
     if (!result.frame) {
       throw new Error("Failed to read matter, not enough data");
     }

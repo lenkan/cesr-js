@@ -1,6 +1,5 @@
 import { CountCode_10, CountCode_20 } from "./codes.ts";
-import { Frame, type FrameInit, type ReadResult } from "./frame.ts";
-import { resolveEntry, type CodeTableEntry } from "./code-table.ts";
+import { Frame, type FrameInit, type FrameSizeInit, type ReadResult } from "./frame.ts";
 import { decodeUtf8 } from "./encoding-utf8.ts";
 
 export interface CounterInit {
@@ -25,7 +24,7 @@ function resolveFrameInit(init: CounterInit): FrameInit {
   };
 }
 
-function lookupCounterSize(input: Uint8Array | string): CodeTableEntry {
+function lookupCounterSize(input: Uint8Array | string): FrameSizeInit {
   if (typeof input !== "string") {
     input = decodeUtf8(input.slice(0, 4));
   }
@@ -34,11 +33,11 @@ function lookupCounterSize(input: Uint8Array | string): CodeTableEntry {
     case "-":
       switch (input.charAt(1)) {
         case "-":
-          return resolveEntry({ hs: 3, ss: 5, fs: 8 });
+          return { hs: 3, ss: 5, fs: 8 };
         case "_":
-          return resolveEntry({ hs: 5, ss: 3, fs: 8 });
+          return { hs: 5, ss: 3, fs: 8 };
         default:
-          return resolveEntry({ hs: 2, ss: 2, fs: 4 });
+          return { hs: 2, ss: 2, fs: 4 };
       }
   }
 

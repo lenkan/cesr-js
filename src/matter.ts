@@ -1,12 +1,48 @@
 import { concat } from "./array-utils.ts";
-import { CodeTable, type CodeTableEntry } from "./code-table.ts";
 import { MatterCode, MatterTableInit } from "./codes.ts";
 import { decodeBase64Int, decodeBase64Url, encodeBase64Url } from "./encoding-base64.ts";
 import { decodeUtf8, encodeUtf8 } from "./encoding-utf8.ts";
-import { Frame } from "./frame.ts";
+import { Frame, type FrameSize, type ReadResult } from "./frame.ts";
 
-const Table = new CodeTable(MatterTableInit);
 const REGEX_BASE64_CHARACTER = /^[A-Za-z0-9\-_]+$/;
+
+const Table: Record<string, FrameSize> = {};
+const Hards: Record<string, number> = {};
+for (const [key, value] of Object.entries(MatterTableInit)) {
+  Table[key] = {
+    hs: value.hs,
+    fs: value.fs ?? 0,
+    ss: value.ss ?? 0,
+    ls: value.ls ?? 0,
+    xs: value.xs ?? 0,
+  };
+
+  Hards[key.slice(0, 1)] = value.hs;
+}
+
+/**
+ * Finds the size table of a code
+ * @param input The input to parse the code from
+ */
+function lookup(input: string | Uint8Array): FrameSize {
+  if (typeof input !== "string") {
+    input = decodeUtf8(input.slice(0, 4));
+  }
+
+  if (input.length === 0) {
+    throw new Error("Received empty input code for lookup");
+  }
+
+  const hs = Hards[input.slice(0, 1)];
+  const hard = input.slice(0, hs ?? 4);
+  const entry = Table[hard];
+
+  if (!entry) {
+    throw new Error(`Unknown code ${hard}`);
+  }
+
+  return entry;
+}
 
 function padNumber(num: number, length: number) {
   return num.toString().padStart(length, "0");
@@ -22,7 +58,7 @@ function decodeHexRaw(input: Uint8Array): string {
   return value.replace(/^0+/, "") || "0";
 }
 
-function encodeHexRaw(input: string, entry: CodeTableEntry): Uint8Array {
+function encodeHexRaw(input: string, entry: FrameSize): Uint8Array {
   const size = Math.floor(((entry.fs - entry.hs - entry.ss) * 3) / 4) - entry.ls;
 
   const raw = new Uint8Array(size);
@@ -169,7 +205,7 @@ const PrimitiveMatter = {
 
   hex(input: string): Matter {
     // TODO: Choose smaller/bigger size based on input
-    const entry = Matter.Table.lookup(Matter.Code.Salt_128);
+    const entry = lookup(Matter.Code.Salt_128);
     const raw = encodeHexRaw(input, entry);
     return new Matter({ code: Matter.Code.Salt_128, raw });
   },
@@ -203,19 +239,32 @@ export class Matter extends Frame implements MatterInit {
       code: init.code,
       raw: init.raw,
       soft: init.soft,
-      size: Table.lookup(init.code),
+      size: lookup(init.code),
     });
   }
 
-  static readonly Table = Table;
   static readonly Code = MatterCode;
 
   static from(code: string, raw: Uint8Array): Matter {
     return new Matter({ code, raw });
   }
 
+  static peek(input: Uint8Array): ReadResult<Matter> {
+    const entry = lookup(input);
+    const result = Frame.peek(input, entry);
+
+    if (!result.frame) {
+      return { n: result.n };
+    }
+
+    return {
+      frame: new Matter(result.frame),
+      n: result.n,
+    };
+  }
+
   static parse(input: string | Uint8Array): Matter {
-    const entry = Table.lookup(input);
+    const entry = lookup(input);
     const frame = Frame.parse(input, entry);
     return new Matter({
       code: frame.code,
