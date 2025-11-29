@@ -62,15 +62,11 @@ function resolveIndexerInit(frame: Frame, entry: IndexCodeTableEntry): IndexerIn
 }
 
 function resolveFrameInit(init: IndexerInit, entry: IndexCodeTableEntry): FrameInit {
-  if (entry.os === 0 && init.ondex !== undefined) {
-    throw new Error(`Indexer code ${init.code} does not support ondex value, got ${init.ondex}`);
-  }
-
   const ms = entry.ss - entry.os;
   const os = entry.os;
 
   const index = encodeBase64Int(init.index, ms);
-  const ondex = encodeBase64Int(init.ondex ?? 0, os);
+  const ondex = os > 0 ? encodeBase64Int(init.ondex ?? 0, os) : "";
   const soft = decodeBase64Int(index + ondex);
 
   return {
@@ -88,9 +84,6 @@ export class Indexer extends Frame implements IndexerInit {
   constructor(init: IndexerInit) {
     const entry = lookup(init.code);
     super(resolveFrameInit(init, entry));
-    if (entry.os === 0 && init.ondex !== undefined) {
-      throw new Error(`Indexer code ${init.code} does not support ondex value, got ${init.ondex}`);
-    }
     this.index = init.index;
     this.ondex = init.ondex;
   }
