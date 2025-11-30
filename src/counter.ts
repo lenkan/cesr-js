@@ -1,5 +1,14 @@
 import { CountCode_10, CountCode_20 } from "./codes.ts";
-import { Frame, type FrameInit, type FrameSizeInit, type ReadResult } from "./frame.ts";
+import {
+  encodeBinary,
+  encodeText,
+  type Frame,
+  decodeText,
+  peekText,
+  resolveQuadletCount,
+  type FrameSize,
+  type ReadResult,
+} from "./frame.ts";
 import { decodeUtf8 } from "./encoding-utf8.ts";
 
 export interface CounterInit {
@@ -15,16 +24,7 @@ function resolveCountCode(init: CounterInit): string {
   return `--${init.type}`;
 }
 
-function resolveFrameInit(init: CounterInit): FrameInit {
-  const code = resolveCountCode(init);
-  return {
-    code,
-    soft: init.count,
-    size: lookupCounterSize(code),
-  };
-}
-
-function lookupCounterSize(input: Uint8Array | string): FrameSizeInit {
+function resolveCounterSize(input: Uint8Array | string): FrameSize {
   if (typeof input !== "string") {
     input = decodeUtf8(input.slice(0, 4));
   }
@@ -54,17 +54,41 @@ function createEncoder<T extends Record<string, string>>(types: T): { [key in ke
   );
 }
 
-export class Counter extends Frame implements CounterInit {
+export class Counter implements Frame, CounterInit {
+  readonly code: string;
+  readonly count: number;
+
   constructor(init: CounterInit) {
-    super(resolveFrameInit(init));
+    this.code = resolveCountCode(init);
+    this.count = init.count;
+  }
+
+  get quadlets() {
+    return resolveQuadletCount(this);
+  }
+
+  get size() {
+    return resolveCounterSize(this.code);
+  }
+
+  get soft() {
+    return this.count;
+  }
+
+  get raw() {
+    return new Uint8Array(0);
+  }
+
+  text(): string {
+    return encodeText(this);
+  }
+
+  binary(): Uint8Array {
+    return encodeBinary(this);
   }
 
   get type() {
     return this.code.replace(/^-+/, "");
-  }
-
-  get count() {
-    return this.soft ?? 0;
   }
 
   static peek(input: string | Uint8Array): ReadResult<Counter> {
@@ -72,8 +96,8 @@ export class Counter extends Frame implements CounterInit {
       return { n: 0 };
     }
 
-    const entry = lookupCounterSize(input);
-    const result = Frame.peek(input, entry);
+    const entry = resolveCounterSize(input);
+    const result = peekText(input, entry);
 
     if (!result.frame) {
       return { n: result.n };
@@ -89,8 +113,8 @@ export class Counter extends Frame implements CounterInit {
   }
 
   static parse(input: string | Uint8Array): Counter {
-    const entry = lookupCounterSize(input);
-    const frame = Frame.parse(input, entry);
+    const entry = resolveCounterSize(input);
+    const frame = decodeText(input, entry);
 
     return new Counter({
       type: frame.code.replace(/^-+/, ""),

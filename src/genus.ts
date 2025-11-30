@@ -1,6 +1,5 @@
 import { decodeBase64Int, encodeBase64Int } from "./encoding-base64.ts";
-import { decodeUtf8 } from "./encoding-utf8.ts";
-import { Frame, type FrameInit } from "./frame.ts";
+import { encodeBinary, encodeText, type Frame, type FrameSize, decodeText, resolveQuadletCount } from "./frame.ts";
 
 export interface GenusInit {
   protocol: string;
@@ -8,36 +7,54 @@ export interface GenusInit {
   minor?: number;
 }
 
-function resolveGenusFrame(genus: GenusInit): FrameInit {
-  if (typeof genus.major !== "number" || genus.major < 0 || genus.major > 63) {
-    throw new Error(`Invalid major version: ${genus.major}`);
-  }
+const Size: FrameSize = Object.freeze({
+  hs: 5,
+  ss: 3,
+  fs: 8,
+  ls: 0,
+  xs: 0,
+});
 
-  const minor = genus.minor ?? 0;
-  if (typeof minor !== "number" || minor < 0) {
-    throw new Error(`Invalid minor version: ${minor}`);
-  }
-
-  return {
-    code: `-_${genus.protocol}`,
-    soft: decodeBase64Int(`${encodeBase64Int(genus.major, 1)}${encodeBase64Int(minor, 2)}`),
-    size: {
-      hs: 5,
-      ss: 3,
-    },
-  };
-}
-
-export class Genus extends Frame implements GenusInit {
+export class Genus implements Frame, GenusInit {
+  readonly code: string;
   readonly protocol: string;
   readonly major: number;
   readonly minor: number;
 
   constructor(init: GenusInit) {
-    super(resolveGenusFrame(init));
+    if (typeof init.major !== "number" || init.major < 0 || init.major > 63) {
+      throw new Error(`Invalid major version: ${init.major}`);
+    }
+
+    const minor = init.minor ?? 0;
+    if (typeof minor !== "number" || minor < 0) {
+      throw new Error(`Invalid minor version: ${minor}`);
+    }
+
+    this.code = `-_${init.protocol}`;
     this.protocol = init.protocol;
     this.major = init.major;
     this.minor = init.minor ?? 0;
+  }
+
+  get size(): FrameSize {
+    return Size;
+  }
+
+  get soft(): number {
+    return decodeBase64Int(`${encodeBase64Int(this.major, 1)}${encodeBase64Int(this.minor, 2)}`);
+  }
+
+  get quadlets(): number {
+    return resolveQuadletCount(this);
+  }
+
+  text(): string {
+    return encodeText(this);
+  }
+
+  binary(): Uint8Array {
+    return encodeBinary(this);
   }
 
   static KERIACDC_10 = new Genus({
@@ -53,17 +70,12 @@ export class Genus extends Frame implements GenusInit {
   });
 
   static parse(input: string | Uint8Array): Genus {
-    if (typeof input !== "string") {
-      input = decodeUtf8(input.slice(0, 8));
-    }
+    const frame = decodeText(input, Size);
 
-    if (input.length < 8) {
-      throw new Error(`Input too short to parse Genus: "${input}"`);
-    }
-
-    const genus = input.slice(2, 5);
-    const major = decodeBase64Int(input.slice(5, 6));
-    const minor = decodeBase64Int(input.slice(6, 8));
+    const genus = frame.code.slice(2);
+    const soft = encodeBase64Int(frame.soft ?? 0, 3);
+    const major = decodeBase64Int(soft.slice(0, 1));
+    const minor = decodeBase64Int(soft.slice(1, 3));
 
     return new Genus({
       protocol: genus,

@@ -93,7 +93,7 @@ export async function* parse(input: ParseInput, options?: ParseOptions): AsyncIt
         buffer = buffer.slice(message.raw.length);
       } else if (start === "-" && next === "_") {
         genus = Genus.parse(buffer);
-        buffer = buffer.slice(genus.n * 4);
+        buffer = buffer.slice(genus.quadlets * 4);
       } else if (start === "-") {
         const counter = Counter.peek(buffer);
 

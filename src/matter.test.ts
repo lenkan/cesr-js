@@ -19,7 +19,7 @@ describe(basename(import.meta.url), () => {
       const matter = Matter.crypto.blake3_256(new Uint8Array(32));
       const result = matter.text();
       assert.strictEqual(result, `E${"A".repeat(43)}`);
-      assert.strictEqual(matter.n, 11);
+      assert.strictEqual(matter.quadlets, 11);
     });
 
     test("should encode 2 char code fixed size primitive", () => {
@@ -28,7 +28,7 @@ describe(basename(import.meta.url), () => {
       const result = matter.text();
 
       assert.strictEqual(result, `0B${"A".repeat(86)}`);
-      assert.strictEqual(matter.n, 22);
+      assert.strictEqual(matter.quadlets, 22);
     });
 
     test("should encode small string lead 0", () => {
@@ -38,7 +38,7 @@ describe(basename(import.meta.url), () => {
 
       assert.strictEqual(text.length % 4, 0);
       assert.strictEqual(text, "4BABZm8h");
-      assert.strictEqual(matter.n, 2);
+      assert.strictEqual(matter.quadlets, 2);
     });
 
     test("should encode small string lead 1", () => {
@@ -48,7 +48,7 @@ describe(basename(import.meta.url), () => {
 
       assert.strictEqual(text.length % 4, 0);
       assert.strictEqual(text, "5BACAGZvb28h");
-      assert.strictEqual(matter.n, 3);
+      assert.strictEqual(matter.quadlets, 3);
     });
 
     test("should encode small string lead 2", () => {

@@ -2,7 +2,16 @@ import { concat } from "./array-utils.ts";
 import { MatterCode, MatterTableInit } from "./codes.ts";
 import { decodeBase64Int, decodeBase64Url, encodeBase64Url } from "./encoding-base64.ts";
 import { decodeUtf8, encodeUtf8 } from "./encoding-utf8.ts";
-import { Frame, type FrameSize, type ReadResult } from "./frame.ts";
+import {
+  encodeBinary,
+  encodeText,
+  decodeText,
+  peekText,
+  resolveQuadletCount,
+  type Frame,
+  type FrameSize,
+  type ReadResult,
+} from "./frame.ts";
 
 const REGEX_BASE64_CHARACTER = /^[A-Za-z0-9\-_]+$/;
 
@@ -59,7 +68,8 @@ function decodeHexRaw(input: Uint8Array): string {
 }
 
 function encodeHexRaw(input: string, entry: FrameSize): Uint8Array {
-  const size = Math.floor(((entry.fs - entry.hs - entry.ss) * 3) / 4) - entry.ls;
+  const ls = entry.ls ?? 0;
+  const size = Math.floor(((entry.fs - entry.hs - entry.ss) * 3) / 4) - ls;
 
   const raw = new Uint8Array(size);
 
@@ -233,14 +243,31 @@ const PrimitiveMatter = {
   },
 };
 
-export class Matter extends Frame implements MatterInit {
+export class Matter implements Frame, MatterInit {
+  readonly code: string;
+  readonly soft?: number;
+  readonly raw: Uint8Array;
+
   constructor(init: MatterInit) {
-    super({
-      code: init.code,
-      raw: init.raw,
-      soft: init.soft,
-      size: lookup(init.code),
-    });
+    this.code = init.code;
+    this.raw = init.raw;
+    this.soft = init.soft;
+  }
+
+  get quadlets(): number {
+    return resolveQuadletCount(this);
+  }
+
+  get size() {
+    return lookup(this.code);
+  }
+
+  text(): string {
+    return encodeText(this);
+  }
+
+  binary(): Uint8Array {
+    return encodeBinary(this);
   }
 
   static readonly Code = MatterCode;
@@ -251,24 +278,28 @@ export class Matter extends Frame implements MatterInit {
 
   static peek(input: Uint8Array): ReadResult<Matter> {
     const entry = lookup(input);
-    const result = Frame.peek(input, entry);
+    const result = peekText(input, entry);
 
     if (!result.frame) {
       return { n: result.n };
     }
 
     return {
-      frame: new Matter(result.frame),
+      frame: new Matter({
+        code: result.frame.code,
+        raw: result.frame.raw ?? new Uint8Array(0),
+        soft: result.frame.soft,
+      }),
       n: result.n,
     };
   }
 
   static parse(input: string | Uint8Array): Matter {
     const entry = lookup(input);
-    const frame = Frame.parse(input, entry);
+    const frame = decodeText(input, entry);
     return new Matter({
       code: frame.code,
-      raw: frame.raw,
+      raw: frame.raw ?? new Uint8Array(0),
       soft: frame.soft,
     });
   }
@@ -315,9 +346,10 @@ export class Matter extends Frame implements MatterInit {
         case Matter.Code.StrB64_Big_L0:
         case Matter.Code.StrB64_Big_L1:
         case Matter.Code.StrB64_Big_L2: {
-          const bext = encodeBase64Url(concat(new Uint8Array(this.size.ls), this.raw));
+          const ls = this.size.ls ?? 0;
+          const bext = encodeBase64Url(concat(new Uint8Array(ls), this.raw));
 
-          if (this.size.ls === 0 && bext) {
+          if (ls === 0 && bext) {
             if (bext[0] === "A") {
               return bext.slice(1);
             }
@@ -325,7 +357,7 @@ export class Matter extends Frame implements MatterInit {
             return bext;
           }
 
-          return bext.slice((this.size.ls + 1) % 4);
+          return bext.slice((ls + 1) % 4);
         }
         case Matter.Code.Bytes_L0:
         case Matter.Code.Bytes_L1:
