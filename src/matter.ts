@@ -11,6 +11,7 @@ import {
   type Frame,
   type FrameSize,
   type ReadResult,
+  type FrameInit,
 } from "./frame.ts";
 
 const REGEX_BASE64_CHARACTER = /^[A-Za-z0-9\-_]+$/;
@@ -176,70 +177,124 @@ const CryptoMatter = {
 };
 
 const PrimitiveMatter = {
-  tag(input: string): Matter {
-    switch (input.length) {
-      case 1:
-        return new Matter({
-          code: Matter.Code.Tag1,
-          raw: new Uint8Array(0),
-          soft: decodeBase64Int(input.padStart(2, "_")),
-        });
-      case 2:
-        return new Matter({
-          code: Matter.Code.Tag2,
-          raw: new Uint8Array(0),
-          soft: decodeBase64Int(input),
-        });
-      default:
-        throw new Error(`Unsupported tag length: ${input.length} for tag "${input}"`);
-    }
-  },
+  from: {
+    tag(input: string): Matter {
+      switch (input.length) {
+        case 1:
+          return new Matter({
+            code: Matter.Code.Tag1,
+            raw: new Uint8Array(0),
+            soft: decodeBase64Int(input.padStart(2, "_")),
+          });
+        case 2:
+          return new Matter({
+            code: Matter.Code.Tag2,
+            raw: new Uint8Array(0),
+            soft: decodeBase64Int(input),
+          });
+        default:
+          throw new Error(`Unsupported tag length: ${input.length} for tag "${input}"`);
+      }
+    },
 
-  string(input: string): Matter {
-    if (REGEX_BASE64_CHARACTER.test(input) && !input.startsWith("A")) {
-      const raw = encodeBase64Raw(input);
-      const code = resolveVariableSizeCode(Matter.Code.StrB64_L0, raw);
+    decimal(input: number): Matter {
+      const raw = encodeBase64Raw(input.toString().replace(".", "p"));
+      const code = resolveVariableSizeCode(Matter.Code.Decimal_L0, raw);
       return new Matter({ code, raw });
-    }
+    },
 
-    const raw = encodeUtf8(input);
-    const code = resolveVariableSizeCode(Matter.Code.Bytes_L0, raw);
-    return new Matter({ code, raw });
+    hex(input: string): Matter {
+      // TODO: Choose smaller/bigger size based on input
+      const entry = lookup(Matter.Code.Salt_128);
+      const raw = encodeHexRaw(input, entry);
+      return new Matter({ code: Matter.Code.Salt_128, raw });
+    },
+    string(input: string): Matter {
+      if (REGEX_BASE64_CHARACTER.test(input) && !input.startsWith("A")) {
+        const raw = encodeBase64Raw(input);
+        const code = resolveVariableSizeCode(Matter.Code.StrB64_L0, raw);
+        return new Matter({ code, raw });
+      }
+
+      const raw = encodeUtf8(input);
+      const code = resolveVariableSizeCode(Matter.Code.Bytes_L0, raw);
+      return new Matter({ code, raw });
+    },
+
+    date(date: Date): Matter {
+      if (date.toString() === "Invalid Date") {
+        throw new Error("Invalid date");
+      }
+
+      const YYYY = date.getFullYear();
+      const MM = padNumber(date.getUTCMonth() + 1, 2);
+      const dd = padNumber(date.getUTCDate(), 2);
+      const hh = padNumber(date.getUTCHours(), 2);
+      const mm = padNumber(date.getUTCMinutes(), 2);
+      const ss = padNumber(date.getUTCSeconds(), 2);
+      const ms = padNumber(date.getUTCMilliseconds(), 3);
+
+      const raw = decodeBase64Url(`${YYYY}-${MM}-${dd}T${hh}c${mm}c${ss}d${ms}000p00c00`);
+      return new Matter({ code: Matter.Code.DateTime, raw });
+    },
   },
 
-  decimal(input: number): Matter {
-    const raw = encodeBase64Raw(input.toString().replace(".", "p"));
-    const code = resolveVariableSizeCode(Matter.Code.Decimal_L0, raw);
-    return new Matter({ code, raw });
-  },
+  as: {
+    string(frame: FrameInit): string {
+      const raw = frame.raw || new Uint8Array();
+      switch (frame.code) {
+        case Matter.Code.StrB64_L0:
+        case Matter.Code.StrB64_L1:
+        case Matter.Code.StrB64_L2:
+        case Matter.Code.StrB64_Big_L0:
+        case Matter.Code.StrB64_Big_L1:
+        case Matter.Code.StrB64_Big_L2: {
+          const ls = frame.size.ls ?? 0;
+          const bext = encodeBase64Url(concat(new Uint8Array(ls), raw));
 
-  hex(input: string): Matter {
-    // TODO: Choose smaller/bigger size based on input
-    const entry = lookup(Matter.Code.Salt_128);
-    const raw = encodeHexRaw(input, entry);
-    return new Matter({ code: Matter.Code.Salt_128, raw });
-  },
+          if (ls === 0 && bext) {
+            if (bext[0] === "A") {
+              return bext.slice(1);
+            }
 
-  integer(input: number): Matter {
-    const raw = encodeBase64Raw(input.toString());
-    return new Matter({ code: Matter.Code.Short, raw });
-  },
+            return bext;
+          }
 
-  date(date: Date): Matter {
-    if (date.toString() === "Invalid Date") {
-      throw new Error("Invalid date");
-    }
+          return bext.slice((ls + 1) % 4);
+        }
+        case Matter.Code.Bytes_L0:
+        case Matter.Code.Bytes_L1:
+        case Matter.Code.Bytes_L2:
+        case Matter.Code.Bytes_Big_L0:
+        case Matter.Code.Bytes_Big_L1:
+        case Matter.Code.Bytes_Big_L2:
+          return decodeUtf8(raw);
+        default:
+          throw new Error(`Cannot decode ${frame.code} as a string`);
+      }
+    },
 
-    const YYYY = date.getFullYear();
-    const MM = padNumber(date.getUTCMonth() + 1, 2);
-    const dd = padNumber(date.getUTCDate(), 2);
-    const hh = padNumber(date.getUTCHours(), 2);
-    const mm = padNumber(date.getUTCMinutes(), 2);
-    const ss = padNumber(date.getUTCSeconds(), 2);
-    const ms = padNumber(date.getUTCMilliseconds(), 3);
+    date(init: FrameInit): Date {
+      const raw = init.raw || new Uint8Array();
+      if (init.code !== Matter.Code.DateTime) {
+        throw new Error(`Cannot decode ${init.code} as a Date`);
+      }
 
-    const raw = decodeBase64Url(`${YYYY}-${MM}-${dd}T${hh}c${mm}c${ss}d${ms}000p00c00`);
-    return new Matter({ code: Matter.Code.DateTime, raw });
+      const text = encodeBase64Url(raw);
+      const datestr = text.replaceAll("c", ":").replaceAll("d", ".").replaceAll("p", "+");
+      const result = new Date(datestr);
+
+      if (result.toString() === "Invalid Date") {
+        throw new Error(`Invalid date frame: ${text}`);
+      }
+
+      return result;
+    },
+
+    hex(frame: FrameInit): string {
+      const raw = frame.raw || new Uint8Array();
+      return decodeHexRaw(raw);
+    },
   },
 };
 
@@ -305,6 +360,17 @@ export class Matter implements Frame, MatterInit {
   }
 
   /**
+   * Convert to Matter primitive types
+   */
+  get as() {
+    return {
+      string: () => PrimitiveMatter.as.string(this),
+      date: () => PrimitiveMatter.as.date(this),
+      hex: () => PrimitiveMatter.as.hex(this),
+    };
+  }
+
+  /**
    * Predefined Matter creators for common crypto types
    */
   static readonly crypto = CryptoMatter;
@@ -312,63 +378,5 @@ export class Matter implements Frame, MatterInit {
   /**
    * Predefined Matter creators for common value types
    */
-  static readonly primitive = PrimitiveMatter;
-
-  get decode() {
-    // To ensure its not enumerable, clutters the object view
-    return this.#decode;
-  }
-
-  readonly #decode = {
-    hex: (): string => {
-      return decodeHexRaw(this.raw);
-    },
-    date: (): Date => {
-      if (this.code !== Matter.Code.DateTime) {
-        throw new Error(`Cannot decode ${this.code} as a Date`);
-      }
-
-      const text = encodeBase64Url(this.raw);
-      const datestr = text.replaceAll("c", ":").replaceAll("d", ".").replaceAll("p", "+");
-      const result = new Date(datestr);
-
-      if (result.toString() === "Invalid Date") {
-        throw new Error(`Invalid date frame: ${text}`);
-      }
-
-      return result;
-    },
-    string: (): string => {
-      switch (this.code) {
-        case Matter.Code.StrB64_L0:
-        case Matter.Code.StrB64_L1:
-        case Matter.Code.StrB64_L2:
-        case Matter.Code.StrB64_Big_L0:
-        case Matter.Code.StrB64_Big_L1:
-        case Matter.Code.StrB64_Big_L2: {
-          const ls = this.size.ls ?? 0;
-          const bext = encodeBase64Url(concat(new Uint8Array(ls), this.raw));
-
-          if (ls === 0 && bext) {
-            if (bext[0] === "A") {
-              return bext.slice(1);
-            }
-
-            return bext;
-          }
-
-          return bext.slice((ls + 1) % 4);
-        }
-        case Matter.Code.Bytes_L0:
-        case Matter.Code.Bytes_L1:
-        case Matter.Code.Bytes_L2:
-        case Matter.Code.Bytes_Big_L0:
-        case Matter.Code.Bytes_Big_L1:
-        case Matter.Code.Bytes_Big_L2:
-          return decodeUtf8(this.raw);
-        default:
-          throw new Error(`Cannot decode ${this.code} as a string`);
-      }
-    },
-  };
+  static readonly primitive = PrimitiveMatter.from;
 }

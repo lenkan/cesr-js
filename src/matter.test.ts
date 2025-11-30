@@ -114,21 +114,21 @@ describe(basename(import.meta.url), () => {
       const matter = Matter.primitive.hex("0");
 
       assert.strictEqual(matter.text(), "0A" + "A".repeat(22));
-      assert.strictEqual(matter.decode.hex(), "0");
+      assert.strictEqual(matter.as.hex(), "0");
     });
 
     test("should encode/decode single digit number", () => {
       const matter = Matter.primitive.hex("2");
       assert.strictEqual(matter.text(), "0A" + "A".repeat(21) + "C");
       assert.strictEqual(matter.text().length, 24);
-      assert.strictEqual(matter.decode.hex(), "2");
+      assert.strictEqual(matter.as.hex(), "2");
     });
 
     test("should encode/decode hex number", () => {
       const matter = Matter.primitive.hex("32");
       assert.strictEqual(matter.text(), "0A" + "A".repeat(21) + "y");
       assert.strictEqual(matter.text().length, 24);
-      assert.strictEqual(matter.decode.hex(), "32");
+      assert.strictEqual(matter.as.hex(), "32");
     });
 
     test("should encode/decode large hex number", () => {
@@ -136,7 +136,7 @@ describe(basename(import.meta.url), () => {
       const matter = Matter.primitive.hex(hex);
 
       assert.strictEqual(matter.text(), "0A" + "ASNFZ4kKvN7xI0VniQq83v");
-      assert.strictEqual(matter.decode.hex(), hex);
+      assert.strictEqual(matter.as.hex(), hex);
     });
   });
 
@@ -146,7 +146,7 @@ describe(basename(import.meta.url), () => {
       const expected = "4AABAabc";
       const matter = Matter.primitive.string(value);
       assert.strictEqual(matter.text(), expected);
-      assert.strictEqual(matter.decode.string(), value);
+      assert.strictEqual(matter.as.string(), value);
     });
 
     test("should encode/decode large string", () => {
@@ -155,7 +155,7 @@ describe(basename(import.meta.url), () => {
 
       assert.match(matter.text(), /^7AAA/);
       assert.strictEqual(matter.text().length % 4, 0);
-      assert.strictEqual(matter.decode.string(), value);
+      assert.strictEqual(matter.as.string(), value);
     });
 
     test("should encode/decode 'Foobar'", () => {
@@ -164,7 +164,7 @@ describe(basename(import.meta.url), () => {
       const matter = Matter.primitive.string(value);
 
       assert.strictEqual(matter.text(), expected);
-      assert.strictEqual(matter.decode.string(), value);
+      assert.strictEqual(matter.as.string(), value);
     });
 
     test("should encode/decode 'Foobars'", () => {
@@ -173,7 +173,7 @@ describe(basename(import.meta.url), () => {
       const matter = Matter.primitive.string(value);
 
       assert.strictEqual(matter.text(), expected);
-      assert.strictEqual(matter.decode.string(), value);
+      assert.strictEqual(matter.as.string(), value);
     });
 
     test("should encode/decode 'ABC' (non-base64)", () => {
@@ -182,7 +182,7 @@ describe(basename(import.meta.url), () => {
       const matter = Matter.primitive.string(value);
 
       assert.strictEqual(matter.text(), expected);
-      assert.strictEqual(matter.decode.string(), value);
+      assert.strictEqual(matter.as.string(), value);
     });
 
     test("should encode/decode 'Hello World!'", () => {
@@ -191,7 +191,7 @@ describe(basename(import.meta.url), () => {
       const matter = Matter.primitive.string(value);
 
       assert.strictEqual(matter.text(), expected);
-      assert.strictEqual(matter.decode.string(), value);
+      assert.strictEqual(matter.as.string(), value);
     });
 
     test("should encode/decode 'Foobars!'", () => {
@@ -200,7 +200,7 @@ describe(basename(import.meta.url), () => {
       const matter = Matter.primitive.string(value);
 
       assert.strictEqual(matter.text(), expected);
-      assert.strictEqual(matter.decode.string(), value);
+      assert.strictEqual(matter.as.string(), value);
     });
 
     test("should encode/decode special characters", () => {
@@ -209,7 +209,7 @@ describe(basename(import.meta.url), () => {
       const matter = Matter.primitive.string(value);
 
       assert.strictEqual(matter.text(), expected);
-      assert.strictEqual(matter.decode.string(), value);
+      assert.strictEqual(matter.as.string(), value);
     });
 
     test("should encode/decode path '-a-b-c'", () => {
@@ -218,7 +218,7 @@ describe(basename(import.meta.url), () => {
       const matter = Matter.primitive.string(value);
 
       assert.strictEqual(matter.text(), expected);
-      assert.strictEqual(matter.decode.string(), value);
+      assert.strictEqual(matter.as.string(), value);
     });
 
     test("should encode/decode path '-a-abc'", () => {
@@ -227,7 +227,7 @@ describe(basename(import.meta.url), () => {
       const matter = Matter.primitive.string(value);
 
       assert.strictEqual(matter.text(), expected);
-      assert.strictEqual(matter.decode.string(), value);
+      assert.strictEqual(matter.as.string(), value);
     });
 
     test("should encode/decode path '-a-abcdef'", () => {
@@ -236,7 +236,7 @@ describe(basename(import.meta.url), () => {
       const matter = Matter.primitive.string(value);
 
       assert.strictEqual(matter.text(), expected);
-      assert.strictEqual(matter.decode.string(), value);
+      assert.strictEqual(matter.as.string(), value);
     });
 
     test("should encode/decode path '-A-ABC-c'", () => {
@@ -245,7 +245,7 @@ describe(basename(import.meta.url), () => {
       const matter = Matter.primitive.string(value);
 
       assert.strictEqual(matter.text(), expected);
-      assert.strictEqual(matter.decode.string(), value);
+      assert.strictEqual(matter.as.string(), value);
     });
   });
 
@@ -258,14 +258,14 @@ describe(basename(import.meta.url), () => {
     test("should decode an encoded date", () => {
       const original = new Date("2024-11-23T16:02:27.123Z");
       const matter = Matter.primitive.date(original);
-      const decoded = matter.decode.date();
+      const decoded = matter.as.date();
       assert.strictEqual(decoded.toISOString(), original.toISOString());
     });
 
     test("should handle dates with zero milliseconds", () => {
       const date = new Date("2024-01-15T10:30:45.000Z");
       const matter = Matter.primitive.date(date);
-      const decoded = matter.decode.date();
+      const decoded = matter.as.date();
 
       assert.strict(matter.text(), "1AAG2024-01-15T10c30c45d000000p00c00");
       assert.strictEqual(decoded.toISOString(), date.toISOString());
@@ -275,7 +275,7 @@ describe(basename(import.meta.url), () => {
       const date = new Date("2024-07-04T14:30:15.456Z");
       const matter = Matter.primitive.date(date);
 
-      const decoded = matter.decode.date();
+      const decoded = matter.as.date();
 
       assert.strictEqual(decoded.getUTCFullYear(), date.getUTCFullYear());
       assert.strictEqual(decoded.getUTCMonth(), date.getUTCMonth());
@@ -301,7 +301,7 @@ describe(basename(import.meta.url), () => {
       let current = original;
       for (let i = 0; i < 3; i++) {
         const encoded = Matter.primitive.date(current);
-        current = encoded.decode.date();
+        current = encoded.as.date();
       }
 
       assert.strictEqual(current.toISOString(), original.toISOString());
@@ -311,7 +311,7 @@ describe(basename(import.meta.url), () => {
       const leapDay = new Date("2024-02-29T12:00:00.000Z"); // 2024 is a leap year
       const matter = Matter.primitive.date(leapDay);
 
-      const decoded = matter.decode.date();
+      const decoded = matter.as.date();
 
       assert.strictEqual(decoded.toISOString(), leapDay.toISOString());
     });
