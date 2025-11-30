@@ -48,7 +48,7 @@ export class GenericMapGroup {
       }
     }
 
-    const size = frames.reduce((acc, frame) => acc + frame.n, 0);
+    const size = frames.reduce((acc, frame) => acc + frame.quadlets, 0);
     return [Counter.v2.GenericMapGroup(size), ...frames];
   }
 

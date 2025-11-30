@@ -1,6 +1,16 @@
 import { IndexCode, IndexTableInit } from "./codes.ts";
 import { decodeBase64Int, encodeBase64Int } from "./encoding-base64.ts";
-import { Frame, type FrameInit, type FrameSize, type ReadResult } from "./frame.ts";
+import {
+  encodeBinary,
+  encodeText,
+  decodeText,
+  peekText,
+  resolveQuadletCount,
+  type Frame,
+  type FrameInit,
+  type FrameSize,
+  type ReadResult,
+} from "./frame.ts";
 
 export interface IndexerInit {
   code: string;
@@ -45,7 +55,7 @@ function lookup(input: string | Uint8Array): IndexCodeTableEntry {
   return entry;
 }
 
-function resolveIndexerInit(frame: Frame, entry: IndexCodeTableEntry): IndexerInit {
+function resolveIndexerInit(frame: FrameInit, entry: IndexCodeTableEntry): IndexerInit {
   const ms = entry.ss - entry.os;
   const os = entry.os;
 
@@ -55,44 +65,58 @@ function resolveIndexerInit(frame: Frame, entry: IndexCodeTableEntry): IndexerIn
 
   return {
     code: frame.code,
-    raw: frame.raw,
+    raw: frame.raw || new Uint8Array(),
     index,
     ondex,
   };
 }
 
-function resolveFrameInit(init: IndexerInit, entry: IndexCodeTableEntry): FrameInit {
-  const ms = entry.ss - entry.os;
-  const os = entry.os;
-
-  const index = encodeBase64Int(init.index, ms);
-  const ondex = os > 0 ? encodeBase64Int(init.ondex ?? 0, os) : "";
-  const soft = decodeBase64Int(index + ondex);
-
-  return {
-    code: init.code,
-    raw: init.raw,
-    soft,
-    size: entry,
-  };
-}
-
-export class Indexer extends Frame implements IndexerInit {
+export class Indexer implements IndexerInit, Frame {
+  readonly code: string;
   readonly index: number;
   readonly ondex?: number;
+  readonly raw: Uint8Array;
 
   constructor(init: IndexerInit) {
-    const entry = lookup(init.code);
-    super(resolveFrameInit(init, entry));
     this.index = init.index;
     this.ondex = init.ondex;
+    this.code = init.code;
+    this.raw = init.raw;
+  }
+
+  get quadlets() {
+    return resolveQuadletCount(this);
+  }
+
+  get soft() {
+    const entry = lookup(this.code);
+    const ms = entry.ss - entry.os;
+    const os = entry.os;
+
+    const index = encodeBase64Int(this.index, ms);
+    const ondex = os > 0 ? encodeBase64Int(this.ondex ?? 0, os) : "";
+    const soft = decodeBase64Int(index + ondex);
+
+    return soft;
+  }
+
+  get size() {
+    return lookup(this.code);
+  }
+
+  text(): string {
+    return encodeText(this);
+  }
+
+  binary(): Uint8Array {
+    return encodeBinary(this);
   }
 
   static readonly Code = IndexCode;
 
   static peek(input: Uint8Array): ReadResult<Indexer> {
     const entry = lookup(input);
-    const result = Frame.peek(input, entry);
+    const result = peekText(input, entry);
 
     if (!result.frame) {
       return { n: result.n };
@@ -106,7 +130,7 @@ export class Indexer extends Frame implements IndexerInit {
 
   static parse(input: string | Uint8Array): Indexer {
     const entry = lookup(input);
-    const frame = Frame.parse(input, entry);
+    const frame = decodeText(input, entry);
 
     return new Indexer(resolveIndexerInit(frame, entry));
   }

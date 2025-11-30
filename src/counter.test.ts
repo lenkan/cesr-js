@@ -62,10 +62,7 @@ describe(basename(import.meta.url), () => {
   describe("inspect", () => {
     test("should display code and raw", () => {
       const counter = Counter.v1.ControllerIdxSigs(32);
-      assert.deepStrictEqual(
-        inspect(counter, { colors: false }),
-        `Counter { code: '${counter.code}', soft: 32, raw: Uint8Array(0) [] }`,
-      );
+      assert.deepStrictEqual(inspect(counter, { colors: false }), `Counter { code: '${counter.code}', count: 32 }`);
     });
   });
 });

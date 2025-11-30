@@ -141,7 +141,8 @@ describe(basename(import.meta.url), () => {
       assert.deepStrictEqual(inspect(frame, { colors: false }).split("\n"), [
         `Indexer {`,
         `  code: '${frame.code}',`,
-        "  soft: 131084,",
+        `  index: 32,`,
+        `  ondex: 12,`,
         "  raw: Uint8Array(64) [",
         `    0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0,`,
         `    0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0,`,
@@ -149,9 +150,7 @@ describe(basename(import.meta.url), () => {
         `    0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0,`,
         `    0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0,`,
         `    0, 0, 0, 0`,
-        `  ],`,
-        `  index: 32,`,
-        `  ondex: 12`,
+        `  ]`,
         `}`,
       ]);
     });

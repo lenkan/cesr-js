@@ -186,7 +186,7 @@ export class Attachments implements AttachmentsInit {
         nested.push(...couple.attachments.frames().slice(1));
       }
 
-      const size = nested.reduce((acc, frame) => acc + frame.n, 0);
+      const size = nested.reduce((acc, frame) => acc + frame.quadlets, 0);
 
       // SIC! For PathedMaterialCouples, keripy does not encode
       // multiple "couples" under the same group. Instead each group
@@ -206,7 +206,7 @@ export class Attachments implements AttachmentsInit {
       }
     }
 
-    const size = frames.reduce((acc, frame) => acc + frame.n, 0);
+    const size = frames.reduce((acc, frame) => acc + frame.quadlets, 0);
     return [Counter.v1.AttachmentGroup(size), ...frames];
   }
 

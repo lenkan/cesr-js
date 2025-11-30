@@ -13,7 +13,7 @@ export {
   type TransLastIdxSigGroup,
 } from "./attachments.ts";
 export { VersionString, type VersionStringInit } from "./version-string.ts";
-export { Frame, type FrameInit, type FrameSize, type FrameSizeInit, type ReadResult } from "./frame.ts";
+export { type Frame, type FrameInit, type FrameSize, type ReadResult, encodeText, encodeBinary } from "./frame.ts";
 export { Indexer, type IndexerInit } from "./indexer.ts";
 export { Counter, type CounterInit } from "./counter.ts";
 export { Matter, type MatterInit } from "./matter.ts";

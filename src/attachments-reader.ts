@@ -202,7 +202,7 @@ export class AttachmentsReader {
     let end = 0;
 
     if (this.#version === 1 && result.frame.type === CountCode_10.AttachmentGroup) {
-      const requiredLength = result.frame.count * 4 + result.frame.n * 4;
+      const requiredLength = result.frame.count * 4 + result.frame.quadlets * 4;
       if (this.#buffer.length < requiredLength) {
         return null;
       }
@@ -210,7 +210,7 @@ export class AttachmentsReader {
       this.#readBytes(result.n);
       end = this.#buffer.length - result.frame.count * 4;
     } else if (this.#version === 2 && result.frame.type === CountCode_20.AttachmentGroup) {
-      const requiredLength = result.frame.count * 4 + result.frame.n * 4;
+      const requiredLength = result.frame.count * 4 + result.frame.quadlets * 4;
       if (this.#buffer.length < requiredLength) {
         return null;
       }
