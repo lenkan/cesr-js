@@ -157,7 +157,7 @@ export class AttachmentsReader {
 
       yield {
         prefix: pre.text(),
-        snu: snu.decode.hex(),
+        snu: snu.as.hex(),
         digest: dig.text(),
         ControllerIdxSigs: sigs.map((sig) => sig.text()),
       };
@@ -168,7 +168,7 @@ export class AttachmentsReader {
     const chunk = this.#readBytes(size * 4);
 
     const reader = new AttachmentsReader(chunk, { version: this.#version });
-    const path = reader.#readMatter().decode.string();
+    const path = reader.#readMatter().as.string();
 
     const result = Counter.peek(reader.#buffer);
     const grouped =
@@ -242,8 +242,8 @@ export class AttachmentsReader {
             case CountCode_10.FirstSeenReplayCouples: {
               for (const [fnu, dt] of this.#readCouples(counter)) {
                 attachments.FirstSeenReplayCouples.push({
-                  fnu: fnu.decode.hex(),
-                  dt: dt.decode.date(),
+                  fnu: fnu.as.hex(),
+                  dt: dt.as.date(),
                 });
               }
               break;
@@ -251,7 +251,7 @@ export class AttachmentsReader {
             case CountCode_10.SealSourceCouples:
               for (const [snu, dig] of this.#readCouples(counter)) {
                 attachments.SealSourceCouples.push({
-                  snu: snu.decode.hex(),
+                  snu: snu.as.hex(),
                   digest: dig.text(),
                 });
               }
@@ -260,7 +260,7 @@ export class AttachmentsReader {
               for (const [pre, snu, dig] of this.#readTriples(counter.count)) {
                 attachments.SealSourceTriples.push({
                   prefix: pre.text(),
-                  snu: snu.decode.hex(),
+                  snu: snu.as.hex(),
                   digest: dig.text(),
                 });
               }

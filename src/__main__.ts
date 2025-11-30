@@ -18,3 +18,4 @@ export { Indexer, type IndexerInit } from "./indexer.ts";
 export { Counter, type CounterInit } from "./counter.ts";
 export { Matter, type MatterInit } from "./matter.ts";
 export { Genus, type GenusInit } from "./genus.ts";
+export { cesr } from "./codec.ts";
