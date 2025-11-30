@@ -1,6 +1,6 @@
 import test, { describe } from "node:test";
 import assert from "node:assert";
-import path from "node:path";
+import { basename } from "node:path";
 import { encodeUtf8 } from "./encoding-utf8.ts";
 import { concat } from "./array-utils.ts";
 import { Attachments } from "./attachments.ts";
@@ -21,7 +21,7 @@ const [nsig0, nsig1] = [
 const prefix = "EALkveIFUPvt38xhtgYYJRCCpAGO7WjjHVR37Pawv67E";
 const digest = "EBabiu_JCkE0GbiglDXNB5C4NQq-hiGgxhHKXBxkiojg";
 
-describe(path.parse(import.meta.filename).base, () => {
+describe(basename(import.meta.url), () => {
   describe("reading individual attachment types", () => {
     test("should read empty attachment group", () => {
       const attachments = new Attachments({});

@@ -1,6 +1,6 @@
 #!/usr/bin/env node
-/* eslint-disable no-console */
 import { createReadStream } from "node:fs";
+import process from "node:process";
 import { execute } from "./cli.ts";
 
 async function* resolveInputStream(input: string): AsyncIterableIterator<Uint8Array> {
@@ -36,7 +36,9 @@ try {
   });
 } catch (error) {
   if (error instanceof Error) {
-    console.error(error.message);
+    process.stderr.write("Error: ");
+    process.stderr.write(error.message);
+    process.stderr.write("\n");
   }
   process.exit(1);
 }
