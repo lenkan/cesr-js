@@ -2,8 +2,6 @@ import { Attachments, type AttachmentsInit } from "./attachments.ts";
 import { decodeUtf8, encodeUtf8 } from "./encoding-utf8.ts";
 import { VersionString } from "./version-string.ts";
 
-const customInspectSymbol = Symbol.for("nodejs.util.inspect.custom");
-
 export interface MessageBody {
   v: string;
   [key: string]: unknown;
@@ -71,9 +69,11 @@ function read(input: Uint8Array): MessageBody | null {
 export class Message<T extends MessageBody = MessageBody> {
   #attachments: Attachments;
   readonly #raw: Uint8Array;
+  readonly body: T;
 
   constructor(body: T, attachments?: AttachmentsInit) {
     this.#raw = encode(body);
+    this.body = JSON.parse(decodeUtf8(this.#raw));
     this.#attachments = new Attachments(attachments ?? {});
   }
 
@@ -93,39 +93,12 @@ export class Message<T extends MessageBody = MessageBody> {
     return VersionString.parse(this.body.v);
   }
 
-  get body(): T {
-    return JSON.parse(this.text());
-  }
-
   get attachments(): Attachments {
     return this.#attachments;
   }
 
   set attachments(value: AttachmentsInit) {
     this.#attachments = new Attachments(value);
-  }
-
-  /**
-   * Custom inspect function for pretty printing in Node.js console.
-   * Example: console.log(message) will show this formatted output.
-   * Also works in browsers with a simpler format.
-   */
-  [customInspectSymbol](depth: number): string {
-    if (depth < 0) {
-      return "[Message]";
-    }
-
-    // Simple pretty print that works in both Node.js and browsers
-    const payloadStr = JSON.stringify(this.body, null, 2).replace(/\n/g, "\n  ");
-
-    return [
-      "Message {",
-      `  payload: ${payloadStr},`,
-      `  attachments:`,
-      `    sigs: [${this.#attachments.ControllerIdxSigs.join(", ")}],`,
-      `    receipts: [${this.#attachments.NonTransReceiptCouples}],`,
-      "}",
-    ].join("\n");
   }
 
   static parse(input: Uint8Array): Message | null {
@@ -145,6 +118,4 @@ export class Message<T extends MessageBody = MessageBody> {
   static from<T extends MessageBody = MessageBody>(body: T): Message<T> {
     return new Message<T>(body);
   }
-
-  readonly [Symbol.toStringTag] = "Message";
 }

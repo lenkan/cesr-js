@@ -6,6 +6,7 @@ import { VersionString } from "./version-string.ts";
 import { Attachments } from "./attachments.ts";
 import { encodeUtf8 } from "./encoding-utf8.ts";
 import { Indexer } from "./indexer.ts";
+import { inspect } from "node:util";
 
 describe(basename(import.meta.url), () => {
   describe("creating messages", () => {
@@ -310,6 +311,15 @@ describe(basename(import.meta.url), () => {
           v: VersionString.KERI.replace("JSON", "CBOR"),
         });
       }, /Unsupported encoding kind.*only JSON format is supported/);
+    });
+  });
+
+  describe("inspect", () => {
+    test("should display code and raw", () => {
+      assert.deepStrictEqual(
+        inspect(new Message({ v: VersionString.KERI_LEGACY, t: "qry" }), { colors: false }).split("\n"),
+        [`Message { body: { v: 'KERI10JSON000023_', t: 'qry' } }`],
+      );
     });
   });
 });
