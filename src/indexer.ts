@@ -11,6 +11,7 @@ import {
   type FrameSize,
   type ReadResult,
 } from "./frame.ts";
+import { Matter } from "./matter.ts";
 
 export interface IndexerInit {
   code: string;
@@ -150,6 +151,33 @@ export class Indexer implements IndexerInit, Frame {
     return new Indexer({ code, raw, index, ondex });
   }
 
+  /**
+   * Convert a Matter frame into an Indexer frame by providing the index and optional ondex.
+   *
+   * @param matter The Matter frame to convert
+   * @param index The main index of the signature
+   * @param ondex The optional secondary index of the signature
+   * @returns The created Indexer frame
+   */
+  static convert(matter: Pick<FrameInit, "code" | "raw">, index: number, ondex?: number): Indexer {
+    if (!matter.raw) {
+      throw new Error("Cannot create Indexer from Matter without raw data");
+    }
+
+    switch (matter.code) {
+      case Matter.Code.Ed25519_Sig:
+        return Indexer.crypto.ed25519_sig(matter.raw, index, ondex);
+      case Matter.Code.Ed448_Sig:
+        return Indexer.crypto.ed448_sig(matter.raw, index, ondex);
+      case Matter.Code.ECDSA_256k1_Sig:
+        return Indexer.crypto.ecdsa_256k1_sig(matter.raw, index, ondex);
+      case Matter.Code.ECDSA_256r1_Sig:
+        return Indexer.crypto.ecdsa_256r1_sig(matter.raw, index, ondex);
+      default:
+        throw new Error(`Cannot create Indexer from unsupported Matter code: ${matter.code}`);
+    }
+  }
+
   static readonly crypto = {
     ed25519_sig(raw: Uint8Array, index: number, ondex?: number): Indexer {
       if (ondex !== undefined) {
@@ -178,12 +206,27 @@ export class Indexer implements IndexerInit, Frame {
 
       return Indexer.from(Indexer.Code.Ed448_Crt_Sig, raw, index);
     },
-    ecdsa_256k1_sig(raw: Uint8Array, index: number): Indexer {
-      if (index > 64) {
-        return Indexer.from(Indexer.Code.ECDSA_256r1_Big_Crt_Sig, raw, index);
+    ecdsa_256k1_sig(raw: Uint8Array, index: number, ondex?: number): Indexer {
+      if (ondex !== undefined) {
+        return Indexer.from(Indexer.Code.ECDSA_256k1_Big_Sig, raw, index, ondex);
       }
 
-      return Indexer.from(Indexer.Code.ECDSA_256k1_Crt_Sig, raw, index);
+      if (index > 64) {
+        return Indexer.from(Indexer.Code.ECDSA_256k1_Big_Sig, raw, index);
+      }
+
+      return Indexer.from(Indexer.Code.ECDSA_256k1_Sig, raw, index, ondex);
+    },
+    ecdsa_256r1_sig(raw: Uint8Array, index: number, ondex?: number): Indexer {
+      if (ondex !== undefined) {
+        return Indexer.from(Indexer.Code.ECDSA_256r1_Big_Sig, raw, index, ondex);
+      }
+
+      if (index > 64) {
+        return Indexer.from(Indexer.Code.ECDSA_256r1_Big_Sig, raw, index);
+      }
+
+      return Indexer.from(Indexer.Code.ECDSA_256r1_Sig, raw, index, ondex);
     },
   };
 }

@@ -7,51 +7,10 @@ function createRaw(code: string): (raw: Uint8Array) => Matter {
   };
 }
 
-function ed25519_sig(raw: Uint8Array): Matter;
-function ed25519_sig(raw: Uint8Array, index: number, ondex?: number): Indexer;
-function ed25519_sig(raw: Uint8Array, index?: number, ondex?: number): Matter | Indexer {
-  if (index === undefined) {
-    return Matter.from(Matter.Code.Ed25519_Sig, raw);
-  }
-
-  if (ondex === undefined) {
-    if (index > 64) {
-      return Indexer.from(Indexer.Code.Ed25519_Big_Crt_Sig, raw, index);
-    }
-
-    return Indexer.from(Indexer.Code.Ed25519_Sig, raw, index);
-  }
-
-  // TODO: Keripy also checks if index === ondex and then use Crt_Sig
-  return Indexer.from(Indexer.Code.Ed25519_Big_Sig, raw, index, ondex);
-}
-
-function ed448_sig(raw: Uint8Array): Matter;
-function ed448_sig(raw: Uint8Array, index: number, ondex?: number): Indexer;
-function ed448_sig(raw: Uint8Array, index?: number, ondex?: number): Matter | Indexer {
-  if (index === undefined) {
-    return Matter.from(Matter.Code.Ed448_Sig, raw);
-  }
-
-  if (ondex === undefined) {
-    if (index > 64) {
-      return Indexer.from(Indexer.Code.Ed448_Big_Crt_Sig, raw, index);
-    }
-
-    return Indexer.from(Indexer.Code.Ed448_Crt_Sig, raw, index);
-  }
-
-  if (index > 64 || ondex > 64) {
-    return Indexer.from(Indexer.Code.Ed448_Big_Sig, raw, index, ondex);
-  }
-
-  return Indexer.from(Indexer.Code.Ed448_Sig, raw, index, ondex);
-}
-
 export const cesr = {
   crypto: {
-    ed25519_sig: ed25519_sig,
-    ed448_sig: ed448_sig,
+    ed25519_sig: createRaw(Matter.Code.Ed25519_Sig),
+    ed448_sig: createRaw(Matter.Code.Ed448_Sig),
     blake3_256: createRaw(Matter.Code.Blake3_256),
     blake3_512: createRaw(Matter.Code.Blake3_512),
     blake2b_256: createRaw(Matter.Code.Blake2b_256),
@@ -63,5 +22,6 @@ export const cesr = {
     ed448: createRaw(Matter.Code.Ed448),
     ed448N: createRaw(Matter.Code.Ed448N),
   },
+  index: Indexer.convert,
   primitive: Matter.primitive,
 };

@@ -16,7 +16,7 @@ describe(basename(import.meta.url), () => {
   });
 
   test("encode ed25519 indexed signature", () => {
-    const sig = cesr.crypto.ed25519_sig(new Uint8Array(64), 12, 3);
+    const sig = cesr.index(cesr.crypto.ed25519_sig(new Uint8Array(64)), 12, 3);
 
     const text = sig.text();
 
@@ -52,7 +52,7 @@ describe(basename(import.meta.url), () => {
   });
 
   test("encode ed448 indexed signature", () => {
-    const sig = cesr.crypto.ed448_sig(new Uint8Array(114), 5, 1);
+    const sig = cesr.index(cesr.crypto.ed448_sig(new Uint8Array(114)), 5, 1);
 
     const text = sig.text();
 
