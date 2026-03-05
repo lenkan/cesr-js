@@ -4,7 +4,7 @@ import { basename } from "node:path";
 import { Message } from "./message.ts";
 import { VersionString } from "./version-string.ts";
 import { Attachments } from "./attachments.ts";
-import { encodeUtf8 } from "./encoding-utf8.ts";
+import { decodeUtf8, encodeUtf8 } from "./encoding-utf8.ts";
 import { Indexer } from "./indexer.ts";
 import { inspect } from "node:util";
 
@@ -106,7 +106,7 @@ describe(basename(import.meta.url), () => {
       const message1 = new Message(init);
       const message2 = new Message(init);
 
-      assert.strictEqual(message1.text(), message2.text());
+      assert.deepStrictEqual(message1.raw, message2.raw);
       assert.deepStrictEqual(message1.body, message2.body);
     });
   });
@@ -153,7 +153,8 @@ describe(basename(import.meta.url), () => {
         foo: "bar",
       });
 
-      assert.strictEqual(message.text(), JSON.stringify(message.body));
+      const result = decodeUtf8(message.raw);
+      assert.strictEqual(result, JSON.stringify(message.body));
     });
 
     test("should provide access to raw bytes", () => {
@@ -176,7 +177,7 @@ describe(basename(import.meta.url), () => {
         a: 1,
       });
 
-      assert.strictEqual(message.text(), '{"v":"KERI10JSON00001f_","a":1}');
+      assert.strictEqual(message.body.v, "KERI10JSON00001f_");
     });
 
     test("should encode modern version string correctly", () => {
@@ -185,7 +186,7 @@ describe(basename(import.meta.url), () => {
         a: 1,
       });
 
-      assert.strictEqual(message.text(), '{"v":"KERICAAJSONAAAe.","a":1}');
+      assert.strictEqual(message.body.v, "KERICAAJSONAAAe.");
     });
   });
 

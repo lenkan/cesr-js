@@ -77,10 +77,6 @@ export class Message<T extends MessageBody = MessageBody> {
     this.#attachments = new Attachments(attachments ?? {});
   }
 
-  text(): string {
-    return decodeUtf8(this.#raw);
-  }
-
   get raw(): Uint8Array {
     return this.#raw;
   }
@@ -113,9 +109,5 @@ export class Message<T extends MessageBody = MessageBody> {
 
   static encode(init: MessageBody): Uint8Array {
     return encode(init);
-  }
-
-  static from<T extends MessageBody = MessageBody>(body: T): Message<T> {
-    return new Message<T>(body);
   }
 }
